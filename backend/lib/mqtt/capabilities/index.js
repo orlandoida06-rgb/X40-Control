@@ -1,0 +1,20 @@
+module.exports = {
+    AutoEmptyDockManualTriggerCapabilityMqttHandle: require("./AutoEmptyDockManualTriggerCapabilityMqttHandle"),
+    BasicControlCapabilityMqttHandle: require("./BasicControlCapabilityMqttHandle"),
+    CapabilityMqttHandle: require("./CapabilityMqttHandle"),
+    CarpetModeControlCapabilityMqttHandle: require("./CarpetModeControlCapabilityMqttHandle"),
+    CarpetSensorModeControlCapabilityMqttHandle: require("./CarpetSensorModeControlCapabilityMqttHandle"),
+    ConsumableMonitoringCapabilityMqttHandle: require("./ConsumableMonitoringCapabilityMqttHandle"),
+    CurrentStatisticsCapabilityMqttHandle: require("./CurrentStatisticsCapabilityMqttHandle"),
+    GoToLocationCapabilityMqttHandle: require("./GoToLocationCapabilityMqttHandle"),
+    KeyLockCapabilityMqttHandle: require("./KeyLockCapabilityMqttHandle"),
+    LocateCapabilityMqttHandle: require("./LocateCapabilityMqttHandle"),
+    MapSegmentationCapabilityMqttHandle: require("./MapSegmentationCapabilityMqttHandle"),
+    ObstacleAvoidanceControlCapabilityMqttHandle: require("./ObstacleAvoidanceControlCapabilityMqttHandle"),
+    PetObstacleAvoidanceControlCapabilityMqttHandle: require("./PetObstacleAvoidanceControlCapabilityMqttHandle"),
+    PresetSelectionCapabilityMqttHandle: require("./PresetSelectionCapabilityMqttHandle"),
+    SpeakerVolumeControlCapabilityMqttHandle: require("./SpeakerVolumeControlCapabilityMqttHandle"),
+    TotalStatisticsCapabilityMqttHandle: require("./TotalStatisticsCapabilityMqttHandle"),
+    WifiConfigurationCapabilityMqttHandle: require("./WifiConfigurationCapabilityMqttHandle"),
+    ZoneCleaningCapabilityMqttHandle: require("./ZoneCleaningCapabilityMqttHandle")
+};

@@ -1,0 +1,20 @@
+# ignore node_modules if installed here (e.g. by npm install)
+node_modules/
+
+# ignore configuration files for local development
+/local/
+
+# binary compilation output
+build/
+
+# IntelliJ Idea project files
+.idea/
+
+# VSCode project files
+.vscode/
+
+/backend/lib/res/valetudo.openapi.schema.json
+/backend/lib/res/build_metadata.json
+/backend/lib/robots/midea/generated/midea_protobufs.js
+
+/docs/dist
