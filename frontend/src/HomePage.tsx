@@ -36,6 +36,8 @@ import {useIsMobileView} from "./hooks";
 import {useRobotStatusQuery} from "./api";
 import {useCapabilitiesSupported} from "./CapabilitiesProvider";
 import {Capability} from "./api";
+import LanguageSelector from "./i18n/LanguageSelector";
+import {useLanguage} from "./i18n";
 
 const glass = {
     background: "linear-gradient(145deg, rgba(20,29,43,.96), rgba(10,17,27,.96))",
@@ -77,6 +79,7 @@ const DashboardButton = ({
 );
 
 const HomePage = (): React.ReactElement => {
+    const {t} = useLanguage();
     const mobile = useIsMobileView();
     const {data: status} = useRobotStatusQuery();
 
@@ -179,7 +182,8 @@ const HomePage = (): React.ReactElement => {
                         </Box>
 
                         <WifiIcon sx={{color: "#24d99a"}} />
-                        <SettingsIcon sx={{color: "#9db0c9"}} />
+                        <LanguageSelector />
+
                     </>
                 )}
             </Box>
@@ -204,14 +208,14 @@ const HomePage = (): React.ReactElement => {
                             gap: .4,
                         }}
                     >
-                        <DashboardButton icon={<HomeIcon/>} label="Inicio" route="/" />
-                        <DashboardButton icon={<MapIcon/>} label="Mapa" route="/options/map_management" />
-                        <DashboardButton icon={<RoomsIcon/>} label="Habitaciones" route="/options/map_management/segments" />
-                        <DashboardButton icon={<ZonesIcon/>} label="Zonas" route="/options/map_management/virtual_restrictions" />
-                        <DashboardButton icon={<ScheduleIcon/>} label="Programaciones" route="/valetudo/timers" />
-                        <DashboardButton icon={<HistoryIcon/>} label="Historial" route="/robot/total_statistics" />
-                        <DashboardButton icon={<ConsumablesIcon/>} label="Consumibles" route="/robot/consumables" />
-                        <DashboardButton icon={<SettingsIcon/>} label="Ajustes" route="/options/robot" />
+                        <DashboardButton icon={<HomeIcon/>} label={t("home")} route="/" />
+                        <DashboardButton icon={<MapIcon/>} label={t("map")} route="/options/map_management" />
+                        <DashboardButton icon={<RoomsIcon/>} label={t("rooms")} route="/options/map_management/segments" />
+                        <DashboardButton icon={<ZonesIcon/>} label={t("zones")} route="/options/map_management/virtual_restrictions" />
+                        <DashboardButton icon={<ScheduleIcon/>} label={t("schedules")} route="/valetudo/timers" />
+                        <DashboardButton icon={<HistoryIcon/>} label={t("history")} route="/robot/total_statistics" />
+                        <DashboardButton icon={<ConsumablesIcon/>} label={t("consumables")} route="/robot/consumables" />
+                        <DashboardButton icon={<SettingsIcon/>} label={t("settings")} route="/options/robot" />
 
                         <Box sx={{flex: 1}} />
 
@@ -226,7 +230,7 @@ const HomePage = (): React.ReactElement => {
                             X40 Ultra
                             <br />
                             <span style={{color: "#43546b"}}>
-                                Powered by Valetudo
+                                {t("poweredBy")}
                             </span>
                         </Box>
                     </Box>
@@ -347,7 +351,7 @@ const HomePage = (): React.ReactElement => {
                                     ✓
                                 </Typography>
                                 <Typography sx={{fontSize: 11, color: "#7589a3"}}>
-                                    Online
+                                    {t("online")}
                                 </Typography>
                             </Box>
 

@@ -12,8 +12,10 @@ import CurrentStatistics from "./CurrentStatistics";
 import Attachments from "./Attachments";
 import {FanSpeedMediumIcon, WaterGradeLowIcon} from "../components/CustomIcons";
 import React from "react";
+import {useLanguage} from "../i18n";
 
 const ControlsBody = (): React.ReactElement => {
+    const {t} = useLanguage();
     const [
         basicControls,
         fanSpeed,
@@ -87,7 +89,7 @@ const ControlsBody = (): React.ReactElement => {
                                         capability={
                                             Capability.OperationModeControl
                                         }
-                                        label="Mode"
+                                        label={t("mode")}
                                         icon={
                                             <OperationModeIcon
                                                 fontSize="small"
@@ -129,7 +131,7 @@ const ControlsBody = (): React.ReactElement => {
                                         capability={
                                             Capability.WaterUsageControl
                                         }
-                                        label="Water"
+                                        label={t("water")}
                                         icon={
                                             <WaterGradeLowIcon
                                                 fontSize="small"

@@ -22,6 +22,7 @@ import {
     SvgIconComponent,
 } from "@mui/icons-material";
 import React from "react";
+import {useLanguage} from "../i18n";
 import ConfirmationDialog from "../components/ConfirmationDialog";
 import {usePendingMapAction} from "../map/BaseMap";
 import {useValetudoColorsInverse} from "../hooks/useValetudoColors";
@@ -47,6 +48,7 @@ interface CommandButton {
 }
 
 const BasicControls = (): React.ReactElement => {
+    const {t} = useLanguage();
     const [startConfirmationDialogOpen, setStartConfirmationDialogOpen] =
         React.useState(false);
 
@@ -120,13 +122,13 @@ const BasicControls = (): React.ReactElement => {
         {
             command: "start",
             enabled: StartStates.includes(state),
-            label: flag === "resumable" ? "Resume" : "Start",
+            label: flag === "resumable" ? t("resume") : t("start"),
             Icon: StartIcon,
         },
         {
             command: "pause",
             enabled: PauseStates.includes(state),
-            label: "Pause",
+            label: t("pause"),
             Icon: PauseIcon,
         },
         {
@@ -134,7 +136,7 @@ const BasicControls = (): React.ReactElement => {
             enabled:
                 flag === "resumable" ||
                 (state !== "idle" && state !== "docked"),
-            label: "Stop",
+            label: t("stop"),
             Icon: StopIcon,
         },
         {

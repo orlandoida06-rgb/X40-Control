@@ -58,7 +58,7 @@ const LiveMapPage = (props: Record<string, never> ): React.ReactElement => {
     if (mapLoadError) {
         return (
             <Container>
-                <Typography color="error">Error loading map data</Typography>
+                <Typography color="error">Error al cargar los datos del mapa</Typography>
                 <Box m={1}/>
                 <Button color="primary" variant="contained" onClick={() => {
                     return refetchMap();

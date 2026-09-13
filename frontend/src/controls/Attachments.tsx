@@ -136,7 +136,7 @@ const Attachments = (): React.ReactElement | null => {
                                     }}
                                 >
                                     {attached ?
-                                        "Connected" :
+                                        "Conectado" :
                                         "Not connected"}
                                 </Typography>
                             </Paper>

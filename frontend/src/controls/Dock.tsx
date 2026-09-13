@@ -30,6 +30,7 @@ import {
     ExpandLess as CloseIcon
 } from "@mui/icons-material";
 import React from "react";
+import {useLanguage} from "../i18n";
 import ControlsCard from "./ControlsCard";
 import {useFeedbackPending} from "../hooks/useFeedbackPending";
 import {
@@ -323,6 +324,7 @@ const DockComponents = ({
 };
 
 const Dock = (): React.ReactElement => {
+    const {t} = useLanguage();
     const {
         data: robotStatus,
         isPending: isRobotStatusPending
@@ -535,7 +537,7 @@ const Dock = (): React.ReactElement => {
                                     as={CleanMopIcon}
                                 />
                                 {dockState === "cleaning" ?
-                                    "Stop" :
+                                    t("stop") :
                                     "Clean"}
                             </Button>
                         </Grid2>
@@ -594,7 +596,7 @@ const Dock = (): React.ReactElement => {
                                     as={DryMopIcon}
                                 />
                                 {dockState === "drying" ?
-                                    "Stop" :
+                                    t("stop") :
                                     "Dry"}
                             </Button>
                         </Grid2>

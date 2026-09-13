@@ -2,10 +2,12 @@ import {useCurrentStatisticsQuery} from "../api";
 import {Box, CircularProgress, Grid2, Paper, Typography} from "@mui/material";
 import {Equalizer as StatisticsIcon} from "@mui/icons-material";
 import React from "react";
+import {useLanguage} from "../i18n";
 import {getFriendlyStatName, getHumanReadableStatValue} from "../utils";
 import ControlsCard from "./ControlsCard";
 
 const CurrentStatistics = (): React.ReactElement => {
+    const {t} = useLanguage();
     const {
         data: currentStatistics,
         isPending: statisticsPending,
@@ -124,7 +126,7 @@ const CurrentStatistics = (): React.ReactElement => {
     return (
         <ControlsCard
             icon={StatisticsIcon}
-            title="Statistics"
+            title={t("statistics")}
             isLoading={statisticsPending}
         >
             <Grid2

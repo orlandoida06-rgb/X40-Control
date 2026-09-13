@@ -118,8 +118,16 @@ class WebServer {
                 customCss: ".swagger-ui .topbar { display: none }"
             }));
 
-            swaggerValidation.init(this.openApiSpec);
-            this.validator = swaggerValidation.validate;
+            // openapi-validator-middleware bloquea el runtime ARM64
+            // empaquetado. Conservamos la validación básica de body.
+            this.validator = function(req, res, next) {
+                if (req.method === "PUT" || req.method === "POST") {
+                    if (Tools.IS_EMPTY_OBJECT_OR_UNDEFINED_OR_NULL(req.body)) {
+                        return res.sendStatus(400);
+                    }
+                }
+                next();
+            };
         }
 
         this.robotRouter = new RobotRouter({robot: this.robot, validator: this.validator});
