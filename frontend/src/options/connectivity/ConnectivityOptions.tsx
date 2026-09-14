@@ -28,8 +28,8 @@ const ConnectivityOptions = (): React.ReactElement => {
                 <LinkListMenuItem
                     key="wifiConfiguration"
                     url="/options/connectivity/wifi"
-                    primaryLabel="Wi-Fi Connectivity"
-                    secondaryLabel="Check connection details and modify the configuration"
+                    primaryLabel="Conectividad Wi-Fi"
+                    secondaryLabel="Consultar los detalles de conexión y modificar la configuración"
                     icon={<WifiIcon/>}
                 />
             );
@@ -41,8 +41,8 @@ const ConnectivityOptions = (): React.ReactElement => {
             <LinkListMenuItem
                 key="mqttConnectivity"
                 url="/options/connectivity/mqtt"
-                primaryLabel="MQTT Connectivity"
-                secondaryLabel="Connect Valetudo to your MQTT Broker"
+                primaryLabel="Conectividad MQTT"
+                secondaryLabel="Conectar Valetudo a tu servidor MQTT"
                 icon={<MQTTIcon/>}
             />
         );
@@ -51,8 +51,8 @@ const ConnectivityOptions = (): React.ReactElement => {
             <LinkListMenuItem
                 key="ntpConnectivity"
                 url="/options/connectivity/ntp"
-                primaryLabel="NTP Connectivity"
-                secondaryLabel="Configure the integrated Network Time Protocol (NTP) client"
+                primaryLabel="Conectividad NTP"
+                secondaryLabel="Configurar el cliente integrado de Protocolo de Tiempo de Red (NTP)"
                 icon={<NTPIcon/>}
             />
         );
@@ -61,8 +61,8 @@ const ConnectivityOptions = (): React.ReactElement => {
             <LinkListMenuItem
                 key="networkAdvertisementSettings"
                 url="/options/connectivity/networkadvertisement"
-                primaryLabel="Network Advertisement"
-                secondaryLabel="Control Bonjour/mDNS and SSDP/UPnP discoverability"
+                primaryLabel="Anuncio de red"
+                secondaryLabel="Controlar la visibilidad mediante Bonjour/mDNS y SSDP/UPnP"
                 icon={<NetworkAdvertisementIcon/>}
             />
         );
@@ -71,8 +71,8 @@ const ConnectivityOptions = (): React.ReactElement => {
             <LinkListMenuItem
                 key="authSettings"
                 url="/options/connectivity/auth"
-                primaryLabel="Auth Settings"
-                secondaryLabel="Restrict access to Valetudo"
+                primaryLabel="Ajustes de autenticación"
+                secondaryLabel="Restringir el acceso a Valetudo"
                 icon={<AuthIcon/>}
             />
         );
@@ -85,8 +85,8 @@ const ConnectivityOptions = (): React.ReactElement => {
     return (
         <PaperContainer>
             <ListMenu
-                primaryHeader={"Connectivity Options"}
-                secondaryHeader={"Configure how Valetudo and your robot communicate with the outside world"}
+                primaryHeader={"Opciones de conectividad"}
+                secondaryHeader={"Configurar cómo Valetudo y tu robot se comunican con el exterior"}
                 listItems={listItems}
             />
         </PaperContainer>

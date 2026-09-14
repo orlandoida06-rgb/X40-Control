@@ -29,7 +29,7 @@ import {
 import {
     Wifi as WifiIcon,
 
-    Wifi as WifiStateUnknownIcon,
+    Wifi as WifiStateDesconocidoIcon,
     SignalWifiOff as WifiStateNotConnectedIcon,
     SignalWifi4Bar as WifiStateConnected4BarIcon,
     SignalWifi3Bar as WifiStateConnected3BarIcon,
@@ -70,7 +70,7 @@ const WifiStatusComponent: React.FunctionComponent<{
             case "not_connected":
                 return <WifiStateNotConnectedIcon sx={{fontSize: "4rem"}}/>;
             case "unknown":
-                return <WifiStateUnknownIcon sx={{fontSize: "4rem"}}/>;
+                return <WifiStateDesconocidoIcon sx={{fontSize: "4rem"}}/>;
             case "connected":
 
                 //Adapted from https://android.stackexchange.com/a/176325 Android 7.1.2
@@ -92,17 +92,17 @@ const WifiStatusComponent: React.FunctionComponent<{
         switch (status.state) {
             case "not_connected":
                 return (
-                    <Typography variant="h5">Not connected</Typography>
+                    <Typography variant="h5">No conectado</Typography>
                 );
             case "unknown":
                 return (
-                    <Typography variant="h5">Unknown</Typography>
+                    <Typography variant="h5">Desconocido</Typography>
                 );
             case "connected":
                 return (
                     <>
                         <Typography variant="h5">
-                            {status.details.ssid ?? "Unknown SSID"}
+                            {status.details.ssid ?? "Desconocido SSID"}
                         </Typography>
 
                         {
@@ -221,7 +221,7 @@ const WifiConnectivity = (): React.ReactElement => {
                     <Grid2 style={{flexGrow: 1}}>
                         <TextField
                             style={{width: "100%"}}
-                            label="SSID/Wi-Fi name"
+                            label="Nombre de la red Wi-Fi / SSID"
                             value={newSSID}
                             variant="standard"
                             onChange={e => {
@@ -232,7 +232,7 @@ const WifiConnectivity = (): React.ReactElement => {
                     </Grid2>
                     <Grid2 style={{flexGrow: 1}}>
                         <FormControl style={{width: "100%"}} variant="standard">
-                            <InputLabel htmlFor="standard-adornment-password">PSK/Password</InputLabel>
+                            <InputLabel htmlFor="standard-adornment-password">PSK/Contraseña</InputLabel>
                             <Input
                                 type={showPasswordAsPlain ? "text" : "password"}
                                 fullWidth
@@ -284,7 +284,7 @@ const WifiConnectivity = (): React.ReactElement => {
 
                         <br/><br/>
 
-                        <strong>Note:</strong><br/>
+                        <strong>Nota:</strong><br/>
                         Don&apos;t be confused by buttons labelled &quot;Reset&quot; close to a Wi-Fi LED.<br/>
                         Proximity does not mean that they&apos;re related. Instead, they usually factory-reset the machine, which is not what you want.
                     </Typography>
@@ -312,7 +312,7 @@ const WifiConnectivity = (): React.ReactElement => {
                 </Grid2>
             }
             <ConfirmationDialog
-                title="Apply new Wi-Fi configuration?"
+                title="¿Aplicar la nueva configuración Wi-Fi?"
                 text=""
                 open={confirmationDialogOpen}
                 onClose={() => {
@@ -334,7 +334,7 @@ const WifiConnectivity = (): React.ReactElement => {
                     Are you sure you want to apply the new Wifi settings?
                     <br/>
                     <br/>
-                    <strong>Hint:</strong>
+                    <strong>Consejo:</strong>
                     <br/>
                     You can always revert back to the integrated Wifi Hotspot.
                     Check the documentation supplied with your robot for instructions on how to do so.
@@ -374,7 +374,7 @@ const WifiConnectivityPage = (): React.ReactElement => {
             <Grid2 container direction="row">
                 <Box style={{width: "100%"}}>
                     <DetailPageHeaderRow
-                        title="Wi-Fi Connectivity"
+                        title="Conectividad Wi-Fi"
                         icon={<WifiIcon/>}
                         onRefreshClick={() => {
                             refetchWifiStatus().catch(() => {

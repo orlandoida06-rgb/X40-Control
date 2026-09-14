@@ -58,7 +58,7 @@ const NetworkAdvertisementSettings = (): React.ReactElement => {
     }
 
     if (configurationError || propertiesLoadError || !storedConfiguration) {
-        return <Typography color="error">Error loading Network Advertisement configuration</Typography>;
+        return <Typography color="error">Error loading Anuncio de red configuration</Typography>;
     }
 
     return (
@@ -74,14 +74,14 @@ const NetworkAdvertisementSettings = (): React.ReactElement => {
                         }}
                     />
                 }
-                label="Network Advertisement enabled"
+                label="Anuncio de red activado"
                 sx={{mb: 1, marginTop: "1rem", userSelect: "none"}}
             />
             <Grid2 container spacing={1} sx={{mb: 1, mt: "1rem"}} direction="row">
                 <Grid2 style={{flexGrow: 1}}>
                     <TextField
                         style={{width: "100%"}}
-                        label="Zeroconf Hostname"
+                        label="Nombre de host Zeroconf"
                         value={properties?.zeroconfHostname ?? ""}
                         variant="standard"
                         disabled={true}
@@ -142,7 +142,7 @@ const NetworkAdvertisementSettingsPage = (): React.ReactElement => {
             <Grid2 container direction="row">
                 <Box style={{width: "100%"}}>
                     <DetailPageHeaderRow
-                        title="Network Advertisement"
+                        title="Anuncio de red"
                         icon={<NetworkAdvertisementIcon/>}
                     />
 

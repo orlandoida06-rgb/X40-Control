@@ -16,6 +16,7 @@ import {
     Typography
 } from "@mui/material";
 import React from "react";
+import {useLanguage} from "../i18n";
 import {
     AccessTime as TimeIcon,
     Equalizer as StatisticsIcon,
@@ -79,6 +80,26 @@ interface MenuSubheader {
 
 
 //Note that order is important here
+const menuTextMap: Record<string, string> = {
+    "Consumables": "Consumibles",
+    "Manual control": "Control manual",
+    "Statistics": "Estadísticas",
+    "Map Options": "Opciones del mapa",
+    "Segment Management": "Gestión de habitaciones",
+    "Virtual Restriction Management": "Gestión de restricciones virtuales",
+    "Robot Coverage Map": "Mapa de cobertura del robot",
+    "Connectivity Options": "Opciones de conectividad",
+    "Auth Settings": "Ajustes de autenticación",
+    "MQTT Connectivity": "Conectividad MQTT",
+    "Network Advertisement": "Anuncio de red",
+    "NTP Connectivity": "Conectividad NTP",
+    "Wi-Fi Connectivity": "Conectividad Wi-Fi",
+    "Robot Options": "Opciones del robot",
+    "System Options": "Opciones del sistema",
+    "System Information": "Información del sistema",
+    "Valetudo Options": "Opciones de Valetudo",
+};
+
 const menuTree: Array<MenuEntry | MenuSubEntry | MenuSubheader> = [
     {
         kind: "MenuEntry",
@@ -298,6 +319,7 @@ const ValetudoAppBar: React.FunctionComponent<{ paletteMode: PaletteMode, setPal
     setPaletteMode
 }): React.ReactElement => {
     const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
+    const {t} = useLanguage();
     const currentLocation = useLocation()?.pathname;
     const robotCapabilities = useCapabilitiesSupported(...Object.values(Capability));
 
@@ -426,7 +448,7 @@ const ValetudoAppBar: React.FunctionComponent<{ paletteMode: PaletteMode, setPal
                                         <ListItemIcon>
                                             <ItemIcon/>
                                         </ListItemIcon>
-                                        <ListItemText primary={value.menuText}/>
+                                        <ListItemText primary={menuTextMap[value.menuText] ? menuTextMap[value.menuText] : value.menuText}/>
                                     </ListItemButton>
                                 );
                             }

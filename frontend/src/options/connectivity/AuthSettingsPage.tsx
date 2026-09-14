@@ -35,17 +35,17 @@ const AuthSettings = (): React.ReactElement => {
     const {mutate: updateConfiguration, isPending: configurationUpdating} = useHTTPBasicAuthConfigurationMutation();
 
     const [enabled, setEnabled] = React.useState(false);
-    const [username, setUsername] = React.useState("");
-    const [password, setPassword] = React.useState("");
+    const [username, setUsuario] = React.useState("");
+    const [password, setContraseña] = React.useState("");
 
-    const [showPasswordAsPlain, setShowPasswordAsPlain] = React.useState(false);
+    const [showContraseñaAsPlain, setShowContraseñaAsPlain] = React.useState(false);
     const [configurationModified, setConfigurationModified] = React.useState<boolean>(false);
 
     React.useEffect(() => {
         if (storedConfiguration) {
             setEnabled(storedConfiguration.enabled);
-            setUsername(storedConfiguration.username);
-            setPassword(storedConfiguration.password);
+            setUsuario(storedConfiguration.username);
+            setContraseña(storedConfiguration.password);
         }
     }, [storedConfiguration]);
 
@@ -56,7 +56,7 @@ const AuthSettings = (): React.ReactElement => {
     }
 
     if (configurationError || !storedConfiguration) {
-        return <Typography color="error">Error loading HTTP Basic Auth configuration</Typography>;
+        return <Typography color="error">Error loading Autenticación HTTP básica configuration</Typography>;
     }
 
     return (
@@ -71,28 +71,28 @@ const AuthSettings = (): React.ReactElement => {
                         }}
                     />
                 }
-                label="HTTP Basic Auth enabled"
+                label="Autenticación HTTP básica activada"
                 sx={{mb: 1}}
             />
             <Grid2 container spacing={1} sx={{mb: 1}} direction="row">
                 <Grid2 size="grow" style={{flexGrow: 1}}>
                     <TextField
                         style={{width: "100%"}}
-                        label="Username"
+                        label="Usuario"
                         value={username}
                         variant="standard"
                         disabled={!enabled}
                         onChange={e => {
-                            setUsername(e.target.value);
+                            setUsuario(e.target.value);
                             setConfigurationModified(true);
                         }}
                     />
                 </Grid2>
                 <Grid2 size="grow" style={{flexGrow: 1}}>
                     <FormControl style={{width: "100%"}} variant="standard">
-                        <InputLabel htmlFor="standard-adornment-password">Password</InputLabel>
+                        <InputLabel htmlFor="standard-adornment-password">Contraseña</InputLabel>
                         <Input
-                            type={showPasswordAsPlain ? "text" : "password"}
+                            type={showContraseñaAsPlain ? "text" : "password"}
                             fullWidth
                             value={password}
                             disabled={!enabled}
@@ -101,19 +101,19 @@ const AuthSettings = (): React.ReactElement => {
                                     <IconButton
                                         aria-label="toggle password visibility"
                                         onClick={() => {
-                                            setShowPasswordAsPlain(!showPasswordAsPlain);
+                                            setShowContraseñaAsPlain(!showContraseñaAsPlain);
                                         }}
                                         onMouseDown={e => {
                                             e.preventDefault();
                                         }}
                                         edge="end"
                                     >
-                                        {showPasswordAsPlain ? <VisibilityOffIcon/> : <VisibilityIcon/>}
+                                        {showContraseñaAsPlain ? <VisibilityOffIcon/> : <VisibilityIcon/>}
                                     </IconButton>
                                 </InputAdornment>
                             }
                             onChange={(e) => {
-                                setPassword(e.target.value);
+                                setContraseña(e.target.value);
                                 setConfigurationModified(true);
                             }}/>
                     </FormControl>
@@ -172,7 +172,7 @@ const AuthSettingsPage = (): React.ReactElement => {
             <Grid2 container direction="row">
                 <Box style={{width: "100%"}}>
                     <DetailPageHeaderRow
-                        title="HTTP Basic Auth"
+                        title="Autenticación HTTP básica"
                         icon={<BasicAuthIcon/>}
                     />
                     <AuthSettings/>
