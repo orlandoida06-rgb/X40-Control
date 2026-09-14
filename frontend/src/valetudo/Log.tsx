@@ -87,7 +87,7 @@ const Log = (): React.ReactElement => {
 
     const logLines = React.useMemo(() => {
         if (logError || logLevelError) {
-            return <Typography color="error">Error loading log</Typography>;
+            return <Typography color="error">Error al cargar el registro</Typography>;
         }
 
         const processedLog : Array<LogLine> = [];
@@ -155,11 +155,11 @@ const Log = (): React.ReactElement => {
                     </Grid2>
                     <Grid2 size={{xs: 3, sm:2}}>
                         <FormControl fullWidth>
-                            <InputLabel id="log-level-selector">Current Level</InputLabel>
+                            <InputLabel id="log-level-selector">Nivel actual</InputLabel>
                             <Select
                                 labelId="log-level-selector"
                                 value={logLevel?.current || "info"}
-                                label="Current Level"
+                                label="Nivel actual"
                                 onChange={(e) => {
                                     mutateLogLevel({
                                         level: e.target.value as LogLevel

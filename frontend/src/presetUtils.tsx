@@ -20,30 +20,48 @@ import {
     WaterGradeOffIcon
 } from "./components/CustomIcons";
 
-const order: Array<PresetValue> = ["off", "min", "low", "medium", "high", "max", "turbo", "vacuum", "vacuum_and_mop", "vacuum_then_mop", "mop"];
+const order: Array<PresetValue> = [
+    "off",
+    "min",
+    "low",
+    "medium",
+    "high",
+    "max",
+    "turbo",
+    "vacuum",
+    "vacuum_and_mop",
+    "vacuum_then_mop",
+    "mop"
+];
+
 export const sortPresets = (presets: PresetSelectionState["value"][]) => {
     return [...presets].sort((a, b) => {
         return order.indexOf(a) - order.indexOf(b);
     });
 };
+
 export const presetFriendlyNames: {[key in PresetValue]: string} = Object.freeze({
-    "off": "Off",
-    "min": "Min",
-    "low": "Low",
-    "medium": "Medium",
-    "high": "High",
-    "max": "Max",
+    "off": "Apagado",
+    "min": "Mínimo",
+    "low": "Bajo",
+    "medium": "Medio",
+    "high": "Alto",
+    "max": "Máximo",
     "turbo": "Turbo",
 
-    "custom": "Custom",
+    "custom": "Personalizado",
 
-    "vacuum_and_mop": "Vacuum & Mop",
-    "vacuum_then_mop": "Vacuum then Mop",
-    "vacuum": "Vacuum",
-    "mop": "Mop"
+    "vacuum_and_mop": "Aspirar y fregar",
+    "vacuum_then_mop": "Aspirar y después fregar",
+    "vacuum": "Aspirar",
+    "mop": "Fregar"
 });
 
-export function getPresetIconOrLabel(capability: Capability, preset: PresetValue, style?: React.CSSProperties): ReactElement | string {
+export function getPresetIconOrLabel(
+    capability: Capability,
+    preset: PresetValue,
+    style?: React.CSSProperties
+): ReactElement | string {
     switch (capability) {
         case Capability.FanSpeedControl:
             switch (preset) {
@@ -63,8 +81,8 @@ export function getPresetIconOrLabel(capability: Capability, preset: PresetValue
                     return <FanSpeedTurboIcon style={style}/>;
                 default:
                     return presetFriendlyNames[preset];
-
             }
+
         case Capability.WaterUsageControl:
             switch (preset) {
                 case "off":
@@ -82,6 +100,7 @@ export function getPresetIconOrLabel(capability: Capability, preset: PresetValue
                 default:
                     return presetFriendlyNames[preset];
             }
+
         case Capability.OperationModeControl:
             switch (preset) {
                 case "vacuum":
@@ -95,6 +114,7 @@ export function getPresetIconOrLabel(capability: Capability, preset: PresetValue
                 default:
                     return presetFriendlyNames[preset];
             }
+
         default:
             return presetFriendlyNames[preset];
     }

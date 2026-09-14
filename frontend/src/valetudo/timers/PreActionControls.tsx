@@ -109,7 +109,7 @@ const PresetSelectionPreActionControl: FunctionComponent<{
             </Grid2>
             <Grid2 sx={{flexGrow: 1, marginLeft: "1rem"}}>
                 <FormControl sx={{width: "100%"}}>
-                    <InputLabel id={"FanSpeedControlPreActionControl_presets_label"}>Preset</InputLabel>
+                    <InputLabel id={"FanSpeedControlPreActionControl_presets_label"}>Preajuste</InputLabel>
                     <Select
                         labelId={"FanSpeedControlPreActionControl_presets_label"}
                         id={"FanSpeedControlPreActionControl_presets-select"}

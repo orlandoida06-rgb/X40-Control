@@ -24,7 +24,7 @@ export function InputModeToggle({ mode, onChange }: InputModeToggleProps) {
         >
             <ToggleButton value="joystick">Joystick</ToggleButton>
             <ToggleButton value="dpad">D-Pad</ToggleButton>
-            <ToggleButton value="keyboard">Keyboard</ToggleButton>
+            <ToggleButton value="keyboard">Teclado</ToggleButton>
         </ToggleButtonGroup>
     );
 }

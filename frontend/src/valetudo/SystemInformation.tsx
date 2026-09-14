@@ -57,7 +57,7 @@ const SystemRuntimeInfo = (): React.ReactElement => {
         }
 
         if (!systemRuntimeInfo) {
-            return <Typography color="error">No runtime information</Typography>;
+            return <Typography color="error">No hay información del entorno de ejecución</Typography>;
         }
 
         const topItems: Array<[header: string, body: string]> = [
@@ -116,7 +116,7 @@ const SystemRuntimeInfo = (): React.ReactElement => {
                     }}>Node</Button>
                     <Button onClick={() => {
                         setEnvDialogOpen(true);
-                    }}>Environment</Button>
+                    }}>Entorno</Button>
                 </ButtonGroup>
 
                 <Dialog
@@ -127,7 +127,7 @@ const SystemRuntimeInfo = (): React.ReactElement => {
                     scroll={"body"}
                     fullScreen={mobileView}
                 >
-                    <DialogTitle>Node information</DialogTitle>
+                    <DialogTitle>Información de Node</DialogTitle>
                     <DialogContent dividers>
                         <Stack spacing={2}>
                             <Grid2 container spacing={2}>
@@ -150,8 +150,8 @@ const SystemRuntimeInfo = (): React.ReactElement => {
                                 <Table size="small">
                                     <TableHead>
                                         <TableRow>
-                                            <TableCell>Dependency</TableCell>
-                                            <TableCell align="right">Version</TableCell>
+                                            <TableCell>Dependencia</TableCell>
+                                            <TableCell align="right">Versión</TableCell>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
@@ -164,7 +164,7 @@ const SystemRuntimeInfo = (): React.ReactElement => {
                     <DialogActions>
                         <Button onClick={() => {
                             setNodeDialogOpen(false);
-                        }}>Close</Button>
+                        }}>Cerrar</Button>
                     </DialogActions>
                 </Dialog>
 
@@ -177,14 +177,14 @@ const SystemRuntimeInfo = (): React.ReactElement => {
                     maxWidth={"xl"}
                     scroll={"body"}
                 >
-                    <DialogTitle>Environment</DialogTitle>
+                    <DialogTitle>Entorno</DialogTitle>
                     <DialogContent>
                         <TableContainer component={Paper}>
                             <Table size="small" stickyHeader>
                                 <TableHead>
                                     <TableRow>
-                                        <TableCell>Key</TableCell>
-                                        <TableCell>Value</TableCell>
+                                        <TableCell>Clave</TableCell>
+                                        <TableCell>Valor</TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
@@ -196,7 +196,7 @@ const SystemRuntimeInfo = (): React.ReactElement => {
                     <DialogActions>
                         <Button onClick={() => {
                             setEnvDialogOpen(false);
-                        }}>Close</Button>
+                        }}>Cerrar</Button>
                     </DialogActions>
                 </Dialog>
             </Stack>
@@ -252,7 +252,7 @@ const SystemInformation = (): React.ReactElement => {
         }
 
         if (!version && !valetudoInformation) {
-            return <Typography color="error">No valetudo information</Typography>;
+            return <Typography color="error">No hay información de Valetudo</Typography>;
         }
 
         const items = [
@@ -292,7 +292,7 @@ const SystemInformation = (): React.ReactElement => {
         }
 
         if (!robotInformation && !robotProperties) {
-            return <Typography color="error">No robot information</Typography>;
+            return <Typography color="error">No hay información del robot</Typography>;
         }
 
         const items = [
@@ -330,7 +330,7 @@ const SystemInformation = (): React.ReactElement => {
         }
         if (!systemHostInfo) {
             return (
-                <Typography color="textSecondary">No system host information</Typography>
+                <Typography color="textSecondary">No hay información del sistema anfitrión</Typography>
             );
         }
 

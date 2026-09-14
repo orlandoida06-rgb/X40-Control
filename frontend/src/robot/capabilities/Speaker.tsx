@@ -49,7 +49,7 @@ const SpeakerControl: FunctionComponent = () => {
                 </Stack>
                 <Button loading={speakerTesting} variant="outlined" color="success" onClick={() => {
                     return testSpeaker();
-                }}>Test sound volume</Button>
+                }}>Probar volumen de sonido</Button>
             </>
         );
     }, [onChange, onCommit, sliderValue, speakerTesting, speakerVolumeError, speakerVolumeLoading, testSpeaker]);

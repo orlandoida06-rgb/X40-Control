@@ -58,7 +58,7 @@ const NetworkAdvertisementSettings = (): React.ReactElement => {
     }
 
     if (configurationError || propertiesLoadError || !storedConfiguration) {
-        return <Typography color="error">Error loading Anuncio de red configuration</Typography>;
+        return <Typography color="error">Error al cargar la configuración del anuncio de red</Typography>;
     }
 
     return (

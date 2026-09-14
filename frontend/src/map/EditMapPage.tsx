@@ -85,7 +85,7 @@ const EditMapPage = (props: {
     if (!mapData) {
         return (
             <Container>
-                <Typography align="center">No map data</Typography>;
+                <Typography align="center">No hay datos del mapa</Typography>;
             </Container>
         );
     }
@@ -93,7 +93,7 @@ const EditMapPage = (props: {
     if (!robotStatus) {
         return (
             <Container>
-                <Typography align="center">No robot status</Typography>;
+                <Typography align="center">No hay estado del robot</Typography>;
             </Container>
         );
     }

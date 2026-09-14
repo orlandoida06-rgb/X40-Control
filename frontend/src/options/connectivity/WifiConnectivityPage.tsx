@@ -62,7 +62,7 @@ const WifiStatusComponent: React.FunctionComponent<{
     }
 
     if (statusError) {
-        return <Typography color="error">Error loading Wi-Fi status</Typography>;
+        return <Typography color="error">Error al cargar el estado de Wi-Fi</Typography>;
     }
 
     const getIconForState = (): React.ReactElement => {
@@ -199,7 +199,7 @@ const WifiConnectivity = (): React.ReactElement => {
     }
 
     if (wifiStatusLoadError || !wifiStatus || propertiesLoadError || !properties) {
-        return <Typography color="error">Error loading Wi-Fi Status</Typography>;
+        return <Typography color="error">Error al cargar el estado de Wi-Fi</Typography>;
     }
 
     return (
@@ -241,7 +241,7 @@ const WifiConnectivity = (): React.ReactElement => {
                                 endAdornment={
                                     <InputAdornment position="end">
                                         <IconButton
-                                            aria-label="toggle password visibility"
+                                            aria-label="Mostrar u ocultar contraseña"
                                             onClick={() => {
                                                 setShowPasswordAsPlain(!showPasswordAsPlain);
                                             }}
@@ -279,7 +279,7 @@ const WifiConnectivity = (): React.ReactElement => {
                         <br/><br/>
                         Some supported robots may have dedicated connectivity buttons you need to press and hold.
                         If it is anything more special than that, you will find guidance for your model of robot on the
-                        &quot;Supported Robots&quot; page in the docs on <a style={{color: "inherit"}} href="https://valetudo.cloud" target="_blank" rel="noreferrer">valetudo.cloud</a>.<br/>
+                        &quot;Robots compatibles&quot; en la documentación de <a style={{color: "inherit"}} href="https://valetudo.cloud" target="_blank" rel="noreferrer">valetudo.cloud</a>.<br/>
                         The robot may also have come with a manual by the vendor, which might contain guidance.
 
                         <br/><br/>

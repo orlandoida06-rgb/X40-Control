@@ -224,7 +224,7 @@ const ProvisioningPage = (): React.ReactElement => {
         }
 
         if (!robotInformation || !version) {
-            return <Typography color="error">No robot information</Typography>;
+            return <Typography color="error">No hay información del robot</Typography>;
         }
 
         const items: Array<[header: string, body: string]> = [

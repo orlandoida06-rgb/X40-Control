@@ -551,7 +551,7 @@ export const ActivationListMenuItem = (): React.ReactElement => {
                             <>
                                 <Box sx={{ display: "flex", alignItems: "center", gap: 1}}>
                                     <VerifiedIcon sx={{color: valetudoColors.green}} fontSize="large" />
-                                    <Typography variant="h6">Licensed Product</Typography>
+                                    <Typography variant="h6">Producto con licencia</Typography>
                                 </Box>
                                 <DialogContentText>
                                     Valetudo is activated with a digital license.
@@ -567,7 +567,7 @@ export const ActivationListMenuItem = (): React.ReactElement => {
                                     boxShadow: 2
                                 }}>
                                     <Box sx={{mb: 1}}>
-                                        <Typography variant="caption" sx={{color: theme.palette.text.secondary, display: "block"}}>LICENSE TYPE</Typography>
+                                        <Typography variant="caption" sx={{color: theme.palette.text.secondary, display: "block"}}>TIPO DE LICENCIA</Typography>
                                         <Typography variant="body2" sx={{color: valetudoColors.lightBlue, fontWeight: "bold"}}>
                                             Unlimited Company License
                                         </Typography>
@@ -575,7 +575,7 @@ export const ActivationListMenuItem = (): React.ReactElement => {
                                     <Divider sx={{ mb: 1}} />
 
                                     <Box sx={{mb: 1}}>
-                                        <Typography variant="caption" sx={{color: theme.palette.text.secondary, display: "block"}}>REGISTERED TO</Typography>
+                                        <Typography variant="caption" sx={{color: theme.palette.text.secondary, display: "block"}}>REGISTRADO A</Typography>
                                         <Typography variant="body2" sx={{color: valetudoColors.lightBlue}}>
                                             Hackerman
                                         </Typography>
@@ -589,7 +589,7 @@ export const ActivationListMenuItem = (): React.ReactElement => {
                                         Your Evaluation License for Valetudo has expired.
                                     </DialogContentText>
                                     <DialogContentText sx={{ fontSize: "0.9rem", mt: 1 }}>
-                                        Continued use of this software requires a valid <strong>Valetudo</strong> subscription.
+                                        El uso continuado de este software requiere una suscripción válida a <strong>Valetudo</strong>.
                                     </DialogContentText>
                                 </Box>
 

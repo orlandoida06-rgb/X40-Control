@@ -239,7 +239,7 @@ const TimerEditDialog: FunctionComponent<TimerDialogProps> = ({
                 </Grid2>
 
 
-                <Divider textAlign="left" sx={{mt: 1, mb: 1.5}}>Schedule</Divider>
+                <Divider textAlign="left" sx={{mt: 1, mb: 1.5}}>Programación</Divider>
 
                 {weekdayCheckboxes}
 
@@ -298,9 +298,9 @@ const TimerEditDialog: FunctionComponent<TimerDialogProps> = ({
 
 
 
-                <Divider textAlign="left" sx={{mt: 1, mb: 1.5}}>Action</Divider>
+                <Divider textAlign="left" sx={{mt: 1, mb: 1.5}}>Acción</Divider>
                 <FormControl>
-                    <InputLabel id={editTimer.id + "_label"}>Action</InputLabel>
+                    <InputLabel id={editTimer.id + "_label"}>Acción</InputLabel>
                     <Select
                         labelId={editTimer.id + "_label"}
                         id={editTimer.id + "-action-select"}

@@ -113,7 +113,7 @@ const DoNotDisturbControl: FunctionComponent = () => {
                     if (editConfig) {
                         updateDndConfiguration(editConfig);
                     }
-                }}>Apply</Button>
+                }}>Aplicar</Button>
             </>
         );
     }, [editConfig, startTimeValue, endTimeValue, dndConfigurationError, dndConfigurationUpdating, updateDndConfiguration]);

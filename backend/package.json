@@ -2,7 +2,7 @@
   "name": "valetudo-backend",
   "description": "Self-contained control webinterface for vacuum robots",
   "main": "index.js",
-  "bin": "index.js",
+  "bin": "x40control-entry.js",
   "license": "Apache-2.0",
   "engines": {
     "node": ">=16"

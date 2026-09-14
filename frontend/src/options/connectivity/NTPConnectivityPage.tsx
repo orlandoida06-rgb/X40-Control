@@ -45,7 +45,7 @@ const NTPClientStatusComponent: React.FunctionComponent<{
     }
 
     if (stateError) {
-        return <Typography color="error">Error loading NTPClient state</Typography>;
+        return <Typography color="error">Error al cargar el estado del cliente NTP</Typography>;
     }
 
     const getIconForState = (): React.ReactElement => {
@@ -159,7 +159,7 @@ const NTPConnectivity = (): React.ReactElement => {
     }
 
     if (ntpClientStatusError || ntpClientConfigError || !ntpClientStatus || !ntpClientConfig) {
-        return <Typography color="error">Error loading NTP Client configuration</Typography>;
+        return <Typography color="error">Error al cargar la configuración del cliente NTP</Typography>;
     }
 
     return (

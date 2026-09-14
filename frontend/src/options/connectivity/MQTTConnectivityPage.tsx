@@ -67,7 +67,7 @@ const MQTTStatusComponent: React.FunctionComponent<{
     }
 
     if (statusError) {
-        return <Typography color="error">Error loading MQTT status</Typography>;
+        return <Typography color="error">Error al cargar el estado MQTT</Typography>;
     }
 
     const getIconForState = (): React.ReactElement => {
@@ -132,19 +132,19 @@ const MQTTStatusComponent: React.FunctionComponent<{
     const getConexiónStats = (): React.ReactElement => {
         const items = [
             {
-                header: "Connects",
+                header: "Conexiones",
                 body: status.stats.connection.connects.toString()
             },
             {
-                header: "Disconnects",
+                header: "Desconexiones",
                 body: status.stats.connection.disconnects.toString()
             },
             {
-                header: "Reconnects",
+                header: "Reconexiones",
                 body: status.stats.connection.reconnects.toString()
             },
             {
-                header: "Errors",
+                header: "Errores",
                 body: status.stats.connection.errors.toString()
             },
         ];
@@ -492,7 +492,7 @@ const MQTTConnectivity = (): React.ReactElement => {
     }
 
     if (mqttConfigurationError || mqttPropertiesError || !storedMQTTConfiguration || !mqttProperties) {
-        return <Typography color="error">Error loading MQTT configuration</Typography>;
+        return <Typography color="error">Error al cargar la configuración MQTT</Typography>;
     }
 
     return (
@@ -534,7 +534,7 @@ const MQTTConnectivity = (): React.ReactElement => {
                     mqttConfiguration={mqttConfiguration}
                     modifyMQTTConfig={modifyMQTTConfig}
 
-                    title="Port"
+                    title="Puerto"
                     helperText="Puerto del servidor MQTT"
                     required={true}
                     configPath={["connection", "port"]}
@@ -550,7 +550,7 @@ const MQTTConnectivity = (): React.ReactElement => {
                         modifyMQTTConfig={modifyMQTTConfig}
 
                         title="CA"
-                        helperText="The optional Certificado Authority to verify the connection with"
+                        helperText="Autoridad de certificación opcional para verificar la conexión"
                         required={false}
                         configPath={["connection", "tls", "ca"]}
                         additionalProps={{
@@ -579,7 +579,7 @@ const MQTTConnectivity = (): React.ReactElement => {
                             modifyMQTTConfig={modifyMQTTConfig}
 
                             title="Usuario"
-                            helperText="Usuario for authentication"
+                            helperText="Usuario para la autenticación"
                             required={true}
                             configPath={["connection", "authentication", "credentials", "username"]}
                         />
@@ -588,7 +588,7 @@ const MQTTConnectivity = (): React.ReactElement => {
                             modifyMQTTConfig={modifyMQTTConfig}
 
                             title="Contraseña"
-                            helperText="Contraseña for authentication"
+                            helperText="Contraseña para la autenticación"
                             required={false}
                             configPath={["connection", "authentication", "credentials", "password"]}
                             additionalProps={{
@@ -596,7 +596,7 @@ const MQTTConnectivity = (): React.ReactElement => {
                                 endAdornment: (
                                     <InputAdornment position="end">
                                         <IconButton
-                                            aria-label="toggle password visibility"
+                                            aria-label="Mostrar u ocultar contraseña"
                                             onClick={() => {
                                                 setShowMQTTAuthContraseñaAsPlain(!showMQTTAuthContraseñaAsPlain);
                                             }}
@@ -623,7 +623,7 @@ const MQTTConnectivity = (): React.ReactElement => {
                             modifyMQTTConfig={modifyMQTTConfig}
 
                             title="Certificado"
-                            helperText="The full certificate as a multi-line string"
+                            helperText="Certificado completo como texto multilínea"
                             required={true}
                             configPath={["connection", "authentication", "clientCertificate", "certificate"]}
                             additionalProps={{

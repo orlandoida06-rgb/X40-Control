@@ -196,7 +196,7 @@ const HighResolutionManualControlInternal: React.FunctionComponent = (): React.R
                         <Skeleton height={"12rem"} />
                     ) : (
                         <>
-                            {stateError && <Typography color="error">Error loading manual controls</Typography>}
+                            {stateError && <Typography color="error">Error al cargar los controles manuales</Typography>}
                             <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
                                 <HighResolutionControlToggle />
                             </Box>
@@ -224,7 +224,7 @@ const ManualControlInternal: React.FunctionComponent = (): React.ReactElement =>
                         <Skeleton height={"12rem"} />
                     ) : (
                         <>
-                            {hasError && <Typography color="error">Error loading manual controls</Typography>}
+                            {hasError && <Typography color="error">Error al cargar los controles manuales</Typography>}
                             <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
                                 <StandardControlToggle />
                             </Box>

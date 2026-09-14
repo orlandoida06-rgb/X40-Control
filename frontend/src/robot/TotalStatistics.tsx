@@ -177,7 +177,7 @@ const StatisticsGridItem: React.FunctionComponent<{ dataPoint: ValetudoDataPoint
                 <DialogActions>
                     <Button onClick={() => {
                         setOverviewDialogOpen(false);
-                    }}>Close</Button>
+                    }}>Cerrar</Button>
                 </DialogActions>
             </Dialog>
         </>
@@ -286,7 +286,7 @@ const TotalStatisticsInternal: React.FunctionComponent = (): React.ReactElement 
         }
 
         if (totalStatisticsError || !totalStatisticsState) {
-            return <Typography color="error">Error loading statistics</Typography>;
+            return <Typography color="error">Error al cargar las estadísticas</Typography>;
         }
 
         const statistics = totalStatisticsState.sort((a, b) => {

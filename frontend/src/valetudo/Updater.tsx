@@ -86,7 +86,7 @@ const UpdaterStateComponent : React.FunctionComponent<{ state: UpdaterState | un
     }
 
     if (stateError) {
-        return <Typography color="error">Error loading Updater state</Typography>;
+        return <Typography color="error">Error al cargar el estado del actualizador</Typography>;
     }
 
     const getIconForState = () : React.ReactElement => {
@@ -115,7 +115,7 @@ const UpdaterStateComponent : React.FunctionComponent<{ state: UpdaterState | un
     const getContentForState = () : React.ReactElement | undefined => {
         if (state.busy && state.__class !== "ValetudoUpdaterDownloadingState") {
             return (
-                <Typography>The Updater is currently busy</Typography>
+                <Typography>El actualizador está ocupado</Typography>
             );
         } else {
             switch (state.__class) {

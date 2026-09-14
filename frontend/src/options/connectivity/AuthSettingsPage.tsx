@@ -56,7 +56,7 @@ const AuthSettings = (): React.ReactElement => {
     }
 
     if (configurationError || !storedConfiguration) {
-        return <Typography color="error">Error loading Autenticación HTTP básica configuration</Typography>;
+        return <Typography color="error">Error al cargar la configuración de Autenticación HTTP básica</Typography>;
     }
 
     return (

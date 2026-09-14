@@ -83,7 +83,7 @@ const LiveMapPage = (props: Record<string, never> ): React.ReactElement => {
     if (!mapData) {
         return (
             <Container>
-                <Typography align="center">No map data</Typography>;
+                <Typography align="center">No hay datos del mapa</Typography>;
             </Container>
         );
     }

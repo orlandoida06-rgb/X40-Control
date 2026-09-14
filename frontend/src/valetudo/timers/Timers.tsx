@@ -110,7 +110,7 @@ const Timers = (): React.ReactElement => {
     }
 
     if (timerDataError || timerPropertiesError || !timerPropertiesData) {
-        return <Typography color="error">Error loading timers</Typography>;
+        return <Typography color="error">Error al cargar las programaciones</Typography>;
     }
 
     return (

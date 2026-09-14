@@ -73,7 +73,7 @@ const SegmentRenameDialog = (props: SegmentRenameDialogProps) => {
 
     return (
         <Dialog open={open} onClose={onClose} sx={{userSelect: "none"}}>
-            <DialogTitle>Rename Segment</DialogTitle>
+            <DialogTitle>Renombrar habitación</DialogTitle>
             <DialogContent>
                 <DialogContentText>
                     How should the segment &apos;{currentName}&apos; be called?
@@ -97,7 +97,7 @@ const SegmentRenameDialog = (props: SegmentRenameDialogProps) => {
                 />
             </DialogContent>
             <DialogActions>
-                <Button onClick={onClose}>Cancel</Button>
+                <Button onClick={onClose}>Cancelar</Button>
                 <Button
                     onClick={() => {
                         onRename(name.trim());
@@ -137,7 +137,7 @@ const SegmentMaterialDialog = (props: SegmentMaterialDialogProps) => {
 
     return (
         <Dialog open={open} onClose={onClose} sx={{userSelect: "none"}}>
-            <DialogTitle>Segment Material</DialogTitle>
+            <DialogTitle>Material de la habitación</DialogTitle>
             <DialogContent>
                 <DialogContentText style={{marginBottom: "1rem"}}>
                     What material is the floor of segment &apos;{name}&apos; made of?
@@ -163,7 +163,7 @@ const SegmentMaterialDialog = (props: SegmentMaterialDialogProps) => {
                 )}
             </DialogContent>
             <DialogActions>
-                <Button onClick={onClose}>Cancel</Button>
+                <Button onClick={onClose}>Cancelar</Button>
                 <Button
                     onClick={() => {
                         onSubmit(material);
