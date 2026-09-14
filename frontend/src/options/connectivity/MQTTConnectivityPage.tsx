@@ -42,7 +42,7 @@ import {
     useMQTTStatusQuery
 } from "../../api";
 import {getIn, setIn} from "../../api/utils";
-import {convertBytesToHumans, deepCopy, extractServidorFromUrl} from "../../utils";
+import {convertBytesToHumans, deepCopy, extractHostFromUrl} from "../../utils";
 import {InputProps} from "@mui/material/Input/Input";
 import InfoBox from "../../components/InfoBox";
 import PaperContainer from "../../components/PaperContainer";
@@ -527,7 +527,7 @@ const MQTTConnectivity = (): React.ReactElement => {
                     required={true}
                     configPath={["connection", "host"]}
                     inputPostProcessor={(value) => {
-                        return extractServidorFromUrl(value);
+                        return extractHostFromUrl(value);
                     }}
                 />
                 <MQTTInput
@@ -613,9 +613,9 @@ const MQTTConnectivity = (): React.ReactElement => {
                         />
                     </GroupBox>
                     <GroupBox title="Certificado del cliente"
-                        checked={mqttConfiguration.connection.authentication.clientCertificado.enabled}
+                        checked={mqttConfiguration.connection.authentication.clientCertificate.enabled}
                         onChange={(e) => {
-                            modifyMQTTConfig(e.target.checked, ["connection", "authentication", "clientCertificado", "enabled"]);
+                            modifyMQTTConfig(e.target.checked, ["connection", "authentication", "clientCertificate", "enabled"]);
                         }}>
 
                         <MQTTInput
@@ -625,7 +625,7 @@ const MQTTConnectivity = (): React.ReactElement => {
                             title="Certificado"
                             helperText="The full certificate as a multi-line string"
                             required={true}
-                            configPath={["connection", "authentication", "clientCertificado", "certificate"]}
+                            configPath={["connection", "authentication", "clientCertificate", "certificate"]}
                             additionalProps={{
                                 multiline: true,
                                 minRows: 3,
@@ -639,7 +639,7 @@ const MQTTConnectivity = (): React.ReactElement => {
                             title="Clave"
                             helperText="The full key as a multi-line string"
                             required={true}
-                            configPath={["connection", "authentication", "clientCertificado", "key"]}
+                            configPath={["connection", "authentication", "clientCertificate", "key"]}
                             additionalProps={{
                                 multiline: true,
                                 minRows: 3,
