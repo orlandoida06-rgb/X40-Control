@@ -32,7 +32,8 @@ Actualmente desarrollado y probado para:
 
 X40-Control puede instalarse desde cualquier ordenador que tenga acceso SSH al robot.
 
-**No es necesario utilizar una Raspberry Pi.**
+Acceso SSH como root al robot mediante una clave SSH válida. La clave no tiene que llamarse id_rsa; puede utilizarse cualquier clave autorizada para acceder al robot.
+
 
 ### 1. Descargar X40-Control
 
@@ -41,3 +42,29 @@ Clona el repositorio:
 ```bash
 git clone https://github.com/orlandoida06-rgb/X40-Control.git
 cd X40-Control
+
+2. Preparar el instalador
+
+Da permisos de ejecución:
+
+chmod +x install-x40control.sh
+3. Instalar X40-Control
+
+Ejecuta el instalador indicando:
+
+IP_DEL_ROBOT
+RUTA_DE_LA_CLAVE_SSH
+
+Comando:
+
+./install-x40control.sh IP_DEL_ROBOT RUTA_DE_LA_CLAVE_SSH
+
+Ejemplo:
+
+./install-x40control.sh 192.168.1.50 ~/.ssh/id_rsa
+
+La IP y la ruta utilizadas en el ejemplo son únicamente orientativas.
+
+Cada usuario debe utilizar la IP de su propio robot y la ruta de su propia clave SSH.
+
+El instalador utiliza el usuario:root
