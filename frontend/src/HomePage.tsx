@@ -28,6 +28,7 @@ import {
 
 import LiveMapPage from "./map/LiveMapPage";
 import BasicControls from "./controls/BasicControls";
+import PresetSelectionControl from "./controls/PresetSelection";
 import RobotStatus from "./controls/RobotStatus";
 import Dock from "./controls/Dock";
 import CurrentStatistics from "./controls/CurrentStatistics";
@@ -88,11 +89,13 @@ const HomePage = (): React.ReactElement => {
         dockClean,
         dockDry,
         statistics,
+        operationMode,
     ] = useCapabilitiesSupported(
         Capability.AutoEmptyDockManualTrigger,
         Capability.MopDockCleanManualTrigger,
         Capability.MopDockDryManualTrigger,
         Capability.CurrentStatistics,
+        Capability.OperationModeControl,
     );
 
     const statusText: Record<string, string> = {
@@ -346,23 +349,24 @@ const HomePage = (): React.ReactElement => {
                                 </Typography>
                             </Box>
 
-                            <Box sx={{...glass, p: 1.5, textAlign: "center"}}>
-                                <Typography sx={{fontSize: 22, fontWeight: 700}}>
-                                    ✓
-                                </Typography>
-                                <Typography sx={{fontSize: 11, color: "#7589a3"}}>
-                                    {t("online")}
-                                </Typography>
-                            </Box>
-
-                            <Box sx={{...glass, p: 1.5, textAlign: "center"}}>
-                                <Typography sx={{fontSize: 22, fontWeight: 700}}>
-                                    4
-                                </Typography>
-                                <Typography sx={{fontSize: 11, color: "#7589a3"}}>
-                                    Modos
-                                </Typography>
-                            </Box>
+                            {operationMode ? (
+                                <Box sx={{textAlign: "left"}}>
+                                    <PresetSelectionControl
+                                        capability={Capability.OperationModeControl}
+                                        label={t("mode")}
+                                        icon={<PlayIcon fontSize="small" />}
+                                    />
+                                </Box>
+                            ) : (
+                                <Box sx={{...glass, p: 1.5, textAlign: "center"}}>
+                                    <Typography sx={{fontSize: 22, fontWeight: 700}}>
+                                        4
+                                    </Typography>
+                                    <Typography sx={{fontSize: 11, color: "#7589a3"}}>
+                                        Modos
+                                    </Typography>
+                                </Box>
+                            )}
                         </Box>
 
                         <Box sx={{mt: 1.5}}>
