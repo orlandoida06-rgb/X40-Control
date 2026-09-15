@@ -2,6 +2,7 @@
 
 Interfaz personalizada de Valetudo para el **Dreame X40 Ultra**, con una interfaz moderna y traducida al español.
 
+![X40-Control](screenshot.png)
 
 ## ✨ Características
 
