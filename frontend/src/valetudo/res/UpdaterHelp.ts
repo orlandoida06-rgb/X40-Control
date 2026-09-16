@@ -1,22 +1,37 @@
 export const UpdaterHelp = `
-## Updater
+## Actualizador
 
-The Valetudo updater is a convenience feature aiming to make life with Valetudo a bit easier.
+El actualizador de X40-Control es una función de comodidad diseñada para facilitar
+el mantenimiento del sistema.
 
-As it is built with privacy in mind, you will have to manually click a button to make it search for newer versions of Valetudo.
-No daily update check means no daily pings to some external server.
+Como está diseñado teniendo en cuenta la privacidad, tendrás que pulsar manualmente
+un botón para buscar nuevas versiones.
 
-By default, it's polling the GitHub API, meaning that I am not able to collect any data about you.
+No se realizan comprobaciones diarias, por lo que no se envían solicitudes diarias
+a servidores externos.
 
-**Note: The updater will always try to update you to the next chronological release. If you're multiple releases behind,
-you will have to update multiple times in a row.**
+De forma predeterminada, el actualizador consulta la API de GitHub. Esto significa
+que no se recopilan datos sobre ti.
 
-As the updater is just a convenience feature, there might be situations in which it doesn't work. In those situations,
-you will have to do a manual update, which usually involves SSH access to the robot.
+**Nota: el actualizador siempre intentará actualizarte a la siguiente versión
+cronológica disponible. Si tienes varias versiones de retraso, tendrás que realizar
+varias actualizaciones consecutivas.**
 
-Sometimes, a configuration change might enable you to use the updater. In other instances, your model of robot might not
-be able to use the updater at all as there's not enough storage built in. This is not a bug. That's just how it is.
+Como el actualizador es únicamente una función de comodidad, puede haber situaciones
+en las que no funcione.
 
-It is also worth noting that the updater won't update the robots firmware. It only updates the Valetudo binary.
+En esos casos tendrás que realizar una actualización manual, que normalmente requiere
+acceso SSH al robot.
 
+En algunas ocasiones, un cambio de configuración puede permitir utilizar el
+actualizador.
+
+En otros casos, el modelo de robot puede no ser compatible con el actualizador
+porque no dispone de suficiente almacenamiento.
+
+Esto no es un error: simplemente es una limitación del robot.
+
+También debes tener en cuenta que el actualizador no actualiza el firmware del robot.
+
+Solo actualiza el binario de X40-Control.
 `;

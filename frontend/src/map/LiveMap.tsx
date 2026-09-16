@@ -1,7 +1,24 @@
 import BaseMap, {MapContainer, MapProps, MapState, usePendingMapAction} from "./BaseMap";
-import {Capability} from "../api";
+import {
+    Capability,
+    RobotAttributeClass,
+    useRobotAttributeQuery,
+} from "../api";
 import GoToTargetClientStructure from "./structures/client_structures/GoToTargetClientStructure";
-import {ActionsContainer} from "./Styled";
+import {
+    ActionsContainer,
+    ActionButton,
+    MapGlassPanel,
+    MapControlsPanel,
+    MapStatusPanel,
+    MapRobotStatus,
+    MapConnectionDot,
+    MapTitle,
+    MapSubtitle,
+    MapStatusCard,
+    MapStatusValue,
+    MapStatusLabel,
+} from "./Styled";
 import SegmentActions from "./actions/live_map_actions/SegmentActions";
 import SegmentLabelMapStructure from "./structures/map_structures/SegmentLabelMapStructure";
 import ZoneActions from "./actions/live_map_actions/ZoneActions";
@@ -10,7 +27,7 @@ import GoToActions from "./actions/live_map_actions/GoToActions";
 import {TapTouchHandlerEvent} from "./utils/touch_handling/events/TapTouchHandlerEvent";
 import React from "react";
 import {LiveMapModeSwitcher} from "./LiveMapModeSwitcher";
-import {Button, Dialog, DialogActions, DialogContent, DialogTitle} from "@mui/material";
+import {Box, Button, Dialog, DialogActions, DialogContent, DialogTitle} from "@mui/material";
 
 
 export type LiveMapMode = "segments" | "zones" | "goto" | "none";
@@ -29,6 +46,68 @@ interface LiveMapState extends MapState {
     zones: Array<ZoneClientStructure>,
     goToTarget: GoToTargetClientStructure | undefined
 }
+
+const MapBatteryStatus = (): React.ReactElement => {
+    const {
+        data: batteries,
+        isPending,
+        isError,
+    } = useRobotAttributeQuery(RobotAttributeClass.BatteryState);
+
+    if (isPending) {
+        return (
+            <MapStatusCard>
+                <MapStatusValue>--</MapStatusValue>
+                <MapStatusLabel>Batería</MapStatusLabel>
+            </MapStatusCard>
+        );
+    }
+
+    if (isError || !batteries || batteries.length === 0) {
+        return (
+            <MapStatusCard>
+                <MapStatusValue>--</MapStatusValue>
+                <MapStatusLabel>Batería</MapStatusLabel>
+            </MapStatusCard>
+        );
+    }
+
+    const level = Math.round(batteries[0].level);
+
+    return (
+        <MapStatusCard>
+            <MapStatusValue>
+                🔋 {level}%
+            </MapStatusValue>
+            <Box
+                sx={{
+                    height: 4,
+                    marginTop: 0.6,
+                    borderRadius: 99,
+                    overflow: "hidden",
+                    backgroundColor: "rgba(128,128,128,0.22)",
+                }}
+            >
+                <Box
+                    sx={{
+                        width: `${Math.max(0, Math.min(100, level))}%`,
+                        height: "100%",
+                        borderRadius: 99,
+                        backgroundColor:
+                            level <= 20 ?
+                                "#ff4d4d" :
+                                level <= 40 ?
+                                    "#ffb020" :
+                                    "#35d36b",
+                        transition: "width 500ms ease",
+                    }}
+                />
+            </Box>
+            <MapStatusLabel>Batería</MapStatusLabel>
+        </MapStatusCard>
+    );
+};
+
 
 class LiveMap extends BaseMap<LiveMapProps, LiveMapState> {
     private readonly supportedModes: Array<LiveMapMode>;
@@ -163,7 +242,70 @@ class LiveMap extends BaseMap<LiveMapProps, LiveMapState> {
 
     render(): React.ReactElement {
         return (
-            <MapContainer style={{overflow: "hidden"}}>
+            <Box
+                sx={{
+                    width: "100%",
+                    height: "100%",
+                    display: "flex",
+                    flexDirection: "column",
+                    overflow: "hidden",
+                }}
+            >
+                <MapStatusPanel
+                    sx={{
+                        position: "relative",
+                        top: "auto",
+                        left: "auto",
+                        right: "auto",
+                        bottom: "auto",
+                        flexShrink: 0,
+                        margin: 2,
+                        marginBottom: 1,
+                    }}
+                >
+                    <MapRobotStatus>
+                        <MapConnectionDot />
+                        <div>
+                            <MapStatusValue>Dreame X40 Ultra</MapStatusValue>
+                            <MapStatusLabel>Conectado</MapStatusLabel>
+                        </div>
+                    </MapRobotStatus>
+
+                    <MapStatusCard>
+                        <MapStatusValue>Mapa</MapStatusValue>
+                        <MapStatusLabel>Tiempo real</MapStatusLabel>
+                    </MapStatusCard>
+
+                    <MapStatusCard>
+                        <MapStatusValue>
+                            {this.state.mode === "segments" ?
+                                "Habitaciones" :
+                                this.state.mode === "zones" ?
+                                    "Zonas" :
+                                    this.state.mode === "goto" ?
+                                        "Ir a" :
+                                        "Navegación"}
+                        </MapStatusValue>
+                        <MapStatusLabel>Modo actual</MapStatusLabel>
+                    </MapStatusCard>
+
+                    <MapStatusCard>
+                        <MapStatusValue>
+                            {Math.round(this.getMapZoom() * 100)}%
+                        </MapStatusValue>
+                        <MapStatusLabel>Zoom</MapStatusLabel>
+                    </MapStatusCard>
+
+                    <MapBatteryStatus />
+                </MapStatusPanel>
+
+                <MapContainer
+                    style={{
+                        overflow: "hidden",
+                        flex: 1,
+                        minHeight: 0,
+                    }}
+                >
                 <canvas
                     ref={this.canvasRef}
                     style={{
@@ -172,6 +314,38 @@ class LiveMap extends BaseMap<LiveMapProps, LiveMapState> {
                         imageRendering: "crisp-edges"
                     }}
                 />
+
+                {/* ===== X40-CONTROL TESLA UI ===== */}
+
+                <MapControlsPanel>
+                    <ActionButton
+                        size="small"
+                        aria-label="Acercar"
+                        onClick={() => this.zoomIn()}
+                    >
+                        +
+                    </ActionButton>
+
+                    <ActionButton
+                        size="small"
+                        aria-label="Alejar"
+                        onClick={() => this.zoomOut()}
+                    >
+                        −
+                    </ActionButton>
+
+                    <ActionButton
+                        size="small"
+                        aria-label="Centrar mapa"
+                        onClick={() => {}}
+                    >
+                        ⌾
+                    </ActionButton>
+                </MapControlsPanel>
+
+
+
+                {/* ===== FIN X40-CONTROL TESLA UI ===== */}
                 {
                     this.supportedModes.length > 0 &&
                     <LiveMapModeSwitcher
@@ -212,6 +386,7 @@ class LiveMap extends BaseMap<LiveMapProps, LiveMapState> {
                         }}
                     />
                 }
+
 
                 <ActionsContainer>
                     {
@@ -313,11 +488,12 @@ class LiveMap extends BaseMap<LiveMapProps, LiveMapState> {
                         <Button onClick={() => {
                             this.setState({dialogOpen: false});
                         }} autoFocus>
-                            Close
+                            Cerrar
                         </Button>
                     </DialogActions>
                 </Dialog>
-            </MapContainer>
+                </MapContainer>
+            </Box>
         );
     }
 }

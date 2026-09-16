@@ -82,7 +82,7 @@ const ControlsBody = (): React.ReactElement => {
                                 <Grid2
                                     size={{
                                         xs: 12,
-                                        sm: 4,
+                                        sm: 8,
                                     }}
                                 >
                                     <PresetSelectionControl

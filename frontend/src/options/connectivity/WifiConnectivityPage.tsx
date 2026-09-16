@@ -280,13 +280,13 @@ const WifiConnectivity = (): React.ReactElement => {
                         Some supported robots may have dedicated connectivity buttons you need to press and hold.
                         If it is anything more special than that, you will find guidance for your model of robot on the
                         &quot;Robots compatibles&quot; en la documentación de <a style={{color: "inherit"}} href="https://valetudo.cloud" target="_blank" rel="noreferrer">valetudo.cloud</a>.<br/>
-                        The robot may also have come with a manual by the vendor, which might contain guidance.
+                        Es posible que el robot incluya un manual del fabricante con instrucciones.
 
                         <br/><br/>
 
                         <strong>Nota:</strong><br/>
-                        Don&apos;t be confused by buttons labelled &quot;Reset&quot; close to a Wi-Fi LED.<br/>
-                        Proximity does not mean that they&apos;re related. Instead, they usually factory-reset the machine, which is not what you want.
+                        Don&apos;t be confused by buttons labelled &quot;Restablecer&quot; close to a Wi-Fi LED.<br/>
+                        Que estén cerca no significa que estén relacionados. Normalmente esos botones restablecen el robot de fábrica, que no es lo que quieres.
                     </Typography>
                 </InfoBox>
             }
@@ -306,7 +306,7 @@ const WifiConnectivity = (): React.ReactElement => {
                                 setConfirmationDialogOpen(true);
                             }}
                         >
-                            Save configuration
+                            Guardar configuration
                         </Button>
                     </Grid2>
                 </Grid2>
@@ -331,7 +331,7 @@ const WifiConnectivity = (): React.ReactElement => {
                 }}
             >
                 <DialogContentText>
-                    Are you sure you want to apply the new Wifi settings?
+                    ¿Seguro que quieres aplicar la nueva configuración Wi-Fi?
                     <br/>
                     <br/>
                     <strong>Consejo:</strong>
@@ -343,7 +343,7 @@ const WifiConnectivity = (): React.ReactElement => {
 
             <Dialog open={finalDialogOpen}>
                 <DialogTitle>
-                    New Wifi configuration is applying
+                    Aplicando la nueva configuración Wi-Fi
                 </DialogTitle>
                 <DialogContent>
                     <DialogContentText>

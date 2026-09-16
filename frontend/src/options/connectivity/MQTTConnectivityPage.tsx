@@ -267,7 +267,7 @@ const MQTTInput: React.FunctionComponent<{
     helperText: string,
     required: boolean,
     configPath: Array<string>,
-    additionalProps?: InputProps
+    añadiritionalProps?: InputProps
     inputPostProcessor?: (value: any) => any
 }> = ({
     mqttConfiguration,
@@ -278,7 +278,7 @@ const MQTTInput: React.FunctionComponent<{
     helperText,
     required,
     configPath,
-    additionalProps,
+    añadiritionalProps,
     inputPostProcessor
 }) => {
     const idBase = "mqtt-config-" + configPath.join("-");
@@ -300,7 +300,7 @@ const MQTTInput: React.FunctionComponent<{
                 id={inputId}
                 value={value}
                 onChange={(e) => {
-                    let newValue = additionalProps?.type === "number" ? parseInt(e.target.value) : e.target.value;
+                    let newValue = añadiritionalProps?.type === "number" ? parseInt(e.target.value) : e.target.value;
                     if (inputPostProcessor) {
                         newValue = inputPostProcessor(newValue);
                     }
@@ -309,7 +309,7 @@ const MQTTInput: React.FunctionComponent<{
                 }}
                 aria-describedby={helperId}
 
-                {...additionalProps}
+                {...añadiritionalProps}
             />
             <FormHelperText id={helperId} sx={{userSelect: "none"}}>
                 {helperText}
@@ -538,7 +538,7 @@ const MQTTConnectivity = (): React.ReactElement => {
                     helperText="Puerto del servidor MQTT"
                     required={true}
                     configPath={["connection", "port"]}
-                    additionalProps={{type: "number"}}
+                    añadiritionalProps={{type: "number"}}
                 />
 
                 <GroupBox title="TLS" checked={mqttConfiguration.connection.tls.enabled}
@@ -553,7 +553,7 @@ const MQTTConnectivity = (): React.ReactElement => {
                         helperText="Autoridad de certificación opcional para verificar la conexión"
                         required={false}
                         configPath={["connection", "tls", "ca"]}
-                        additionalProps={{
+                        añadiritionalProps={{
                             multiline: true,
                             minRows: 3,
                             maxRows: 10,
@@ -591,7 +591,7 @@ const MQTTConnectivity = (): React.ReactElement => {
                             helperText="Contraseña para la autenticación"
                             required={false}
                             configPath={["connection", "authentication", "credentials", "password"]}
-                            additionalProps={{
+                            añadiritionalProps={{
                                 type: showMQTTAuthContraseñaAsPlain ? "text" : "password",
                                 endAdornment: (
                                     <InputAdornment position="end">
@@ -626,7 +626,7 @@ const MQTTConnectivity = (): React.ReactElement => {
                             helperText="Certificado completo como texto multilínea"
                             required={true}
                             configPath={["connection", "authentication", "clientCertificate", "certificate"]}
-                            additionalProps={{
+                            añadiritionalProps={{
                                 multiline: true,
                                 minRows: 3,
                                 maxRows: 10
@@ -637,10 +637,10 @@ const MQTTConnectivity = (): React.ReactElement => {
                             modifyMQTTConfig={modifyMQTTConfig}
 
                             title="Clave"
-                            helperText="The full key as a multi-line string"
+                            helperText="La clave completa como texto de varias líneas"
                             required={true}
                             configPath={["connection", "authentication", "clientCertificate", "key"]}
-                            additionalProps={{
+                            añadiritionalProps={{
                                 multiline: true,
                                 minRows: 3,
                                 maxRows: 10
@@ -693,7 +693,7 @@ const MQTTConnectivity = (): React.ReactElement => {
                     helperText="Prefijo de tópicos MQTT"
                     required={false}
                     configPath={["customizations", "topicPrefix"]}
-                    additionalProps={{
+                    añadiritionalProps={{
                         placeholder: mqttProperties.defaults.customizations.topicPrefix,
                         color: "warning",
                         onFocus: () => {
@@ -721,7 +721,7 @@ const MQTTConnectivity = (): React.ReactElement => {
                     helperText="Nombre identificable del robot"
                     required={false}
                     configPath={["identity", "identifier"]}
-                    additionalProps={{
+                    añadiritionalProps={{
                         placeholder: mqttProperties.defaults.identity.identifier,
                         color: "secondary",
                         onFocus: () => {
@@ -737,7 +737,7 @@ const MQTTConnectivity = (): React.ReactElement => {
                 />
                 <br/>
                 <Typography variant="subtitle2" sx={{mt: "0.5rem", mb: "2rem", userSelect: "none"}} noWrap={false}>
-                    The MQTT Topic structure will look like this:<br/>
+                    La estructura del tema MQTT será la siguiente:<br/>
                     <span style={{
                         fontFamily: "\"JetBrains Mono\",monospace",
                         fontWeight: 200,
@@ -801,7 +801,7 @@ const MQTTConnectivity = (): React.ReactElement => {
                 }}
             >
                 <Typography color="info">
-                    Valetudo is developed against and tested with the Mosquitto MQTT broker.<br/>
+                    Valetudo se desarrolla y prueba con el broker MQTT Mosquitto.<br/>
                     In an ideal world, any broker would work, but in reality, some only implement subsets of the MQTT spec.
                     Thus, if you&apos;re experiencing any issues, try Mosquitto.
                     <br/>
@@ -826,7 +826,7 @@ const MQTTConnectivity = (): React.ReactElement => {
                             setConfigurationModified(false);
                         }}
                     >
-                        Save configuration
+                        Guardar configuration
                     </Button>
                 </Grid2>
             </Grid2>

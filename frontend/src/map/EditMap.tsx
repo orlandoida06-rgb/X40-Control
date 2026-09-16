@@ -486,22 +486,22 @@ class EditMap extends BaseMap<EditMapProps, EditMapState> {
                                 this.updateState();
                                 this.draw();
                             }}
-                            onClear={() => {
-                                this.updateVirtualRestrictionClientStructures(true);
-
-                                this.updateState();
-                                this.draw();
-                            }}
-                            onSave={() => {
+                            onGuardar={() => {
                                 this.pendingVirtualRestrictionsStructuresUpdate = true;
-
-                                this.props.enqueueSnackbar("Saved successfully", {
+                                this.props.enqueueSnackbar("Guardado correctamente", {
                                     preventDuplicate: true,
                                     key: "virtual_restrictions_saved",
                                     variant: "info",
                                     autoHideDuration: 1000,
                                 });
                             }}
+                            onClear={() => {
+                                this.updateVirtualRestrictionClientStructures(true);
+
+                                this.updateState();
+                                this.draw();
+                            }}
+
                         />
                     }
                 </ActionsContainer>

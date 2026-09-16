@@ -20,7 +20,7 @@ const ValetudoEvents = (): React.ReactElement => {
     const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorElement(event.currentTarget);
     };
-    const handleClose = () => {
+    const handleCerrar = () => {
         setAnchorElement(null);
     };
 
@@ -92,10 +92,10 @@ const ValetudoEvents = (): React.ReactElement => {
                         marginBottom: "-0.5rem" //eww :(
                     }}
                     onClick={() => {
-                        handleClose();
+                        handleCerrar();
                     }}
                 >
-                    Close
+                    Cerrar
                 </Button>
             </ReloadableCard>
         );
@@ -108,7 +108,7 @@ const ValetudoEvents = (): React.ReactElement => {
                 aria-label="Events"
                 onClick={handleMenu}
                 color="inherit"
-                title="Events and Notifications"
+                title="Eventos y notificaciones"
             >
                 {icon}
             </IconButton>
@@ -116,7 +116,7 @@ const ValetudoEvents = (): React.ReactElement => {
             <Popover
                 open={Boolean(anchorElement)}
                 anchorEl={anchorElement}
-                onClose={handleClose}
+                onClose={handleCerrar}
                 anchorOrigin={{
                     vertical: "top",
                     horizontal: "right",

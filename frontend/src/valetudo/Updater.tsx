@@ -127,7 +127,7 @@ const UpdaterStateComponent : React.FunctionComponent<{ state: UpdaterState | un
                     return (
                         <>
                             <Typography>
-                                The Updater is currently downloading version
+                                El actualizador está descargando actualmente la versión
                                 <br/>
                                 <span
                                     style={{
@@ -172,7 +172,7 @@ const UpdaterStateComponent : React.FunctionComponent<{ state: UpdaterState | un
                     return (
                         <Typography>
                             You are currently running Valetudo {state.currentVersion}.<br/>
-                            There may be newer versions of Valetudo available.
+                            Puede haber versiones más recientes de Valetudo disponibles.
                         </Typography>
                     );
                 case "ValetudoUpdaterApplyPendingState":
@@ -181,7 +181,7 @@ const UpdaterStateComponent : React.FunctionComponent<{ state: UpdaterState | un
                     );
                 case "ValetudoUpdaterDisabledState":
                     return (
-                        <Typography>The Updater was disabled in the Valetudo config.</Typography>
+                        <Typography>El actualizador está desactivado en la configuración de Valetudo.</Typography>
                     );
                 case "ValetudoUpdaterNoUpdateRequiredState":
                     return (
@@ -239,8 +239,8 @@ const UpdaterStateComponent : React.FunctionComponent<{ state: UpdaterState | un
                 {
                     state.__class === "ValetudoUpdaterApplyPendingState" && !state.busy &&
                     <Typography color="red" style={{marginTop:"1rem", width: "80%"}}>
-                        Please keep in mind that each update can require troubleshooting post-update.<br/>
-                        Make sure that you&apos;ve thoroughly read the changelog to be aware of possible breaking changes.
+                        Ten en cuenta que cada actualización puede requerir solucionar problemas después de instalarla.<br/>
+                        Asegúrate de leer detenidamente el registro de cambios para conocer posibles cambios incompatibles.
                     </Typography>
                 }
             </Grid2>
@@ -300,7 +300,7 @@ const StartUpdateControls: React.FunctionComponent<{
             }}
             sx={{mt: 1, mb: 1}}
         >
-            Check for Updates
+            Buscar actualizaciones
         </Button>
     );
 };
@@ -324,14 +324,14 @@ const DownloadUpdateControls: React.FunctionComponent<{
                 }}
                 sx={{mt: 1, mb: 1}}
             >
-                Download Update
+                Descargar actualización
             </Button>
             <ConfirmationDialog
-                title="Download Update?"
+                title="Descargar actualización?"
                 text={(
                     <>
-                        Do you want to download the displayed Valetudo update?<br/>
-                        Please make sure to fully read the provided changelog as it may contain breaking changes as well as other relevant information.
+                        ¿Quieres descargar la actualización de Valetudo mostrada?<br/>
+                        Asegúrate de leer completamente el registro de cambios proporcionado, ya que puede contener cambios incompatibles y otra información relevante.
                     </>
                 )}
                 open={dialogOpen}
@@ -366,10 +366,10 @@ const ApplyUpdateControls: React.FunctionComponent<{
                 }}
                 sx={{mt: 1, mb: 1}}
             >
-                Apply Update
+                Aplicar actualización
             </Button>
             <ConfirmationDialog
-                title="Apply Update?"
+                title="Aplicar actualización?"
                 text="Do you want to apply the downloaded update? The robot may reboot during this procedure."
                 open={dialogOpen}
                 onClose={() => {

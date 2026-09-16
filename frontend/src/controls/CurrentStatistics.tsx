@@ -45,7 +45,7 @@ const CurrentStatistics = (): React.ReactElement => {
                 >
                     <Box p={1.5}>
                         <Typography color="error">
-                            Error loading current statistics
+                            Error al cargar las estadísticas actuales
                         </Typography>
                     </Box>
                 </Paper>

@@ -149,27 +149,27 @@ const DockComponents = ({
 
                 switch (type) {
                     case "water_tank_clean":
-                        label = "Freshwater";
+                        label = "Agua limpia";
                         IconComponent = DockComponentWaterTankClean;
                         break;
 
                     case "water_tank_dirty":
-                        label = "Wastewater";
+                        label = "Agua residual";
                         IconComponent = DockComponentWaterTankDirty;
                         break;
 
                     case "detergent":
-                        label = "Detergent";
+                        label = "Detergente";
                         IconComponent = DockComponentDetergent;
                         break;
 
                     case "dustbag":
-                        label = "Dustbag";
+                        label = "Bolsa de polvo";
                         IconComponent = DockComponentDustbag;
                         break;
 
                     default:
-                        label = "Unknown";
+                        label = "Desconocido";
                         IconComponent = DockComponentUnknownIcon;
                         break;
                 }
@@ -184,22 +184,22 @@ const DockComponents = ({
                         break;
 
                     case "empty":
-                        statusText = "Empty";
+                        statusText = "Vacío";
                         statusColor = palette.red;
                         break;
 
                     case "full":
-                        statusText = "Full";
+                        statusText = "Lleno";
                         statusColor = palette.red;
                         break;
 
                     case "missing":
-                        statusText = "Missing";
+                        statusText = "Falta";
                         statusColor = palette.yellow;
                         break;
 
                     default:
-                        statusText = "Unknown";
+                        statusText = "Desconocido";
                         statusColor = palette.purple;
                         break;
                 }
@@ -288,7 +288,7 @@ const DockComponents = ({
                             mr: 1,
                         }}
                     >
-                        {isOk ? "OK" : "CHECK"}
+                        {isOk ? "OK" : "COMPROBAR"}
                     </Typography>
 
                     <Icon
@@ -538,7 +538,7 @@ const Dock = (): React.ReactElement => {
                                 />
                                 {dockState === "cleaning" ?
                                     t("stop") :
-                                    "Clean"}
+                                    "Limpiar"}
                             </Button>
                         </Grid2>
                     )}
@@ -597,7 +597,7 @@ const Dock = (): React.ReactElement => {
                                 />
                                 {dockState === "drying" ?
                                     t("stop") :
-                                    "Dry"}
+                                    "Secar"}
                             </Button>
                         </Grid2>
                     )}
@@ -645,7 +645,7 @@ const Dock = (): React.ReactElement => {
                                 <StyledIcon
                                     as={EmptyIcon}
                                 />
-                                Empty
+                                Vaciar
                             </Button>
                         </Grid2>
                     )}
@@ -676,7 +676,7 @@ const Dock = (): React.ReactElement => {
 
     return (
         <ControlsCard
-            title="Dock"
+            title="Estación"
             pending={feedbackPending}
             icon={DockIcon}
             isLoading={isPending}

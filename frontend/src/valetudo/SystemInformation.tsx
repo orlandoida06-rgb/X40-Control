@@ -367,7 +367,7 @@ const SystemInformation = (): React.ReactElement => {
                 </Grid2>
                 <Grid2 size={{xs: 12}}>
                     <Typography variant="caption" color="textSecondary">
-                        System Memory (RAM)
+                        Memoria del sistema (RAM)
                     </Typography>
 
                     <RatioBar
@@ -473,7 +473,7 @@ const SystemInformation = (): React.ReactElement => {
                 <Grid2
                     style={{flexGrow: 1}}
                 >
-                    <ReloadableCard title="System Host Information" loading={systemHostInfoFetching}
+                    <ReloadableCard title="Información del sistema anfitrión" loading={systemHostInfoFetching}
                         boxShadow={3}
                         onReload={() => {
                             return fetchSystemHostInfo();

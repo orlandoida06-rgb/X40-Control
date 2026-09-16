@@ -368,6 +368,53 @@ abstract class BaseMap<P, S> extends React.Component<P & MapProps, S & MapState 
         return this.ctxWrapper.mapPointToCurrentTransform(this.canvas.width/2, this.canvas.height/2);
     }
 
+    /**
+     * Zooms the map around the center of the viewport.
+     *
+     * @param {number} factor Zoom multiplier applied to the current map scale.
+     */
+    protected zoomMap(factor: number): void {
+        if (!this.ctxWrapper || !this.canvas) {
+            return;
+        }
+
+        const {scaleX: currentScaleFactor} = this.ctxWrapper.getScaleFactor();
+        const clampedFactor = clampMapScalingFactorFactor(currentScaleFactor, factor);
+
+        const center = this.ctxWrapper.mapPointToCurrentTransform(
+            this.canvas.width / 2,
+            this.canvas.height / 2
+        );
+
+        this.ctxWrapper.translate(center.x, center.y);
+        this.ctxWrapper.scale(clampedFactor, clampedFactor);
+        this.ctxWrapper.translate(-center.x, -center.y);
+
+        this.updateScaleFactor();
+        this.draw();
+    }
+
+    /**
+     * Zooms in one step.
+     */
+    protected zoomIn(): void {
+        this.zoomMap(1.25);
+    }
+
+    /**
+     * Zooms out one step.
+     */
+    protected zoomOut(): void {
+        this.zoomMap(0.8);
+    }
+
+    /**
+     * Returns the current map zoom factor.
+     */
+    protected getMapZoom(): number {
+        return this.currentScaleFactor;
+    }
+
     protected onTap(evt: TapTouchHandlerEvent) : boolean | void {
         const currentTransform = this.ctxWrapper.getTransform();
 

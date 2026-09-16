@@ -33,7 +33,7 @@ const IntegrationHelpDialog: React.FunctionComponent<{
             style={{userSelect: "none"}}
         >
             <DialogTitle>
-                Connect with other applications
+                Conectar con otras aplicaciones
             </DialogTitle>
             <DialogContent>
                 <DialogContentText component={"span"}>
@@ -48,7 +48,7 @@ const IntegrationHelpDialog: React.FunctionComponent<{
                             }}
                         >
                             <Typography color="info">
-                                Please note that the coordinates displayed here can become invalid if the underlying map changes.
+                                Ten en cuenta que las coordenadas mostradas aquí pueden dejar de ser válidas si cambia el mapa.
                             </Typography>
                         </InfoBox>
                     }

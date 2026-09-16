@@ -53,7 +53,7 @@ const CapabilitiesProvider = (props: {
             closeSnackbar(snackbarKey.current);
         }
 
-        snackbarKey.current = enqueueSnackbar("Error while loading capabilities", {
+        snackbarKey.current = enqueueSnackbar("Error al cargar las capacidades del robot", {
             variant: "error",
             action: SnackbarAction,
             persist: true,

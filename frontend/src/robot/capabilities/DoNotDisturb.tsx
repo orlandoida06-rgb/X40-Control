@@ -67,10 +67,10 @@ const DoNotDisturbControl: FunctionComponent = () => {
                         newConfig.enabled = e.target.checked;
                         setEditConfig(newConfig);
                     }
-                }}/>} label="Enabled"/>
+                }}/>} label="Activado"/>
                 <Stack direction="row" spacing={1} sx={{mt: 1, mb: 1}}>
                     <TextField
-                        label="Start time"
+                        label="Hora de inicio"
                         type="time"
                         value={`${startTimeValue.getHours().toString().padStart(2, "0")}:${startTimeValue.getMinutes().toString().padStart(2, "0")}`}
                         InputLabelProps={{ shrink: true }}

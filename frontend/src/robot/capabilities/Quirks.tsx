@@ -116,7 +116,7 @@ const Quirks: FunctionComponent = () => {
         if (!quirksPending && (!quirks || (Array.isArray(quirks) && quirks.length === 0))) {
             return (
                 <Typography style={{textAlign: "center"}}>
-                    No quirks. You might want to reload
+                    No hay particularidades. Puede que quieras volver a cargar la página.
                 </Typography>
             );
         }

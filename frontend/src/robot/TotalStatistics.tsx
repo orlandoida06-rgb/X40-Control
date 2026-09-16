@@ -318,7 +318,7 @@ const TotalStatistics = (): React.ReactElement => {
     return (
         <PaperContainer>
             {supported ? <TotalStatisticsInternal/> : (
-                <Typography color="error">This robot does not support total statistics.</Typography>
+                <Typography color="error">Este robot no admite estadísticas totales.</Typography>
             )}
         </PaperContainer>
     );

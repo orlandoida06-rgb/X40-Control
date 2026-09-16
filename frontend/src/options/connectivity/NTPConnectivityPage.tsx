@@ -278,7 +278,7 @@ const NTPConnectivity = (): React.ReactElement => {
                             setConfigurationModified(false);
                         }}
                     >
-                        Save configuration
+                        Guardar configuration
                     </Button>
                 </Grid2>
             </Grid2>

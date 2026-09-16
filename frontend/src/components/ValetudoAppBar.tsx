@@ -571,7 +571,7 @@ const ValetudoAppBar: React.FunctionComponent<{ paletteMode: PaletteMode, setPal
                             size="large"
                             edge="start"
                             color="inherit"
-                            aria-label="back"
+                            aria-label="atrás"
                             sx={{mr: 2}}
 
                             component={Link}

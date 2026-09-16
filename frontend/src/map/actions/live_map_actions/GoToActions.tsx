@@ -116,7 +116,7 @@ const GoToActions = (
                     !canGo &&
                     <Grid2>
                         <Typography variant="caption" color="textSecondary">
-                            Cannot go to point while the robot is busy
+                            No se puede ir a ese punto mientras el robot está ocupado
                         </Typography>
                     </Grid2>
                 }

@@ -32,8 +32,8 @@ import {
 import {Mark} from "@mui/material/Slider/useSlider.types";
 
 const DiscreteSlider = styled(Slider)(({theme}) => ({
-    paddingTop: theme.spacing(2),
-    paddingBottom: theme.spacing(1.5),
+    paddingTop: theme.spacing(1.25),
+    paddingBottom: theme.spacing(1),
 
     [`& .${sliderClasses.track}`]: {
         height: 5,
@@ -74,10 +74,11 @@ const DiscreteSlider = styled(Slider)(({theme}) => ({
     },
 
     [`& .${sliderClasses.markLabel}`]: {
-        fontSize: "0.68rem",
-        opacity: 0.65,
+        fontSize: "0.62rem",
+        opacity: 0.75,
         transform: "translateX(-50%)",
         whiteSpace: "nowrap",
+        lineHeight: 1.1,
     },
 }));
 
@@ -247,8 +248,8 @@ const PresetSelectionControl = (
             >
                 <Box
                     sx={{
-                        px: 2,
-                        py: 1.5,
+                        px: 1.5,
+                        py: 1,
                     }}
                 >
                     <Grid2
@@ -262,7 +263,8 @@ const PresetSelectionControl = (
                         }}
                         sx={{
                             cursor: "pointer",
-                            minHeight: "34px",
+                            minHeight: "30px",
+                            width: "100%",
                         }}
                     >
                         <Grid2
@@ -308,11 +310,14 @@ const PresetSelectionControl = (
                                     <Grid2>
                                         <Typography
                                             sx={{
-                                                fontSize: "0.78rem",
+                                                fontSize: "0.68rem",
                                                 fontWeight: 700,
-                                                letterSpacing: "0.04em",
-                                                opacity: 0.75,
+                                                letterSpacing: "0.025em",
+                                                opacity: 0.8,
                                                 textTransform: "uppercase",
+                                                lineHeight: 1.15,
+                                                maxWidth: "150px",
+                                                textAlign: "right",
                                             }}
                                         >
                                             {currentPreset}

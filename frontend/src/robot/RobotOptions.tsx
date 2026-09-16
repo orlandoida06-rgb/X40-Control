@@ -102,8 +102,8 @@ const LocateButtonListMenuItem = (): React.ReactElement => {
 
     return (
         <ButtonListMenuItem
-            primaryLabel="Locate Robot"
-            secondaryLabel="The robot will play a sound to announce its location"
+            primaryLabel="Localizar robot"
+            secondaryLabel="El robot reproducirá un sonido para indicar su ubicación"
             icon={<LocateIcon/>}
             buttonLabel="Go"
             action={() => {
@@ -133,8 +133,8 @@ const KeyLockCapabilitySwitchListMenuItem = () => {
             }}
             disabled={disabled}
             loadError={isError}
-            primaryLabel={"Lock Keys"}
-            secondaryLabel={"Prevents the robot from being operated using its physical buttons."}
+            primaryLabel={"Bloquear botones"}
+            secondaryLabel={"Impide manejar el robot mediante sus botones físicos."}
             icon={<KeyLockIcon/>}
         />
     );
@@ -160,7 +160,7 @@ const CarpetModeControlCapabilitySwitchListMenuItem = () => {
             disabled={disabled}
             loadError={isError}
             primaryLabel={"Carpet Mode"}
-            secondaryLabel={"When enabled, the vacuum will recognize carpets automatically and increase the suction."}
+            secondaryLabel={"Cuando está activado, el robot reconoce automáticamente las alfombras y aumenta la potencia de aspiración."}
             icon={<CarpetModeIcon/>}
         />
     );
@@ -204,10 +204,10 @@ const CarpetSensorModeControlCapabilitySelectListMenuItem = () => {
                 label = "Avoid Carpet";
                 break;
             case "lift":
-                label = "Lift Mop";
+                label = "Elevar mopas";
                 break;
             case "detach":
-                label = "Detach Mop";
+                label = "Desacoplar mopas";
                 break;
         }
 
@@ -244,8 +244,8 @@ const CarpetSensorModeControlCapabilitySelectListMenuItem = () => {
             disabled={disabled}
             loadingOptions={carpetSensorModePropertiesPending || isPending}
             loadError={carpetSensorModePropertiesError}
-            primaryLabel="Carpet Sensor"
-            secondaryLabel="Select what action the robot should take if it detects carpet while mopping."
+            primaryLabel="Sensor de alfombras"
+            secondaryLabel="Selecciona qué acción debe realizar el robot si detecta una alfombra mientras friega."
             icon={<CarpetSensorModeIcon/>}
         />
     );
@@ -329,8 +329,8 @@ const AutoEmptyDockAutoEmptyIntervalControlCapabilitySelectListMenuItem = () => 
             disabled={disabled}
             loadingOptions={autoEmptyDockAutoEmptyIntervalPropertiesPending || isPending}
             loadError={autoEmptyDockAutoEmptyIntervalPropertiesError}
-            primaryLabel="Dock Auto-Empty"
-            secondaryLabel="Select if and/or how often the dock should auto-empty the robot."
+            primaryLabel="Vaciado automático de la estación"
+            secondaryLabel="Selecciona si la estación debe vaciar automáticamente el robot y con qué frecuencia."
             icon={<AutoEmptyIntervalControlIcon/>}
         />
     );
@@ -357,7 +357,7 @@ const ObstacleAvoidanceControlCapabilitySwitchListMenuItem = () => {
             disabled={disabled}
             loadError={isError}
             primaryLabel={"Obstacle Avoidance"}
-            secondaryLabel={"Avoid obstacles using sensors such as lasers or cameras. May suffer from false positives."}
+            secondaryLabel={"Evita obstáculos utilizando sensores como láseres o cámaras. Puede producir falsos positivos."}
             icon={<ObstacleAvoidanceControlIcon/>}
         />
     );
@@ -383,7 +383,7 @@ const PetObstacleAvoidanceControlCapabilitySwitchListMenuItem = () => {
             disabled={disabled}
             loadError={isError}
             primaryLabel={"Pet Obstacle Avoidance"}
-            secondaryLabel={"Fine-tune obstacle avoidance to avoid obstacles left by pets. Will increase the general false positive rate."}
+            secondaryLabel={"Ajusta la prevención de obstáculos para evitar objetos dejados por mascotas. Aumentará la tasa general de falsos positivos."}
             icon={<PetObstacleAvoidanceControlIcon/>}
         />
     );
@@ -409,7 +409,7 @@ const ObstacleImagesCapabilitySwitchListMenuItem = () => {
             disabled={disabled}
             loadError={isError}
             primaryLabel={"Obstacle Images"}
-            secondaryLabel={"Take pictures of all encountered obstacles."}
+            secondaryLabel={"Tomar imágenes de todos los obstáculos encontrados."}
             icon={<ObstacleImagesIcon/>}
         />
     );
@@ -434,8 +434,8 @@ const CollisionAvoidantNavigationControlCapabilitySwitchListMenuItem = () => {
             }}
             disabled={disabled}
             loadError={isError}
-            primaryLabel={"Collision-avoidant Navigation"}
-            secondaryLabel={"Drive a more conservative route to reduce collisions. May cause missed spots."}
+            primaryLabel={"Navegación con prevención de colisiones"}
+            secondaryLabel={"Utiliza una ruta más conservadora para reducir las colisiones. Puede dejar algunas zonas sin limpiar."}
             icon={<CollisionAvoidantNavigationControlIcon/>}
         />
     );
@@ -460,8 +460,8 @@ const MopExtensionControlCapabilitySwitchListMenuItem = () => {
             }}
             disabled={disabled}
             loadError={isError}
-            primaryLabel={"Mop Extension"}
-            secondaryLabel={"Extend the mop outwards to reach closer to walls and furniture."}
+            primaryLabel={"Extensión de las mopas"}
+            secondaryLabel={"Extiende la mopa hacia fuera para acercarse más a paredes y muebles."}
             icon={<MopExtensionControlCapabilityIcon/>}
         />
     );
@@ -487,7 +487,7 @@ const CameraLightControlCapabilitySwitchListMenuItem = () => {
             disabled={disabled}
             loadError={isError}
             primaryLabel={"Camera Light"}
-            secondaryLabel={"Illuminate the dark to improve the AI image recognition obstacle avoidance."}
+            secondaryLabel={"Ilumina las zonas oscuras para mejorar el reconocimiento de obstáculos mediante IA."}
             icon={<CameraLightControlIcon/>}
         />
     );
@@ -569,8 +569,8 @@ const MopDockMopWashTemperatureControlCapabilitySelectListMenuItem = () => {
             disabled={disabled}
             loadingOptions={mopDockMopWashTemperaturePropertiesPending || isPending}
             loadError={mopDockMopWashTemperaturePropertiesError}
-            primaryLabel="Mop Wash Temperature"
-            secondaryLabel="Select if and/or how much the dock should heat the water used to rinse the mop pads."
+            primaryLabel="Temperatura de lavado de las mopas"
+            secondaryLabel="Selecciona si la estación debe calentar el agua utilizada para lavar las mopas y cuánto."
             icon={<MopDockMopWashTemperatureControlIcon/>}
         />
     );
@@ -596,10 +596,10 @@ const MopTwistControlCapabilitySwitchListMenuItem = () => {
     let label;
     let icon;
     if (mopExtensionControlCapabilitySupported) {
-        label = "With the mop extended, twist the robot to further reach below furniture and other overhangs.";
+        label = "Con la mopa extendida, gira el robot para llegar más lejos debajo de muebles y salientes.";
         icon = <MopTwistControlCapabilityExtendedIcon/>;
     } else {
-        label = "Twist the robot to mop closer to walls and furniture. Will increase the cleanup duration.";
+        label = "Gira el robot para fregar más cerca de paredes y muebles. Aumentará la duración de la limpieza.";
         icon = <MopTwistControlCapabilityIcon/>;
     }
 
@@ -611,7 +611,7 @@ const MopTwistControlCapabilitySwitchListMenuItem = () => {
             }}
             disabled={disabled}
             loadError={isError}
-            primaryLabel={"Mop Twist"}
+            primaryLabel={"Giro de las mopas"}
             secondaryLabel={label}
             icon={icon}
         />
@@ -637,8 +637,8 @@ const MopExtensionFurnitureLegHandlingControlCapabilitySwitchListMenuItem = () =
             }}
             disabled={disabled}
             loadError={isError}
-            primaryLabel={"Mop Extension for Furniture Legs"}
-            secondaryLabel={"Use the extending mop to mop up close to legs of chairs and tables."}
+            primaryLabel={"Extensión de las mopas para patas de muebles"}
+            secondaryLabel={"Utiliza la mopa extensible para fregar cerca de las patas de sillas y mesas."}
             icon={<MopExtensionFurnitureLegHandlingControlIcon/>}
         />
     );
@@ -663,8 +663,8 @@ const MopDockMopAutoDryingControlCapabilitySwitchListMenuItem = () => {
             }}
             disabled={disabled}
             loadError={isError}
-            primaryLabel={"Mop Auto-Drying"}
-            secondaryLabel={"Automatically dry the mop pads after a cleanup."}
+            primaryLabel={"Secado automático de las mopas"}
+            secondaryLabel={"Seca automáticamente las mopas después de una limpieza."}
             icon={<MopDockMopAutoDryingControlIcon/>}
         />
     );
@@ -689,8 +689,8 @@ const FloorMaterialDirectionAwareNavigationControlCapabilitySwitchListMenuItem =
             }}
             disabled={disabled}
             loadError={isError}
-            primaryLabel={"Material-aligned Navigation"}
-            secondaryLabel={"Clean along the direction of the configured/detected floor material (if applicable)."}
+            primaryLabel={"Navegación alineada con el material"}
+            secondaryLabel={"Limpia siguiendo la dirección del material del suelo configurado o detectado (si corresponde)."}
             icon={<FloorMaterialDirectionAwareNavigationControlIcon/>}
         />
     );
@@ -734,10 +734,10 @@ const CleanRouteControlCapabilitySelectListMenuItem = () => {
                 label = "Normal";
                 break;
             case "intensive":
-                label = "Intensive";
+                label = "Intensiva";
                 break;
             case "deep":
-                label = "Deep";
+                label = "Profunda";
                 break;
         }
 
@@ -758,7 +758,7 @@ const CleanRouteControlCapabilitySelectListMenuItem = () => {
                     return `"${label}"`;
                 });
 
-                desc += ` ${labels.join(", ")} only ${labels.length > 1 ? "apply" : "applies"} when mopping.`;
+                desc += ` ${labels.join(", ")} ${labels.length > 1 ? "solo se aplican" : "solo se aplica"} al fregar.`;
             }
 
             if (cleanRouteControlProperties.oneTime.length > 0) {
@@ -802,7 +802,7 @@ const CleanRouteControlCapabilitySelectListMenuItem = () => {
             disabled={disabled}
             loadingOptions={cleanRouteControlPropertiesPending || isPending}
             loadError={cleanRouteControlPropertiesError}
-            primaryLabel="Clean Route"
+            primaryLabel="Ruta de limpieza"
             secondaryLabel={description}
             icon={<CleanRouteControlIcon/>}
         />
@@ -841,13 +841,13 @@ const MopDockMopDryingTimeControlCapabilitySelectListMenuItem = () => {
 
         switch (val) {
             case "2h":
-                label = "2 Hours";
+                label = "2 horas";
                 break;
             case "3h":
-                label = "3 Hours";
+                label = "3 horas";
                 break;
             case "4h":
-                label = "4 Hours";
+                label = "4 horas";
                 break;
             case "cold":
                 label = "Cold";
@@ -861,7 +861,7 @@ const MopDockMopDryingTimeControlCapabilitySelectListMenuItem = () => {
     });
 
     const description = React.useMemo(() => {
-        let desc = "Select how long the mop should be dried with hot air after a cleanup.";
+        let desc = "Selecciona durante cuánto tiempo debe secarse la mopa con aire caliente después de una limpieza.";
 
         if (mopDryingTimeProperties?.supportedDurations?.includes("cold")) {
             desc += " \"Cold\" disables the heater and compensates with far longer runtimes.";
@@ -897,7 +897,7 @@ const MopDockMopDryingTimeControlCapabilitySelectListMenuItem = () => {
             disabled={disabled}
             loadingOptions={mopDryingTimePropertiesPending || isPending}
             loadError={mopDryingTimePropertiesError}
-            primaryLabel="Mop Drying Time"
+            primaryLabel="Tiempo de secado de las mopas"
             secondaryLabel={description}
             icon={<MopDockMopDryingTimeControlIcon/>}
         />
@@ -936,7 +936,7 @@ const AutoEmptyDockAutoEmptyDurationControlCapabilitySelectListMenuItem = () => 
 
         switch (val) {
             case "auto":
-                label = "Auto";
+                label = "Automático";
                 break;
             case "short":
                 label = "Short";
@@ -981,8 +981,8 @@ const AutoEmptyDockAutoEmptyDurationControlCapabilitySelectListMenuItem = () => 
             disabled={disabled}
             loadingOptions={autoEmptyDurationPropertiesPending || isPending}
             loadError={autoEmptyDurationPropertiesError}
-            primaryLabel="Auto-Empty Duration"
-            secondaryLabel={"Configure the duration of the auto-empty cycle."}
+            primaryLabel="Duración del vaciado automático"
+            secondaryLabel={"Configura la duración del ciclo de vaciado automático."}
             icon={<AutoEmptyDockAutoEmptyDurationControlIcon/>}
         />
     );
@@ -1261,7 +1261,7 @@ const RobotOptions = (): React.ReactElement => {
                 <LinkListMenuItem
                     key="systemRobotSettings"
                     url="/options/robot/system"
-                    primaryLabel="System Options"
+                    primaryLabel="Opciones del sistema"
                     secondaryLabel={label.join(", ")}
                     icon={<SystemIcon/>}
                 />
@@ -1293,7 +1293,7 @@ const RobotOptions = (): React.ReactElement => {
     const listItems = React.useMemo(() => {
         const items: Array<React.ReactElement> = [];
 
-        const addGroup = (groupItems: React.ReactElement[], title: string, icon: React.ReactElement) => {
+        const añadirGroup = (groupItems: React.ReactElement[], title: string, icon: React.ReactElement) => {
             if (groupItems.length > 0) {
                 items.push(
                     <SubHeaderListMenuItem
@@ -1307,11 +1307,11 @@ const RobotOptions = (): React.ReactElement => {
             }
         };
 
-        addGroup(generalListItems, "General", <GeneralIcon/>);
-        addGroup(behaviorListItems, "Behavior", <BehaviourIcon/>);
-        addGroup(navigationListItems, "Perception", <PerceptionIcon/>);
-        addGroup(dockListItems, "Dock", <DockIcon/>);
-        addGroup(miscListItems, "Misc", <MiscIcon/>);
+        añadirGroup(generalListItems, "General", <GeneralIcon/>);
+        añadirGroup(behaviorListItems, "Comportamiento", <BehaviourIcon/>);
+        añadirGroup(navigationListItems, "Perception", <PerceptionIcon/>);
+        añadirGroup(dockListItems, "Estación de vaciado y limpieza", <DockIcon/>);
+        añadirGroup(miscListItems, "Misc", <MiscIcon/>);
 
         if (items.at(-1)?.type === SpacerListMenuItem) {
             items.pop();
@@ -1329,8 +1329,8 @@ const RobotOptions = (): React.ReactElement => {
     return (
         <PaperContainer>
             <ListMenu
-                primaryHeader={"Robot Options"}
-                secondaryHeader={"Tunables and actions provided by the robot's firmware"}
+                primaryHeader={"Opciones del robot"}
+                secondaryHeader={"Ajustes y acciones proporcionados por el firmware del robot"}
                 listItems={listItems}
             />
         </PaperContainer>

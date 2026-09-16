@@ -52,7 +52,7 @@ const RobotStatus = (): React.ReactElement => {
         if (isStatusError) {
             return (
                 <Typography color="error">
-                    Error loading robot state
+                    Error al cargar el estado del robot
                 </Typography>
             );
         }

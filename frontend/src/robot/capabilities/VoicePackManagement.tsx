@@ -64,7 +64,7 @@ const VoicePackControl: FunctionComponent = () => {
                 </Typography>
                 {isError && (
                     <Typography color="error">
-                        Error installing voice pack. Check the log for details.
+                        Error al instalar el paquete de voz. Consulta el registro para obtener más detalles.
                     </Typography>
                 )}
                 <Collapse in={isWorking}>
@@ -77,7 +77,7 @@ const VoicePackControl: FunctionComponent = () => {
                 <TextField label="URL" value={url} onChange={(e) => {
                     setUrl(e.target.value);
                 }} variant="standard" placeholder="https://" disabled={commandDisabled} fullWidth sx={{mb: 0.3}}/>
-                <TextField label="Language code" value={languageCode} onChange={(e) => {
+                <TextField label="Código de idioma" value={languageCode} onChange={(e) => {
                     setLanguageCode(e.target.value);
                 }} variant="standard" placeholder="VA" disabled={commandDisabled} fullWidth sx={{mb: 0.3}}/>
                 <TextField label="Hash" value={hash} onChange={(e) => {

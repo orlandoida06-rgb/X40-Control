@@ -52,7 +52,7 @@ const DetailPageHeaderRow: FunctionComponent<DetailPageHeaderRowProps> = ({
                                         onClick={() => {
                                             return setHelpDialogOpen(true);
                                         }}
-                                        title="Help"
+                                        title="Ayuda"
                                     >
                                         <HelpIcon/>
                                     </IconButton>

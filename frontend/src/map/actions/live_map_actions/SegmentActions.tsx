@@ -89,7 +89,7 @@ const SegmentActions = (
         return (
             <Container>
                 <Typography color="error">
-                    Error loading {Capability.MapSegmentation} properties
+                    Error al cargar las propiedades de {Capability.MapSegmentation}
                 </Typography>
                 <Box m={1}/>
                 <Button color="primary" variant="contained" onClick={() => {
@@ -113,7 +113,7 @@ const SegmentActions = (
         return (
             <Container>
                 <Typography align="center">
-                    No {Capability.MapSegmentation} properties
+                    No hay propiedades de {Capability.MapSegmentation}
                 </Typography>
                 ;
             </Container>
@@ -124,7 +124,7 @@ const SegmentActions = (
 
     return (
         <>
-            <Grid2 container spacing={1} direction="row-reverse" flexWrap="wrap-reverse">
+            <Grid2 container justifyContent="space-around" alignItems="center" flexWrap="nowrap" sx={{width: "100%"}}>
                 <Grid2>
                     <ActionButton
                         disabled={!didSelectSegments || segmentActionExecuting || !canClean}
@@ -134,7 +134,7 @@ const SegmentActions = (
                         {...setupClickHandlers()}
                     >
                         <GoIcon style={{marginRight: "0.25rem", marginLeft: "-0.25rem"}}/>
-                        Clean {segments.length} segments
+                        Limpiar {segments.length} segmentos
                         {segmentActionExecuting && (
                             <CircularProgress
                                 color="inherit"
@@ -155,7 +155,6 @@ const SegmentActions = (
                                 textTransform: "initial"
                             }}
                             onClick={handleIterationToggle}
-                            title="Iteration Count"
                         >
                             <IterationsIcon iterationCount={iterationCount}/>
                         </ActionButton>
@@ -171,7 +170,7 @@ const SegmentActions = (
                             onClick={onClear}
                         >
                             <ClearIcon style={{marginRight: "0.25rem", marginLeft: "-0.25rem"}}/>
-                            Clear
+                            Limpiar
                         </ActionButton>
                     </Grid2>
                 }
@@ -179,7 +178,7 @@ const SegmentActions = (
                     (didSelectSegments && !canClean) &&
                     <Grid2>
                         <Typography variant="caption" color="textSecondary">
-                            Cannot start segment cleaning while the robot is busy
+                            No se puede iniciar la limpieza de habitaciones mientras el robot está ocupado
                         </Typography>
                     </Grid2>
                 }
@@ -190,7 +189,7 @@ const SegmentActions = (
                     setIntegrationHelpDialogOpen(open);
                 }}
                 coordinatesWarning={false}
-                helperText={"To start a cleanup of the currently selected segments with the currently configured parameters via MQTT or REST, simply use this payload."}
+                helperText={"Para iniciar la limpieza de las habitaciones seleccionadas con los parámetros configurados mediante MQTT o REST, utiliza este contenido."}
                 payload={integrationHelpDialogPayload}
             />
         </>

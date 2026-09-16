@@ -103,7 +103,7 @@ const SegmentRenameDialog = (props: SegmentRenameDialogProps) => {
                         onRename(name.trim());
                     }}
                 >
-                    Rename
+                        Renombrar
                 </Button>
             </DialogActions>
         </Dialog>
@@ -293,7 +293,7 @@ const SegmentActions = (
 
 
     return (
-        <Grid2 container spacing={2} justifyContent="center" alignItems="center" sx={{width: "100%", padding: "10px", gap: "12px", display: "flex", flexWrap: "wrap", justifyContent: "center", alignItems: "center"}} direction="row-reverse" flexWrap="wrap-reverse">
+        <Grid2 container spacing={2} justifyContent="center" alignItems="center" sx={{width: "100%", padding: "10px", gap: "45px", display: "flex", flexWrap: "wrap", justifyContent: "center", alignItems: "center"}} direction="row-reverse" flexWrap="wrap-reverse">
             {
                 supportedCapabilities[Capability.MapSegmentEdit] &&
                 (selectedSegmentIds.length === 1 || selectedSegmentIds.length === 2) &&
@@ -304,11 +304,11 @@ const SegmentActions = (
                         disabled={joinSegmentsExecuting || !canEdit || selectedSegmentIds.length !== 2}
                         color="inherit"
                         size="medium"
-                        variant="extended"
+                        variant="extended" sx={{fontSize: "0.8rem"}}
                         onClick={handleJoinClick}
                     >
                         <JoinIcon style={{marginRight: "0.25rem", marginLeft: "-0.25rem"}}/>
-                        Join {segmentNames[selectedSegmentIds[0]]} and {selectedSegmentIds.length === 2 ? segmentNames[selectedSegmentIds[1]] : "?"}
+                        Unir {segmentNames[selectedSegmentIds[0]]} y {selectedSegmentIds.length === 2 ? segmentNames[selectedSegmentIds[1]] : "?"}
                         {joinSegmentsExecuting && (
                             <CircularProgress
                                 color="inherit"
@@ -329,11 +329,11 @@ const SegmentActions = (
                         disabled={splitSegmentExecuting || !canEdit}
                         color="inherit"
                         size="medium"
-                        variant="extended"
+                        variant="extended" sx={{fontSize: "0.8rem"}}
                         onClick={handleSplitClick}
                     >
                         <SplitIcon style={{marginRight: "0.25rem", marginLeft: "-0.25rem"}}/>
-                        Split {segmentNames[selectedSegmentIds[0]]}
+                        Dividir {segmentNames[selectedSegmentIds[0]]}
                         {splitSegmentExecuting && (
                             <CircularProgress
                                 color="inherit"
@@ -354,13 +354,13 @@ const SegmentActions = (
                         disabled={renameSegmentExecuting || !canEdit}
                         color="inherit"
                         size="medium"
-                        variant="extended"
+                        variant="extended" sx={{fontSize: "0.8rem"}}
                         onClick={() => {
                             setRenameDialogOpen(true);
                         }}
                     >
                         <RenameIcon style={{marginRight: "0.25rem", marginLeft: "-0.25rem"}}/>
-                        Rename
+                        Renombrar
                         {renameSegmentExecuting && (
                             <CircularProgress
                                 color="inherit"
@@ -381,7 +381,7 @@ const SegmentActions = (
                         disabled={setSegmentMaterialExecuting || !canEdit}
                         color="inherit"
                         size="medium"
-                        variant="extended"
+                        variant="extended" sx={{fontSize: "0.8rem"}}
                         onClick={() => {
                             setMaterialDialogOpen(true);
                         }}
@@ -408,11 +408,11 @@ const SegmentActions = (
                         disabled={joinSegmentsExecuting || !canEdit}
                         color="inherit"
                         size="medium"
-                        variant="extended"
+                        variant="extended" sx={{fontSize: "0.8rem"}}
                         onClick={onAddCuttingLine}
                     >
                         <AddCuttingLineIcon style={{marginRight: "0.25rem", marginLeft: "-0.25rem"}}/>
-                        Cutting Line
+                        Línea de corte
                     </ActionButton>
                 </Grid2>
             }
@@ -426,11 +426,11 @@ const SegmentActions = (
                     <ActionButton
                         color="inherit"
                         size="medium"
-                        variant="extended"
+                        variant="extended" sx={{fontSize: "0.8rem"}}
                         onClick={onClear}
                     >
                         <ClearIcon style={{marginRight: "0.25rem", marginLeft: "-0.25rem"}}/>
-                        Clear
+                        Borrar segmento
                     </ActionButton>
                 </Grid2>
             }
@@ -438,7 +438,7 @@ const SegmentActions = (
                 !canEdit &&
                 <Grid2>
                     <Typography variant="caption" color="textSecondary">
-                        Editing segments requires the robot to be docked
+                        Para editar las habitaciones, el robot debe estar en la base
                     </Typography>
                 </Grid2>
             }
@@ -447,7 +447,7 @@ const SegmentActions = (
                 selectedSegmentIds.length === 0 &&
                 <Grid2>
                     <Typography variant="caption" color="textSecondary" style={{fontSize: "1em"}}>
-                        Please select a segment to start editing
+                        Selecciona una habitación para comenzar a editar
                     </Typography>
                 </Grid2>
             }

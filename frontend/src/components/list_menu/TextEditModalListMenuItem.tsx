@@ -23,7 +23,7 @@ export const TextEditModalListMenuItem: React.FunctionComponent<{
         description: string,
 
         validatingTransformer?: (value: string) => string,
-        onSave: (value: string) => void
+        onGuardar: (value: string) => void
     }
     value: string,
     isLoading: boolean,
@@ -87,7 +87,7 @@ export const TextEditModalListMenuItem: React.FunctionComponent<{
                         setEditorValue(newValue);
                     }
                 }}
-                onSave={dialog.onSave}
+                onGuardar={dialog.onGuardar}
             />
         </>
     );
@@ -102,7 +102,7 @@ const TextEditModal: React.FunctionComponent<{
 
     value: string,
     setValue: (value: string) => void,
-    onSave: (value: string) => void
+    onGuardar: (value: string) => void
 }> = ({
     dialogOpen,
     setDialogOpen,
@@ -112,7 +112,7 @@ const TextEditModal: React.FunctionComponent<{
 
     value,
     setValue,
-    onSave
+    onGuardar
 }): React.ReactElement => {
     return (
         <Dialog
@@ -148,20 +148,20 @@ const TextEditModal: React.FunctionComponent<{
             <DialogActions>
                 <Button
                     onClick={() => {
-                        onSave(value);
+                        onGuardar(value);
 
                         setDialogOpen(false);
                     }}
                     autoFocus
                 >
-                    Save
+                    Guardar
                 </Button>
                 <Button
                     onClick={() => {
                         setDialogOpen(false);
                     }}
                 >
-                    Cancel
+                    Cancelar
                 </Button>
             </DialogActions>
         </Dialog>

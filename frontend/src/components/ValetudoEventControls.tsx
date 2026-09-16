@@ -46,7 +46,7 @@ const ConsumableDepletedEventControl: FunctionComponent<ValetudoEventRenderProps
                 <Stack>
                     <EventTimestamp timestamp={event.timestamp}/>
                     <Typography color={color} style={textStyle} sx={{mr: 1}}>
-                        The consumable <em>{getConsumableName(event.type as ConsumableType, event.subType as ConsumableSubType)}</em> is depleted
+                        El consumible <em>{getConsumableName(event.type as ConsumableType, event.subType as ConsumableSubType)}</em> está agotado
                     </Typography>
                 </Stack>
                 <Button
@@ -60,7 +60,7 @@ const ConsumableDepletedEventControl: FunctionComponent<ValetudoEventRenderProps
                     }}
                     color="warning"
                 >
-                    Reset
+                    Restablecer
                 </Button>
             </EventRow>
         );
@@ -106,7 +106,7 @@ const PendingMapChangeEventControl: FunctionComponent<ValetudoEventRenderProps> 
                 <Stack>
                     <EventTimestamp timestamp={event.timestamp}/>
                     <Typography color={color} style={textStyle} sx={{mr: 1}}>
-                        A map change is pending. Do you want to accept the new map?
+                        Hay un cambio de mapa pendiente. ¿Quieres aceptar el nuevo mapa?
                     </Typography>
                 </Stack>
                 <ButtonGroup size="small" variant="contained" color="success">
@@ -238,7 +238,7 @@ const ValetudoRuntimeErrorEventControl: FunctionComponent<ValetudoEventRenderPro
                 <Stack>
                     <EventTimestamp timestamp={event.timestamp}/>
                     <Typography color={color} style={textStyle} sx={{mr: 1}}>
-                        Valetudo ran into a problem and reincarnated itself. This should never happen.<br/><br/>
+                        Valetudo ha encontrado un problema y se ha reiniciado. Esto no debería ocurrir.<br/><br/>
                         {event.description ? event.description: `Reason: ${event.reason}`}
                     </Typography>
                 </Stack>

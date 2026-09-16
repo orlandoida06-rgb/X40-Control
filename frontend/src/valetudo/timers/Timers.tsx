@@ -58,9 +58,9 @@ const Timers = (): React.ReactElement => {
     const { mutate: deleteTimer } = useTimerDeletionMutation();
     const { mutate: execTimerAction } = useTimerActionMutation();
 
-    const [addTimerDialogOpen, setAddTimerDialogOpen] = React.useState(false);
+    const [añadirTimerDialogOpen, setAddTimerDialogOpen] = React.useState(false);
     const [helpDialogOpen, setHelpDialogOpen] = React.useState(false);
-    const [addTimerData, setAddTimerData] =
+    const [añadirTimerData, setAddTimerData] =
         React.useState<Timer>(timerTemplate);
 
     const timerCards = React.useMemo(() => {
@@ -72,7 +72,7 @@ const Timers = (): React.ReactElement => {
             const onDelete = () => {
                 deleteTimer(id);
             };
-            const onSave = (timer: Timer) => {
+            const onGuardar = (timer: Timer) => {
                 modifyTimer(convertTimer(timer, new Date().getTimezoneOffset()));
             };
             const onExecNow = () => {
@@ -83,7 +83,7 @@ const Timers = (): React.ReactElement => {
                 <Grid2 key={id}>
                     <TimerCard
                         onDelete={onDelete}
-                        onSave={onSave}
+                        onGuardar={onGuardar}
                         onExecNow={onExecNow}
                         timerProperties={timerPropertiesData as TimerProperties}
                         timer={timer}
@@ -93,7 +93,7 @@ const Timers = (): React.ReactElement => {
         });
     }, [modifyTimer, deleteTimer, execTimerAction, timerPropertiesData, timerData]);
 
-    const addTimer = React.useCallback(() => {
+    const añadirTimer = React.useCallback(() => {
         if (!timerPropertiesData) {
             return;
         }
@@ -121,7 +121,7 @@ const Timers = (): React.ReactElement => {
                         onClick={() => {
                             return setHelpDialogOpen(true);
                         }}
-                        title="Help"
+                        title="Ayuda"
                     >
                         <HelpIcon/>
                     </IconButton>
@@ -133,21 +133,21 @@ const Timers = (): React.ReactElement => {
                             <Typography
                                 sx={{padding:"1rem", textAlign: "center", marginTop: "10vh", marginBottom: "5vh"}}
                             >
-                                You currently don&apos;t have any timers configured in Valetudo.
+                                Actualmente no tienes ninguna programación configurada en Valetudo.
                             </Typography>
                     }
                 </Grid2>
             </Grid2>
 
             {
-                addTimerDialogOpen &&
+                añadirTimerDialogOpen &&
                 <TimerEditDialog
-                    timerInLocalTime={addTimerData}
+                    timerInLocalTime={añadirTimerData}
                     timerProperties={timerPropertiesData}
                     onCancel={() => {
                         setAddTimerDialogOpen(false);
                     }}
-                    onSave={(timer) => {
+                    onGuardar={(timer) => {
                         createTimer(convertTimer(timer, new Date().getTimezoneOffset()));
                         setAddTimerDialogOpen(false);
                     }}
@@ -167,9 +167,9 @@ const Timers = (): React.ReactElement => {
                 >
                     <Fab
                         color="primary"
-                        aria-label="add"
-                        onClick={addTimer}
-                        title="Add new timer"
+                        aria-label="añadir"
+                        onClick={añadirTimer}
+                        title="Añadir nueva programación"
                     >
                         <AddIcon />
                     </Fab>

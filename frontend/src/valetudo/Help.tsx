@@ -24,7 +24,7 @@ const Help = (): React.ReactElement => {
             <Grid2 container direction="row">
                 <Box style={{width: "100%"}}>
                     <DetailPageHeaderRow
-                        title="General Help"
+                        title="Ayuda general"
                         icon={<HelpIcon/>}
                     />
 

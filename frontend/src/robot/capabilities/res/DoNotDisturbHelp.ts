@@ -1,17 +1,23 @@
 export const DoNotDisturbHelp = `
-## Do not disturb
+## No molestar
 
-Some firmwares allow you to define a do not disturb period where certain features of the robot are disabled.
-What exactly changes may differ based on robot vendor, model and firmware version.
+Algunos firmwares permiten definir un periodo de no molestar durante el cual
+determinadas funciones del robot quedan desactivadas.
 
-For example, the robot might not continue a partially finished task which has been interrupted due to the
-robot having to charge.
-As charging back up to 100% battery may take a few hours, it could happen that the robot attempts to continue cleaning
-at 3am, which is often considered undesirable.
+Los cambios concretos pueden variar según el fabricante, el modelo del robot
+y la versión del firmware.
 
-Another thing that can be affected by the DND setting is the auto empty dock as those are usually pretty loud.
+Por ejemplo, es posible que el robot no continúe una tarea parcialmente terminada
+que se haya interrumpido porque necesitaba volver a cargarse.
+
+Como cargar la batería hasta el 100 % puede tardar varias horas, podría ocurrir
+que el robot intentase continuar la limpieza a las 3 de la madrugada, algo que
+normalmente no resulta deseable.
+
+Otra función que puede verse afectada por el modo No molestar es el vaciado
+automático de la estación, ya que normalmente produce bastante ruido.
 
 
-**Please note that DND times are evaluated and stored as UTC. They are only displayed in your current browser timezone
-for your convenience.**
+**Ten en cuenta que los horarios de No molestar se calculan y almacenan en UTC.
+Solo se muestran en la zona horaria actual de tu navegador para mayor comodidad.**
 `;

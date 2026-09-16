@@ -11,7 +11,7 @@ import {
 import {
     Save as PersistentMapControlIcon,
     Layers as MappingPassIcon,
-    LayersClear as MapResetIcon,
+    LayersClear as MapRestablecerIcon,
     Dashboard as SegmentEditIcon,
     Crop as CleanupCoverageIcon,
     Download as ValetudoMapDownloadIcon,
@@ -34,13 +34,13 @@ export const MappingPassButtonItem = (): React.ReactElement => {
 
     return (
         <ButtonListMenuItem
-            primaryLabel="Mapping Pass"
-            secondaryLabel="Create a new map"
+            primaryLabel="Mapeo"
+            secondaryLabel="Crear un mapa nuevo"
             icon={<MappingPassIcon/>}
             buttonLabel="Go"
             confirmationDialog={{
-                title: "Start mapping pass?",
-                body: "Do you really want to start a mapping pass?"
+                title: "¿Iniciar el mapeo?",
+                body: "¿Realmente quieres iniciar un nuevo mapeo?"
             }}
             action={startMappingPass}
             actionLoading={mappingPassStarting}
@@ -48,22 +48,22 @@ export const MappingPassButtonItem = (): React.ReactElement => {
     );
 };
 
-const MapResetButtonItem = (): React.ReactElement => {
-    const {mutate: resetMap, isPending: mapResetting} = useMapResetMutation();
+const MapRestablecerButtonItem = (): React.ReactElement => {
+    const {mutate: resetMap, isPending: mapRestablecerting} = useMapResetMutation();
 
     return (
         <ButtonListMenuItem
-            primaryLabel="Map Reset"
-            secondaryLabel="Delete the current map"
-            icon={<MapResetIcon/>}
+            primaryLabel="Restablecer mapa"
+            secondaryLabel="Eliminar el mapa actual"
+            icon={<MapRestablecerIcon/>}
             buttonLabel="Go"
             buttonColor={"error"}
             confirmationDialog={{
-                title: "Reset map?",
+                title: "Restablecer map?",
                 body: "Do you really want to reset the map?"
             }}
             action={resetMap}
-            actionLoading={mapResetting}
+            actionLoading={mapRestablecerting}
         />
     );
 };
@@ -95,15 +95,15 @@ export const PersistentMapSwitchListItem = () => {
                 disabled={disabled}
                 loadError={persistentDataError}
                 primaryLabel={"Persistent maps"}
-                secondaryLabel={"Store a persistent map"}
+                secondaryLabel={"Guardar un mapa persistente"}
                 icon={<PersistentMapControlIcon/>}
             />
             <ConfirmationDialog
-                title="Disable persistent maps?"
+                title="¿Desactivar los mapas persistentes?"
                 text={(
                     <>
-                        Do you really want to disable persistent maps?<br/>
-                        This will delete the currently stored map.
+                        ¿Realmente quieres desactivar los mapas persistentes?<br/>
+                        Esto eliminará el mapa almacenado actualmente.
                     </>
                 )}
                 open={dialogOpen}
@@ -132,8 +132,8 @@ const ValetudoMapDataExportButtonItem = (): React.ReactElement => {
 
     return (
         <ButtonListMenuItem
-            primaryLabel="Export ValetudoMap"
-            secondaryLabel="Download a ValetudoMap data export to use with other tools"
+            primaryLabel="Exportar mapa"
+            secondaryLabel="Descargar los datos del mapa para utilizarlos con otras herramientas"
             icon={<ValetudoMapDownloadIcon/>}
             buttonLabel="Go"
             action={() => {
@@ -161,7 +161,7 @@ const MapManagement = (): React.ReactElement => {
     const [
         persistentMapControlCapabilitySupported,
         mappingPassCapabilitySupported,
-        mapResetCapabilitySupported,
+        mapRestablecerCapabilitySupported,
 
         mapSegmentEditCapabilitySupported,
         mapSegmentRenameCapabilitySupported,
@@ -184,7 +184,7 @@ const MapManagement = (): React.ReactElement => {
         if (
             persistentMapControlCapabilitySupported ||
             mappingPassCapabilitySupported ||
-            mapResetCapabilitySupported
+            mapRestablecerCapabilitySupported
         ) {
             if (persistentMapControlCapabilitySupported) {
                 items.push(
@@ -198,9 +198,9 @@ const MapManagement = (): React.ReactElement => {
                 );
             }
 
-            if (mapResetCapabilitySupported) {
+            if (mapRestablecerCapabilitySupported) {
                 items.push(
-                    <MapResetButtonItem key="mapReset"/>
+                    <MapRestablecerButtonItem key="mapRestablecer"/>
                 );
             }
 
@@ -219,7 +219,7 @@ const MapManagement = (): React.ReactElement => {
                     key="segmentManagement"
                     url="/options/map_management/segments"
                     primaryLabel="Segment Management"
-                    secondaryLabel="Modify the maps segments"
+                    secondaryLabel="Modificar las habitaciones del mapa"
                     icon={<SegmentEditIcon/>}
                 />
             );
@@ -231,7 +231,7 @@ const MapManagement = (): React.ReactElement => {
                     key="virtualRestrictionManagement"
                     url="/options/map_management/virtual_restrictions"
                     primaryLabel="Virtual Restriction Management"
-                    secondaryLabel="Create, modify and delete various virtual restrictions"
+                    secondaryLabel="Crear, modificar y eliminar restricciones virtuales"
                     icon={<VirtualRestrictionsIcon/>}
                 />
             );
@@ -241,7 +241,7 @@ const MapManagement = (): React.ReactElement => {
     }, [
         persistentMapControlCapabilitySupported,
         mappingPassCapabilitySupported,
-        mapResetCapabilitySupported,
+        mapRestablecerCapabilitySupported,
 
         combinedVirtualRestrictionsCapabilitySupported,
         mapSegmentEditCapabilitySupported,
@@ -253,8 +253,8 @@ const MapManagement = (): React.ReactElement => {
             <LinkListMenuItem
                 key="robotCoverageMap"
                 url="/options/map_management/robot_coverage"
-                primaryLabel="Robot Coverage Map"
-                secondaryLabel="Check the robots coverage"
+                primaryLabel="Mapa de cobertura del robot"
+                secondaryLabel="Consultar la cobertura del robot"
                 icon={<CleanupCoverageIcon/>}
             />,
             <ValetudoMapDataExportButtonItem key="valetudoMapDataExport" />
@@ -264,14 +264,14 @@ const MapManagement = (): React.ReactElement => {
     return (
         <PaperContainer>
             <ListMenu
-                primaryHeader={"Robot-managed Map Features"}
-                secondaryHeader={"These features are managed and provided by the robot's firmware"}
+                primaryHeader={"Funciones del mapa gestionadas por el robot"}
+                secondaryHeader={"Estas funciones son gestionadas y proporcionadas por el firmware del robot"}
                 listItems={robotManagedListItems}
                 helpText={MapManagementHelp}
             />
             <ListMenu
-                primaryHeader={"Map Utilities"}
-                secondaryHeader={"Do neat things with the map"}
+                primaryHeader={"Herramientas del mapa"}
+                secondaryHeader={"Funciones adicionales para el mapa"}
                 listItems={utilityMapItems}
                 helpText={MapUtilitiesHelp}
                 style={{marginTop: "1rem"}}

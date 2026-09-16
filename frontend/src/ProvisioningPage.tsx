@@ -286,7 +286,7 @@ const ProvisioningPage = (): React.ReactElement => {
                     }}
                     align="center"
                 >
-                    Please join the robot to your Wi-Fi network to start using Valetudo
+                    Conecta el robot a tu red Wi-Fi para empezar a usar Valetudo
                 </Typography>
                 <Divider/>
 
@@ -376,12 +376,12 @@ const ProvisioningPage = (): React.ReactElement => {
 
             <Dialog open={successDialogOpen}>
                 <DialogTitle>
-                    Wi-Fi configuration is applying
+                    Aplicando la configuración Wi-Fi
                 </DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        If you&apos;ve entered your Wi-Fi credentials correctly, the robot should now join your network.<br/>
-                        You can now close this page.
+                        Si has introducido correctamente las credenciales Wi-Fi, el robot debería conectarse ahora a tu red.<br/>
+                        Ya puedes cerrar esta página.
                     </DialogContentText>
                 </DialogContent>
             </Dialog>

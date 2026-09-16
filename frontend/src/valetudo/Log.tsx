@@ -142,9 +142,9 @@ const Log = (): React.ReactElement => {
                                 <FilterAltIcon/>
                             </SearchIconWrapper>
                             <StyledInputBase
-                                placeholder="Filter…"
+                                placeholder="Filtrar…"
                                 inputProps={{
-                                    "aria-label": "filter",
+                                    "aria-label": "filtrar",
                                     value: filter,
                                     onChange: (e: any) => {
                                         setFilter((e.target as HTMLInputElement).value);

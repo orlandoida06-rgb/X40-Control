@@ -283,7 +283,7 @@ const BasicControls = (): React.ReactElement => {
             </Grid2>
 
             <ConfirmationDialog
-                title="Are you sure you want to start a full cleanup?"
+                title="¿Seguro que quieres iniciar una limpieza completa?"
                 open={startConfirmationDialogOpen}
                 onClose={() => {
                     setStartConfirmationDialogOpen(false);
@@ -293,7 +293,7 @@ const BasicControls = (): React.ReactElement => {
                 }}
             >
                 <DialogContentText>
-                    You currently have a pending MapAction.
+                    Actualmente tienes una acción de mapa pendiente.
                     <br/>
                     <br/>
                     <strong>Hint:</strong>

@@ -53,7 +53,7 @@ export const ListMenu: React.FunctionComponent<{
                                     onClick={() => {
                                         return setHelpDialogOpen(true);
                                     }}
-                                    title="Help"
+                                    title="Ayuda"
                                 >
                                     <HelpIcon/>
                                 </IconButton>

@@ -30,12 +30,12 @@ const ConsumableButtonListMenuItem: React.FunctionComponent<{
     let secondaryLabelElement : React.ReactElement | undefined;
 
     if (state) {
-        secondaryLabel = "Remaining: ";
+        secondaryLabel = "Restante: ";
         secondaryLabel += state.remaining.unit === "minutes" ? convertSecondsToHumans(60 * state.remaining.value, false) : `${state.remaining.value} %`;
 
         if (state.remaining.value <= 0) {
             buttonColor = "warning";
-            secondaryLabel = "Depleted";
+            secondaryLabel = "Agotado";
         }
 
 
@@ -72,11 +72,11 @@ const ConsumableButtonListMenuItem: React.FunctionComponent<{
         <ButtonListMenuItem
             primaryLabel={getConsumableName(consumable.type, consumable.subType)}
             secondaryLabel={secondaryLabelElement ?? secondaryLabel}
-            buttonLabel="Reset"
+            buttonLabel="Restablecer"
             buttonColor={buttonColor}
             confirmationDialog={{
-                title: "Reset consumable?",
-                body: `Do you really want to reset the ${getConsumableName(consumable.type, consumable.subType)} consumable?`
+                title: "¿Restablecer consumible?",
+                body: `¿Realmente quieres restablecer el consumible ${getConsumableName(consumable.type, consumable.subType)}?`
             }}
             action={() => {
                 resetConsumable(consumable);
@@ -118,8 +118,8 @@ const Consumables = (): React.ReactElement => {
     return (
         <PaperContainer>
             <ListMenu
-                primaryHeader={"Consumables"}
-                secondaryHeader={"Monitor and reset consumable states"}
+                primaryHeader={"Consumibles"}
+                secondaryHeader={"Consultar y restablecer el estado de los consumibles"}
                 listItems={listItems}
                 helpText={ConsumablesHelp}
             />
