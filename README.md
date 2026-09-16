@@ -48,6 +48,7 @@ cd X40-Control
 Da permisos de ejecución:
 
 chmod +x install-x40control.sh
+
 3. Instalar X40-Control
 
 Ejecuta el instalador indicando:
