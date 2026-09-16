@@ -293,7 +293,7 @@ const SegmentActions = (
 
 
     return (
-        <Grid2 container spacing={1} direction="row-reverse" flexWrap="wrap-reverse">
+        <Grid2 container spacing={2} justifyContent="center" alignItems="center" sx={{width: "100%", padding: "10px", gap: "12px", display: "flex", flexWrap: "wrap", justifyContent: "center", alignItems: "center"}} direction="row-reverse" flexWrap="wrap-reverse">
             {
                 supportedCapabilities[Capability.MapSegmentEdit] &&
                 (selectedSegmentIds.length === 1 || selectedSegmentIds.length === 2) &&
