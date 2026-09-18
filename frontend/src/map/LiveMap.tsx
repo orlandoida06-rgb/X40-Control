@@ -1,23 +1,17 @@
 import BaseMap, {MapContainer, MapProps, MapState, usePendingMapAction} from "./BaseMap";
 import {
     Capability,
-    RobotAttributeClass,
-    useRobotAttributeQuery,
 } from "../api";
 import GoToTargetClientStructure from "./structures/client_structures/GoToTargetClientStructure";
 import {
     ActionsContainer,
     ActionButton,
-    MapGlassPanel,
     MapControlsPanel,
-    MapStatusPanel,
     MapRobotStatus,
     MapConnectionDot,
+    MapTopPanel,
     MapTitle,
     MapSubtitle,
-    MapStatusCard,
-    MapStatusValue,
-    MapStatusLabel,
 } from "./Styled";
 import SegmentActions from "./actions/live_map_actions/SegmentActions";
 import SegmentLabelMapStructure from "./structures/map_structures/SegmentLabelMapStructure";
@@ -47,66 +41,6 @@ interface LiveMapState extends MapState {
     goToTarget: GoToTargetClientStructure | undefined
 }
 
-const MapBatteryStatus = (): React.ReactElement => {
-    const {
-        data: batteries,
-        isPending,
-        isError,
-    } = useRobotAttributeQuery(RobotAttributeClass.BatteryState);
-
-    if (isPending) {
-        return (
-            <MapStatusCard>
-                <MapStatusValue>--</MapStatusValue>
-                <MapStatusLabel>Batería</MapStatusLabel>
-            </MapStatusCard>
-        );
-    }
-
-    if (isError || !batteries || batteries.length === 0) {
-        return (
-            <MapStatusCard>
-                <MapStatusValue>--</MapStatusValue>
-                <MapStatusLabel>Batería</MapStatusLabel>
-            </MapStatusCard>
-        );
-    }
-
-    const level = Math.round(batteries[0].level);
-
-    return (
-        <MapStatusCard>
-            <MapStatusValue>
-                🔋 {level}%
-            </MapStatusValue>
-            <Box
-                sx={{
-                    height: 4,
-                    marginTop: 0.6,
-                    borderRadius: 99,
-                    overflow: "hidden",
-                    backgroundColor: "rgba(128,128,128,0.22)",
-                }}
-            >
-                <Box
-                    sx={{
-                        width: `${Math.max(0, Math.min(100, level))}%`,
-                        height: "100%",
-                        borderRadius: 99,
-                        backgroundColor:
-                            level <= 20 ?
-                                "#ff4d4d" :
-                                level <= 40 ?
-                                    "#ffb020" :
-                                    "#35d36b",
-                        transition: "width 500ms ease",
-                    }}
-                />
-            </Box>
-            <MapStatusLabel>Batería</MapStatusLabel>
-        </MapStatusCard>
-    );
-};
 
 
 class LiveMap extends BaseMap<LiveMapProps, LiveMapState> {
@@ -251,53 +185,67 @@ class LiveMap extends BaseMap<LiveMapProps, LiveMapState> {
                     overflow: "hidden",
                 }}
             >
-                <MapStatusPanel
-                    sx={{
-                        position: "relative",
-                        top: "auto",
-                        left: "auto",
-                        right: "auto",
-                        bottom: "auto",
-                        flexShrink: 0,
-                        margin: 2,
-                        marginBottom: 1,
-                    }}
-                >
+                <MapTopPanel>
+                    <Box sx={{display: "flex", alignItems: "center", gap: 1.25}}>
+                        <Box
+                            sx={{
+                                width: 34,
+                                height: 34,
+                                borderRadius: "50%",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                background: "rgba(255,255,255,0.08)",
+                                fontSize: "1rem",
+                            }}
+                        >
+                            🗺️
+                        </Box>
+
+                        <Box>
+                            <MapTitle>Mapa en vivo</MapTitle>
+                            <MapSubtitle>Dreame X40 Ultra</MapSubtitle>
+                        </Box>
+                    </Box>
+
                     <MapRobotStatus>
                         <MapConnectionDot />
-                        <div>
-                            <MapStatusValue>Dreame X40 Ultra</MapStatusValue>
-                            <MapStatusLabel>Conectado</MapStatusLabel>
-                        </div>
+                        <MapSubtitle sx={{marginTop: 0}}>
+                            Conectado
+                        </MapSubtitle>
                     </MapRobotStatus>
+                </MapTopPanel>
 
-                    <MapStatusCard>
-                        <MapStatusValue>Mapa</MapStatusValue>
-                        <MapStatusLabel>Tiempo real</MapStatusLabel>
-                    </MapStatusCard>
+                <MapTopPanel>
+                    <Box sx={{display: "flex", alignItems: "center", gap: 1.25}}>
+                        <Box
+                            sx={{
+                                width: 34,
+                                height: 34,
+                                borderRadius: "50%",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                background: "rgba(255,255,255,0.08)",
+                                fontSize: "1rem",
+                            }}
+                        >
+                            🗺️
+                        </Box>
 
-                    <MapStatusCard>
-                        <MapStatusValue>
-                            {this.state.mode === "segments" ?
-                                "Habitaciones" :
-                                this.state.mode === "zones" ?
-                                    "Zonas" :
-                                    this.state.mode === "goto" ?
-                                        "Ir a" :
-                                        "Navegación"}
-                        </MapStatusValue>
-                        <MapStatusLabel>Modo actual</MapStatusLabel>
-                    </MapStatusCard>
+                        <Box>
+                            <MapTitle>Mapa en vivo</MapTitle>
+                            <MapSubtitle>Dreame X40 Ultra</MapSubtitle>
+                        </Box>
+                    </Box>
 
-                    <MapStatusCard>
-                        <MapStatusValue>
-                            {Math.round(this.getMapZoom() * 100)}%
-                        </MapStatusValue>
-                        <MapStatusLabel>Zoom</MapStatusLabel>
-                    </MapStatusCard>
-
-                    <MapBatteryStatus />
-                </MapStatusPanel>
+                    <MapRobotStatus>
+                        <MapConnectionDot />
+                        <MapSubtitle sx={{marginTop: 0}}>
+                            Conectado
+                        </MapSubtitle>
+                    </MapRobotStatus>
+                </MapTopPanel>
 
                 <MapContainer
                     style={{
@@ -306,48 +254,48 @@ class LiveMap extends BaseMap<LiveMapProps, LiveMapState> {
                         minHeight: 0,
                     }}
                 >
-                <canvas
-                    ref={this.canvasRef}
-                    style={{
-                        width: "100%",
-                        height: "100%",
-                        imageRendering: "crisp-edges"
-                    }}
-                />
+                    <canvas
+                        ref={this.canvasRef}
+                        style={{
+                            width: "100%",
+                            height: "100%",
+                            imageRendering: "crisp-edges"
+                        }}
+                    />
 
-                {/* ===== X40-CONTROL TESLA UI ===== */}
+                    {/* ===== X40-CONTROL TESLA UI ===== */}
 
-                <MapControlsPanel>
-                    <ActionButton
-                        size="small"
-                        aria-label="Acercar"
-                        onClick={() => this.zoomIn()}
-                    >
+                    <MapControlsPanel>
+                        <ActionButton
+                            size="small"
+                            aria-label="Acercar"
+                            onClick={() => this.zoomIn()}
+                        >
                         +
-                    </ActionButton>
+                        </ActionButton>
 
-                    <ActionButton
-                        size="small"
-                        aria-label="Alejar"
-                        onClick={() => this.zoomOut()}
-                    >
+                        <ActionButton
+                            size="small"
+                            aria-label="Alejar"
+                            onClick={() => this.zoomOut()}
+                        >
                         −
-                    </ActionButton>
+                        </ActionButton>
 
-                    <ActionButton
-                        size="small"
-                        aria-label="Centrar mapa"
-                        onClick={() => {}}
-                    >
+                        <ActionButton
+                            size="small"
+                            aria-label="Centrar mapa"
+                            onClick={() => {}}
+                        >
                         ⌾
-                    </ActionButton>
-                </MapControlsPanel>
+                        </ActionButton>
+                    </MapControlsPanel>
 
 
 
-                {/* ===== FIN X40-CONTROL TESLA UI ===== */}
-                {
-                    this.supportedModes.length > 0 &&
+                    {/* ===== FIN X40-CONTROL TESLA UI ===== */}
+                    {
+                        this.supportedModes.length > 0 &&
                     <LiveMapModeSwitcher
                         supportedModes={this.supportedModes}
                         currentMode={this.state.mode}
@@ -385,12 +333,12 @@ class LiveMap extends BaseMap<LiveMapProps, LiveMapState> {
                             }
                         }}
                     />
-                }
+                    }
 
 
-                <ActionsContainer>
-                    {
-                        this.state.mode === "segments" &&
+                    <ActionsContainer>
+                        {
+                            this.state.mode === "segments" &&
 
                         <SegmentActions
                             segments={this.state.selectedSegmentIds}
@@ -407,9 +355,9 @@ class LiveMap extends BaseMap<LiveMapProps, LiveMapState> {
                                 this.redrawLayers();
                             }}
                         />
-                    }
-                    {
-                        this.state.mode === "zones" &&
+                        }
+                        {
+                            this.state.mode === "zones" &&
 
                         <ZoneActions
                             zones={this.state.zones}
@@ -450,9 +398,9 @@ class LiveMap extends BaseMap<LiveMapProps, LiveMapState> {
                                 this.draw();
                             }}
                         />
-                    }
-                    {
-                        this.state.mode === "goto" &&
+                        }
+                        {
+                            this.state.mode === "goto" &&
 
                         <GoToActions
                             goToTarget={this.state.goToTarget}
@@ -470,28 +418,28 @@ class LiveMap extends BaseMap<LiveMapProps, LiveMapState> {
                                 this.draw();
                             }}
                         />
-                    }
-                </ActionsContainer>
-                <Dialog
-                    open={this.state.dialogOpen}
-                    onClose={() =>{
-                        this.setState({dialogOpen: false});
-                    }}
-                >
-                    <DialogTitle>
-                        {this.state.dialogTitle}
-                    </DialogTitle>
-                    <DialogContent>
-                        {this.state.dialogBody}
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={() => {
+                        }
+                    </ActionsContainer>
+                    <Dialog
+                        open={this.state.dialogOpen}
+                        onClose={() =>{
                             this.setState({dialogOpen: false});
-                        }} autoFocus>
+                        }}
+                    >
+                        <DialogTitle>
+                            {this.state.dialogTitle}
+                        </DialogTitle>
+                        <DialogContent>
+                            {this.state.dialogBody}
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={() => {
+                                this.setState({dialogOpen: false});
+                            }} autoFocus>
                             Cerrar
-                        </Button>
-                    </DialogActions>
-                </Dialog>
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
                 </MapContainer>
             </Box>
         );

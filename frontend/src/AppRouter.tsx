@@ -31,19 +31,19 @@ const AppRouter: React.FunctionComponent<{
 }): React.ReactElement => {
     return (
         <LanguageProvider>
-        <HashRouter>
-            <Root>
-                <Content>
-                    <Routes>
-                        <Route path="" element={<HomePage />} />
-                        <Route path="robot/*" element={<RobotRouter />} />
-                        <Route path="options/*" element={<OptionsRouter />} />
-                        <Route path="valetudo/*" element={<ValetudoRouter />} />
-                        <Route path="*" element={<Navigate to="/" />} />
-                    </Routes>
-                </Content>
-            </Root>
-        </HashRouter>
+            <HashRouter>
+                <Root>
+                    <Content>
+                        <Routes>
+                            <Route path="" element={<HomePage />} />
+                            <Route path="robot/*" element={<RobotRouter />} />
+                            <Route path="options/*" element={<OptionsRouter />} />
+                            <Route path="valetudo/*" element={<ValetudoRouter />} />
+                            <Route path="*" element={<Navigate to="/" />} />
+                        </Routes>
+                    </Content>
+                </Root>
+            </HashRouter>
         </LanguageProvider>
     );
 };

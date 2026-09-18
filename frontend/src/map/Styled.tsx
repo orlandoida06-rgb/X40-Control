@@ -46,7 +46,7 @@ export const ActionsContainer = styled(Box)(({theme}) => {
     return {
         position: "absolute",
         pointerEvents: "none",
-        bottom: theme.spacing(2),
+        bottom: theme.spacing(3),
         left: theme.spacing(2),
         right: theme.spacing(2),
         zIndex: 20,

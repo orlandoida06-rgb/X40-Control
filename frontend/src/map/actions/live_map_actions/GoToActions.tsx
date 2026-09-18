@@ -85,10 +85,18 @@ const GoToActions = (
                         color="inherit"
                         size="medium"
                         variant="extended"
+                        sx={{
+                            width: "auto",
+                            minWidth: 170,
+                            padding: "0 18px",
+                            fontSize: "0.82rem",
+                            fontWeight: 600,
+                            whiteSpace: "nowrap",
+                        }}
                         {...setupClickHandlers()}
                     >
                         <GoIcon style={{marginRight: "0.25rem", marginLeft: "-0.25rem"}}/>
-                        Go To Location
+                        Ir a ubicación
                         {goToIsExecuting && (
                             <CircularProgress
                                 color="inherit"
@@ -108,7 +116,7 @@ const GoToActions = (
                             onClick={onClear}
                         >
                             <ClearIcon style={{marginRight: "0.25rem", marginLeft: "-0.25rem"}}/>
-                            Clear
+                            Borrar
                         </ActionButton>
                     }
                 </Grid2>
