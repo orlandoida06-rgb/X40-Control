@@ -52,10 +52,52 @@ class RobotPositionMapStructure extends MapStructure {
             this.angle
         );
 
-
         const ctx = ctxWrapper.getContext();
         const p0 = new DOMPoint(this.x0, this.y0).matrixTransform(transformationMatrixToScreenSpace);
 
+        // ===== X40-CONTROL TESLA ROBOT HALO =====
+        ctx.save();
+
+        const haloRadius = Math.max(
+            rotatedImg.width,
+            rotatedImg.height
+        ) * 0.78;
+
+        const halo = ctx.createRadialGradient(
+            p0.x,
+            p0.y,
+            haloRadius * 0.18,
+            p0.x,
+            p0.y,
+            haloRadius
+        );
+
+        halo.addColorStop(0, "rgba(50, 135, 255, 0.32)");
+        halo.addColorStop(0.45, "rgba(50, 135, 255, 0.16)");
+        halo.addColorStop(1, "rgba(50, 135, 255, 0)");
+
+        ctx.fillStyle = halo;
+        ctx.beginPath();
+        ctx.arc(p0.x, p0.y, haloRadius, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(
+            p0.x,
+            p0.y,
+            Math.max(rotatedImg.width, rotatedImg.height) * 0.58,
+            0,
+            Math.PI * 2
+        );
+        ctx.strokeStyle = "rgba(80, 170, 255, 0.85)";
+        ctx.lineWidth = Math.max(1.5, scaleFactor * 0.8);
+        ctx.shadowColor = "rgba(50, 135, 255, 0.95)";
+        ctx.shadowBlur = Math.max(4, scaleFactor * 4);
+        ctx.stroke();
+
+        ctx.restore();
+
+        // ===== ROBOT REAL =====
         ctx.drawImage(
             rotatedImg,
             p0.x - rotatedImg.width / 2,

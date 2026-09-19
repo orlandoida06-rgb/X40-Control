@@ -19,7 +19,8 @@ const Content = styled("main")({
     display: "flex",
     flexDirection: "column",
     justifyContent: "flex-start",
-    overflow: "hidden",
+    overflowY: "auto",
+    overflowX: "hidden",
 });
 
 const AppRouter: React.FunctionComponent<{

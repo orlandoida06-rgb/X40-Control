@@ -10,34 +10,31 @@ import {
 import {
     Home as HomeIcon,
     Map as MapIcon,
-    Bed as BedIcon,
-    Kitchen as KitchenIcon,
     AccessTime as ScheduleIcon,
     History as HistoryIcon,
     Inventory2 as ConsumablesIcon,
     Settings as SettingsIcon,
-    PlayArrow as PlayIcon,
-    Pause as PauseIcon,
-    PowerSettingsNew as PowerIcon,
     Wifi as WifiIcon,
-    CleaningServices as CleaningIcon,
+    WaterDrop as WaterDropIcon,
     GridView as RoomsIcon,
     CropFree as ZonesIcon,
     MoreHoriz as MoreIcon,
 } from "@mui/icons-material";
 
 import LiveMapPage from "./map/LiveMapPage";
-import BasicControls from "./controls/BasicControls";
-import PresetSelectionControl from "./controls/PresetSelection";
-import RobotStatus from "./controls/RobotStatus";
+// UNUSED_REMOVED BasicControls from "./controls/BasicControls";
+// UNUSED_REMOVED PresetSelectionControl from "./controls/PresetSelection";
+// UNUSED_REMOVED RobotStatus from "./controls/RobotStatus";
 import Dock from "./controls/Dock";
-import CurrentStatistics from "./controls/CurrentStatistics";
-import Attachments from "./controls/Attachments";
+import CompactPresetControl from "./components/CompactPresetControl";
+// UNUSED_REMOVED Attachments from "./controls/Attachments";
 import {useIsMobileView} from "./hooks";
-import {useRobotStatusQuery} from "./api";
+import {RobotAttributeClass, useCurrentStatisticsQuery, useRobotAttributeQuery, useRobotStatusQuery} from "./api";
+import {getFriendlyStatName, getHumanReadableStatValue} from "./utils";
 import {useCapabilitiesSupported} from "./CapabilitiesProvider";
 import {Capability} from "./api";
 import LanguageSelector from "./i18n/LanguageSelector";
+import BatteryIndicator from "./components/BatteryIndicator";
 import {useLanguage} from "./i18n";
 
 const glass = {
@@ -83,19 +80,23 @@ const HomePage = (): React.ReactElement => {
     const {t} = useLanguage();
     const mobile = useIsMobileView();
     const {data: status} = useRobotStatusQuery();
+    const {data: currentStatistics} = useCurrentStatisticsQuery();
+    const {data: batteries} = useRobotAttributeQuery(RobotAttributeClass.BatteryState);
 
     const [
         dockEmpty,
         dockClean,
         dockDry,
-        statistics,
-        operationMode,
+        operationModeControl,
+        fanSpeedControl,
+        waterUsageControl,
     ] = useCapabilitiesSupported(
         Capability.AutoEmptyDockManualTrigger,
         Capability.MopDockCleanManualTrigger,
         Capability.MopDockDryManualTrigger,
-        Capability.CurrentStatistics,
         Capability.OperationModeControl,
+        Capability.FanSpeedControl,
+        Capability.WaterUsageControl,
     );
 
     const statusText: Record<string, string> = {
@@ -111,14 +112,28 @@ const HomePage = (): React.ReactElement => {
     const currentStatus =
         status?.value ? statusText[status.value] || status.value : "Conectando...";
 
+    const batteryLevel =
+        batteries && batteries.length > 0 ?
+            Math.round(batteries[0].level) :
+            null;
+
+    const timeStat =
+        currentStatistics?.find(stat => stat.type === "time");
+
+    const currentTime =
+        timeStat ?
+            getHumanReadableStatValue(timeStat) :
+            "—";
+
     return (
         <Box
             sx={{
-                minHeight: "100%",
+                minHeight: "100vh",
                 width: "100%",
                 bgcolor: "#070d15",
                 color: "#fff",
-                overflow: "hidden",
+                overflowY: {xs: "auto", md: "visible"},
+                overflowX: "hidden",
             }}
         >
             {/* HEADER */}
@@ -186,6 +201,7 @@ const HomePage = (): React.ReactElement => {
 
                         <WifiIcon sx={{color: "#24d99a"}} />
                         <LanguageSelector />
+                        <BatteryIndicator />
 
                     </>
                 )}
@@ -303,85 +319,275 @@ const HomePage = (): React.ReactElement => {
                         display: "flex",
                         flexDirection: "column",
                         gap: 1.5,
-                        overflowY: "auto",
+                        minWidth: 0,
+                        minHeight: 0,
+                        overflowY: {xs: "visible", md: "auto"},
+                        overflowX: "hidden",
+                        pr: 0.5,
                     }}
                 >
                     {/* ESTADO */}
-                    <Paper sx={{...glass, p: 2.2}}>
-                        <Typography sx={{fontSize: 19, fontWeight: 700, mb: 1.5}}>
-                            Estado actual
-                        </Typography>
+                    <Paper
+                        sx={{
+                            ...glass,
+                            p: 1.5,
+                            overflow: "hidden",
+                            position: "relative",
+                            flexShrink: 0,
+                            minHeight: 0,
+                            background:
+                                "linear-gradient(145deg, rgba(8,18,30,.96), rgba(14,27,43,.92))",
+                            border: "1px solid rgba(70,150,255,.16)",
+                            boxShadow: "0 12px 40px rgba(0,0,0,.28)",
+                        }}
+                    >
+                        <Box
+                            sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 1,
+                                px: 0.5,
+                                mb: 1.2,
+                            }}
+                        >
+                            <Typography
+                                sx={{
+                                    fontSize: 17,
+                                    fontWeight: 800,
+                                    letterSpacing: ".03em",
+                                }}
+                            >
+                                ESTADO ACTUAL
+                            </Typography>
+                        </Box>
 
                         <Box
                             sx={{
                                 display: "flex",
                                 alignItems: "center",
-                                gap: 1.5,
-                                mb: 2,
+                                gap: 1,
+                                px: 0.5,
+                                mb: 1,
                             }}
                         >
-                            <CleaningIcon
+                            <Box
                                 sx={{
-                                    fontSize: 35,
-                                    color: "#3287ff",
+                                    width: 9,
+                                    height: 9,
+                                    borderRadius: "50%",
+                                    bgcolor:
+                                        status?.value === "error" ?
+                                            "#ff5c5c" :
+                                            "#19df8a",
+                                    boxShadow:
+                                        status?.value === "error" ?
+                                            "0 0 12px #ff5c5c" :
+                                            "0 0 12px #19df8a",
                                 }}
                             />
 
-                            <Box>
-                                <Typography sx={{fontSize: 22, fontWeight: 600}}>
-                                    {currentStatus}
-                                </Typography>
-                                <Typography sx={{color: "#7589a3", fontSize: 13}}>
-                                    Dreame X40 Ultra
-                                </Typography>
-                            </Box>
+                            <Typography
+                                sx={{
+                                    color:
+                                        status?.value === "error" ?
+                                            "#ff6b6b" :
+                                            "#19df8a",
+                                    fontSize: 15,
+                                    fontWeight: 700,
+                                }}
+                            >
+                                {currentStatus}
+                            </Typography>
                         </Box>
 
-                        <Divider sx={{borderColor: "rgba(130,160,200,.12)", mb: 2}} />
+                        <Box
+                            sx={{
+                                height: 245,
+                                borderRadius: 2.5,
+                                overflow: "hidden",
+                                background: "#07111d",
+                                border: "1px solid rgba(120,160,210,.12)",
+                            }}
+                        >
+                            <Box
+                                component="img"
+                                src="/x40-card.png"
+                                alt="Dreame X40 Ultra"
+                                sx={{
+                                    width: "100%",
+                                    height: "100%",
+                                    display: "block",
+                                    objectFit: "cover",
+                                    objectPosition: "center",
+                                }}
+                            />
+                        </Box>
 
-                        <Box sx={{display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 1}}>
-                            <Box sx={{...glass, p: 1.5, textAlign: "center"}}>
-                                <Typography sx={{fontSize: 22, fontWeight: 700}}>
-                                    X40
-                                </Typography>
-                                <Typography sx={{fontSize: 11, color: "#7589a3"}}>
-                                    Modelo
-                                </Typography>
-                            </Box>
+                        <Box sx={{textAlign: "center", mt: 1}}>
+                            <Typography
+                                sx={{
+                                    fontSize: 17,
+                                    fontWeight: 800,
+                                }}
+                            >
+                                Dreame X40 Ultra
+                            </Typography>
 
-                            {operationMode ? (
-                                <Box sx={{textAlign: "left"}}>
-                                    <PresetSelectionControl
-                                        capability={Capability.OperationModeControl}
-                                        label={t("mode")}
-                                        icon={<PlayIcon fontSize="small" />}
+                            <Typography
+                                sx={{
+                                    color: "#8196b2",
+                                    fontSize: 12,
+                                }}
+                            >
+                                {currentStatus === "Limpiando" ?
+                                    "Limpiando la casa" :
+                                    currentStatus}
+                            </Typography>
+                        </Box>
+
+                        <Divider
+                            sx={{
+                                borderColor: "rgba(130,160,200,.12)",
+                                my: 1.2,
+                            }}
+                        />
+
+                        <Box
+                            sx={{
+                                display: "grid",
+                                gridTemplateColumns: "repeat(4, 1fr)",
+                                gap: 0.5,
+                            }}
+                        >
+                            <Box
+                                sx={{
+                                    minWidth: 0,
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    "& > div": {
+                                        width: "100%",
+                                    },
+                                }}
+                            >
+                                {fanSpeedControl ? (
+                                    <CompactPresetControl
+                                        capability={Capability.FanSpeedControl}
+                                        label="Succión"
                                     />
-                                </Box>
-                            ) : (
-                                <Box sx={{...glass, p: 1.5, textAlign: "center"}}>
-                                    <Typography sx={{fontSize: 22, fontWeight: 700}}>
-                                        4
-                                    </Typography>
-                                    <Typography sx={{fontSize: 11, color: "#7589a3"}}>
-                                        Modos
-                                    </Typography>
-                                </Box>
-                            )}
-                        </Box>
+                                ) : (
+                                    <Box sx={{textAlign: "center"}}>
+                                        <Typography sx={{fontSize: 14, fontWeight: 800}}>
+                                            —
+                                        </Typography>
+                                        <Typography sx={{color: "#8196b2", fontSize: 10}}>
+                                            Succión
+                                        </Typography>
+                                    </Box>
+                                )}
+                            </Box>
 
-                        <Box sx={{mt: 1.5}}>
-                            <BasicControls />
+                            <Box
+                                sx={{
+                                    minWidth: 0,
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    "& > div": {
+                                        width: "100%",
+                                    },
+                                }}
+                            >
+                                {waterUsageControl ? (
+                                    <CompactPresetControl
+                                        capability={Capability.WaterUsageControl}
+                                        label="Agua"
+                                    />
+                                ) : (
+                                    <Box sx={{textAlign: "center"}}>
+                                        <Typography sx={{fontSize: 14, fontWeight: 800}}>
+                                            —
+                                        </Typography>
+                                        <Typography sx={{color: "#8196b2", fontSize: 10}}>
+                                            Agua
+                                        </Typography>
+                                    </Box>
+                                )}
+                            </Box>
+
+                            <Box sx={{textAlign: "center", minWidth: 0}}>
+                                <Typography
+                                    sx={{
+                                        fontSize: 14,
+                                        fontWeight: 800,
+                                        color: "#19df8a",
+                                    }}
+                                >
+                                    {batteryLevel !== null ?
+                                        `${batteryLevel}%` :
+                                        "—"}
+                                </Typography>
+
+                                <Typography
+                                    sx={{
+                                        color: "#8196b2",
+                                        fontSize: 10,
+                                        mt: .25,
+                                    }}
+                                >
+                                    Batería
+                                </Typography>
+                            </Box>
+
+                            <Box sx={{textAlign: "center", minWidth: 0}}>
+                                <Typography
+                                    sx={{
+                                        fontSize: 14,
+                                        fontWeight: 800,
+                                        color: "#dce7f5",
+                                    }}
+                                >
+                                    {currentTime}
+                                </Typography>
+
+                                <Typography
+                                    sx={{
+                                        color: "#8196b2",
+                                        fontSize: 10,
+                                        mt: .25,
+                                    }}
+                                >
+                                    Tiempo
+                                </Typography>
+                            </Box>
                         </Box>
                     </Paper>
 
                     {/* BASE */}
                     {(dockEmpty || dockClean || dockDry) && (
-                        <Paper sx={{...glass, p: 2}}>
-                            <Typography sx={{fontSize: 18, fontWeight: 700, mb: 1}}>
+                        <Paper
+                            sx={{
+                                ...glass,
+                                p: 2,
+                                overflow: "hidden",
+                            }}
+                        >
+                            <Typography
+                                sx={{
+                                    fontSize: 18,
+                                    fontWeight: 700,
+                                    mb: 1,
+                                }}
+                            >
                                 Estación de vaciado y limpieza
                             </Typography>
 
-                            <Box sx={{display: "flex", alignItems: "center", gap: 1}}>
+                            <Box
+                                sx={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: 1,
+                                    mb: 1,
+                                }}
+                            >
                                 <Box
                                     sx={{
                                         width: 9,
@@ -397,66 +603,39 @@ const HomePage = (): React.ReactElement => {
                                 </Typography>
                             </Box>
 
-                            <Box sx={{mt: 1.5}}>
-                                <Dock />
+                            <Box
+                                sx={{
+                                    width: "100%",
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    mb: 1.5,
+                                    borderRadius: "18px",
+                                    overflow: "hidden",
+                                    background:
+                                        "linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.01))",
+                                    border: "1px solid rgba(120,160,210,.10)",
+                                }}
+                            >
+                                <Box
+                                    component="img"
+                                    src="/estaccion.png"
+                                    alt="Estación de vaciado y limpieza"
+                                    sx={{
+                                        display: "block",
+                                        width: "100%",
+                                        maxWidth: 420,
+                                        height: 210,
+                                        objectFit: "contain",
+                                    }}
+                                />
                             </Box>
+
+                            <Dock />
                         </Paper>
                     )}
 
-                    {/* ESTADÍSTICAS */}
-                    {statistics && (
-                        <Paper sx={{...glass, p: 2}}>
-                            <Typography sx={{fontSize: 18, fontWeight: 700, mb: 1}}>
-                                Estadísticas
-                            </Typography>
-                            <CurrentStatistics />
-                        </Paper>
-                    )}
 
-                    {/* ACCIONES */}
-                    <Paper sx={{...glass, p: 2}}>
-                        <Typography sx={{fontSize: 18, fontWeight: 700, mb: 1.2}}>
-                            Funciones adicionales
-                        </Typography>
-
-                        <Box sx={{display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: .8}}>
-                            <Button
-                                component={Link}
-                                to="/options/map_management/virtual_restrictions"
-                                sx={{minWidth: 0, minHeight: 70, flexDirection: "column", color: "#a9bad0", textTransform: "none"}}
-                            >
-                                <ZonesIcon />
-                                <Typography sx={{fontSize: 11}}>Zonas</Typography>
-                            </Button>
-
-                            <Button
-                                component={Link}
-                                to="/options/map_management/segments"
-                                sx={{minWidth: 0, minHeight: 70, flexDirection: "column", color: "#a9bad0", textTransform: "none"}}
-                            >
-                                <RoomsIcon />
-                                <Typography sx={{fontSize: 11}}>Habitaciones</Typography>
-                            </Button>
-
-                            <Button
-                                component={Link}
-                                to="/valetudo/timers"
-                                sx={{minWidth: 0, minHeight: 70, flexDirection: "column", color: "#a9bad0", textTransform: "none"}}
-                            >
-                                <ScheduleIcon />
-                                <Typography sx={{fontSize: 11}}>Programar</Typography>
-                            </Button>
-
-                            <Button
-                                component={Link}
-                                to="/options/robot"
-                                sx={{minWidth: 0, minHeight: 70, flexDirection: "column", color: "#a9bad0", textTransform: "none"}}
-                            >
-                                <MoreIcon />
-                                <Typography sx={{fontSize: 11}}>Más</Typography>
-                            </Button>
-                        </Box>
-                    </Paper>
                 </Box>
             </Box>
         </Box>

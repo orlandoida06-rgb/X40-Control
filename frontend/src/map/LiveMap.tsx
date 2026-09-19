@@ -7,11 +7,6 @@ import {
     ActionsContainer,
     ActionButton,
     MapControlsPanel,
-    MapRobotStatus,
-    MapConnectionDot,
-    MapTopPanel,
-    MapTitle,
-    MapSubtitle,
 } from "./Styled";
 import SegmentActions from "./actions/live_map_actions/SegmentActions";
 import SegmentLabelMapStructure from "./structures/map_structures/SegmentLabelMapStructure";
@@ -160,6 +155,10 @@ class LiveMap extends BaseMap<LiveMapProps, LiveMapState> {
         }
     }
 
+    componentDidMount(): void {
+        super.componentDidMount();
+    }
+
     componentDidUpdate(prevProps: Readonly<MapProps>, prevState: Readonly<MapState>): void {
         super.componentDidUpdate(prevProps, prevState);
 
@@ -185,67 +184,9 @@ class LiveMap extends BaseMap<LiveMapProps, LiveMapState> {
                     overflow: "hidden",
                 }}
             >
-                <MapTopPanel>
-                    <Box sx={{display: "flex", alignItems: "center", gap: 1.25}}>
-                        <Box
-                            sx={{
-                                width: 34,
-                                height: 34,
-                                borderRadius: "50%",
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                background: "rgba(255,255,255,0.08)",
-                                fontSize: "1rem",
-                            }}
-                        >
-                            🗺️
-                        </Box>
 
-                        <Box>
-                            <MapTitle>Mapa en vivo</MapTitle>
-                            <MapSubtitle>Dreame X40 Ultra</MapSubtitle>
-                        </Box>
-                    </Box>
 
-                    <MapRobotStatus>
-                        <MapConnectionDot />
-                        <MapSubtitle sx={{marginTop: 0}}>
-                            Conectado
-                        </MapSubtitle>
-                    </MapRobotStatus>
-                </MapTopPanel>
 
-                <MapTopPanel>
-                    <Box sx={{display: "flex", alignItems: "center", gap: 1.25}}>
-                        <Box
-                            sx={{
-                                width: 34,
-                                height: 34,
-                                borderRadius: "50%",
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                background: "rgba(255,255,255,0.08)",
-                                fontSize: "1rem",
-                            }}
-                        >
-                            🗺️
-                        </Box>
-
-                        <Box>
-                            <MapTitle>Mapa en vivo</MapTitle>
-                            <MapSubtitle>Dreame X40 Ultra</MapSubtitle>
-                        </Box>
-                    </Box>
-
-                    <MapRobotStatus>
-                        <MapConnectionDot />
-                        <MapSubtitle sx={{marginTop: 0}}>
-                            Conectado
-                        </MapSubtitle>
-                    </MapRobotStatus>
-                </MapTopPanel>
 
                 <MapContainer
                     style={{
@@ -289,6 +230,9 @@ class LiveMap extends BaseMap<LiveMapProps, LiveMapState> {
                         >
                         ⌾
                         </ActionButton>
+
+
+
                     </MapControlsPanel>
 
 

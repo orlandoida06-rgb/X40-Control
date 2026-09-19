@@ -175,6 +175,24 @@ const fallbackPixelPatternHandler: PixelPatternHandler = (x, y) => {
     return pattern[localY][localX] === 1;
 };
 
+
+/*
+ * Ajuste visual específico para la habitación de Xiana.
+ * No modifica los datos del robot; solamente evita pintar
+ * la prolongación exterior izquierda del segmento 2.
+ */
+const shouldRenderXianaPixel = (x: number, y: number): boolean => {
+    if (y < 600) {
+        return x >= 600 && x <= 661;
+    }
+
+    if (y < 615) {
+        return x >= 595 && x <= 661;
+    }
+
+    return x >= 610 && x <= 661;
+};
+
 const materialToPixelPatternHandler: {[key in RawMapLayerMaterial]: PixelPatternHandler} = {
     [RawMapLayerMaterial.Generic]: solidFillPixelPatternHandler,
     [RawMapLayerMaterial.Tile]: tilePixelPatternHandler,
@@ -269,9 +287,72 @@ export function PROCESS_LAYERS(layers: Array<RawMapLayer>, pixelSize: number, pa
             const pixelX = layer.pixels[i];
             const pixelY = layer.pixels[i+1];
 
-            const pixelColor = pixelPatternHandler(pixelX, pixelY) ? accentColor : color;
+            if (
+                layer.type === "segment" &&
+                layer.metaData.segmentId === "2" &&
+                !shouldRenderXianaPixel(pixelX, pixelY)
+            ) {
+                continue;
+            }
 
-            pixelData[imgDataOffset] = pixelColor.r;
+            let pixelColor = color;
+
+if (layer.type === "wall") {
+    let nearbySegmentId = 0;
+    let nearbyCount = 0;
+
+    for (let dy = -4; dy <= 4; dy++) {
+        for (let dx = -4; dx <= 4; dx++) {
+            if (dx === 0 && dy === 0) {
+                continue;
+            }
+
+            const nx = pixelX + dx;
+            const ny = pixelY + dy;
+
+            if (
+                nx < dimensions.x.min ||
+                nx > dimensions.x.max ||
+                ny < dimensions.y.min ||
+                ny > dimensions.y.max
+            ) {
+                continue;
+            }
+
+            const neighborOffset =
+                (nx - dimensions.x.min) +
+                ((ny - dimensions.y.min) * width);
+
+            const neighborSegmentId = segmentLookupData[neighborOffset];
+
+            if (neighborSegmentId > 0) {
+                if (nearbySegmentId === 0) {
+                    nearbySegmentId = neighborSegmentId;
+                }
+
+                if (nearbySegmentId === neighborSegmentId) {
+                    nearbyCount++;
+                }
+            }
+        }
+    }
+
+    if (nearbySegmentId > 0 && nearbyCount >= 12) {
+        const segmentId = segmentLookupIdMapping.get(nearbySegmentId);
+
+        if (segmentId) {
+            const colorId = colorFinder.getColor(segmentId);
+
+            pixelColor = colors.segments[colorId];
+        }
+    }
+} else if (layer.type === "segment" && layer.metaData.segmentId === "2") {
+    pixelColor = color;
+} else {
+    pixelColor = pixelPatternHandler(pixelX, pixelY) ? accentColor : color;
+}
+
+pixelData[imgDataOffset] = pixelColor.r;
             pixelData[imgDataOffset + 1] = pixelColor.g;
             pixelData[imgDataOffset + 2] = pixelColor.b;
             pixelData[imgDataOffset + 3] = 255;
@@ -279,6 +360,69 @@ export function PROCESS_LAYERS(layers: Array<RawMapLayer>, pixelSize: number, pa
             segmentLookupData[offset] = segmentLookupId;
         }
     });
+
+    // Rellenar pequeños huecos interiores de Habitación matrimonio (segmento 8)
+    for (let y = dimensions.y.min + 1; y < dimensions.y.max; y++) {
+        for (let x = dimensions.x.min + 1; x < dimensions.x.max; x++) {
+            const offset =
+                (x - dimensions.x.min) +
+                ((y - dimensions.y.min) * width);
+
+            // Solo rellenar píxeles actualmente transparentes.
+            if (pixelData[offset * 4 + 3] !== 0) {
+                continue;
+            }
+
+            let segment8Count = 0;
+
+            for (let dy = -3; dy <= 3; dy++) {
+                for (let dx = -3; dx <= 3; dx++) {
+                    if (dx === 0 && dy === 0) {
+                        continue;
+                    }
+
+                    const nx = x + dx;
+                    const ny = y + dy;
+
+                    if (
+                        nx < dimensions.x.min ||
+                        nx > dimensions.x.max ||
+                        ny < dimensions.y.min ||
+                        ny > dimensions.y.max
+                    ) {
+                        continue;
+                    }
+
+                    const neighborOffset =
+                        (nx - dimensions.x.min) +
+                        ((ny - dimensions.y.min) * width);
+
+                    const neighborSegmentId =
+                        segmentLookupIdMapping.get(
+                            segmentLookupData[neighborOffset]
+                        );
+
+                    if (neighborSegmentId === "8") {
+                        segment8Count++;
+                    }
+                }
+            }
+
+            if (segment8Count >= 10) {
+                const colorId = colorFinder.getColor("8");
+                const fillColor = colors.segments[colorId];
+
+                pixelData[offset * 4] = fillColor.r;
+                pixelData[offset * 4 + 1] = fillColor.g;
+                pixelData[offset * 4 + 2] = fillColor.b;
+                pixelData[offset * 4 + 3] = 255;
+
+                segmentLookupData[offset] =
+                    [...segmentLookupIdMapping.entries()]
+                        .find(([, id]) => id === "8")?.[0] ?? 0;
+            }
+        }
+    }
 
     return {
         pixelData: pixelData,
@@ -332,14 +476,14 @@ const TYPE_SORT_MAPPING = {
 const wallColor = hexToRgb("#333333");
 
 export const COLORS: LayerColors = {
-    floor: hexToRgb(lightPalette.blue),
-    wall: wallColor,
+    floor: hexToRgb("#edf1f4"),
+    wall: hexToRgb("#c9d1d9"),
     segments: [
-        hexToRgb(lightPalette.teal),
-        hexToRgb(lightPalette.green),
-        hexToRgb(lightPalette.red),
-        hexToRgb(lightPalette.yellow),
-        hexToRgb(lightPalette.purple) // "fallback" color
+        hexToRgb("#6f9ed8"),
+        hexToRgb("#62b6bf"),
+        hexToRgb("#86a9dc"),
+        hexToRgb("#70c4d2"),
+        hexToRgb("#9a9fda") // "fallback" color
     ]
 };
 
@@ -362,16 +506,18 @@ export const BACKGROUND_ACCENT_COLORS: LayerColors = {
 };
 
 export const DARK_COLORS: LayerColors = {
-    floor: hexToRgb(darkPalette.blue),
-    wall: wallColor,
+    floor: hexToRgb("#0e151d"),
+    wall: hexToRgb("#273440"),
     segments: [
-        hexToRgb(darkPalette.teal),
-        hexToRgb(darkPalette.green),
-        hexToRgb(darkPalette.red),
-        hexToRgb(darkPalette.yellow),
-        hexToRgb(darkPalette.purple) // "fallback" color
+        hexToRgb("#3474c7"),
+        hexToRgb("#2095a5"),
+        hexToRgb("#4c76bd"),
+        hexToRgb("#258da9"),
+        hexToRgb("#646dc0") // "fallback" color
     ]
 };
+
+
 
 export const DARK_ACCENT_COLORS: LayerColors = {
     floor: adjustRGBColorBrightness(DARK_COLORS.floor, -25),
