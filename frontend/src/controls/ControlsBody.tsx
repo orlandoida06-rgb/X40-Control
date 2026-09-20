@@ -122,6 +122,7 @@ const ControlsBody = (): React.ReactElement => {
 
                             {waterControl && (
                                 <Grid2
+                                    id="water-usage-control"
                                     size={{
                                         xs: 12,
                                         sm: 4,

@@ -31,6 +31,7 @@ import {
 } from "../presetUtils";
 import {Mark} from "@mui/material/Slider/useSlider.types";
 import {playX40ControlVoice} from "../voice/X40ControlVoice";
+const X40_CONTROL_VOICE_TEST = "X40_CONTROL_VOICE_TEST_2026";
 
 const DiscreteSlider = styled(Slider)(({theme}) => ({
     paddingTop: theme.spacing(1.25),

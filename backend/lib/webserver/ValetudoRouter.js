@@ -102,8 +102,8 @@ class ValetudoRouter {
             }
 
             execFile(
-                "/data/personalized_voice/X40-Control/play.sh",
-                [String(id)],
+                "/usr/bin/dmr_client",
+                ["-f", `/data/personalized_voice/X40-Control/${id}.ogg`],
                 {
                     timeout: 10000
                 },

@@ -509,6 +509,33 @@ const HomePage = (): React.ReactElement => {
                                     },
                                 }}
                             >
+                                {operationModeControl ? (
+                                    <CompactPresetControl
+                                        capability={Capability.OperationModeControl}
+                                        label="Modo de fregado"
+                                    />
+                                ) : (
+                                    <Box sx={{textAlign: "center"}}>
+                                        <Typography sx={{fontSize: 14, fontWeight: 800}}>
+                                            —
+                                        </Typography>
+                                        <Typography sx={{color: "#8196b2", fontSize: 10}}>
+                                            Modo de fregado
+                                        </Typography>
+                                    </Box>
+                                )}
+                            </Box>
+
+                            <Box
+                                sx={{
+                                    minWidth: 0,
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    "& > div": {
+                                        width: "100%",
+                                    },
+                                }}
+                            >
                                 {waterUsageControl ? (
                                     <CompactPresetControl
                                         capability={Capability.WaterUsageControl}
@@ -524,30 +551,6 @@ const HomePage = (): React.ReactElement => {
                                         </Typography>
                                     </Box>
                                 )}
-                            </Box>
-
-                            <Box sx={{textAlign: "center", minWidth: 0}}>
-                                <Typography
-                                    sx={{
-                                        fontSize: 14,
-                                        fontWeight: 800,
-                                        color: "#19df8a",
-                                    }}
-                                >
-                                    {batteryLevel !== null ?
-                                        `${batteryLevel}%` :
-                                        "—"}
-                                </Typography>
-
-                                <Typography
-                                    sx={{
-                                        color: "#8196b2",
-                                        fontSize: 10,
-                                        mt: .25,
-                                    }}
-                                >
-                                    Batería
-                                </Typography>
                             </Box>
 
                             <Box sx={{textAlign: "center", minWidth: 0}}>
