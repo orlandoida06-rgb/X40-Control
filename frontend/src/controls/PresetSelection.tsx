@@ -30,6 +30,7 @@ import {
     sortPresets,
 } from "../presetUtils";
 import {Mark} from "@mui/material/Slider/useSlider.types";
+import {playX40ControlVoice} from "../voice/X40ControlVoice";
 
 const DiscreteSlider = styled(Slider)(({theme}) => ({
     paddingTop: theme.spacing(1.25),
@@ -150,6 +151,7 @@ const PresetSelectionControl = (
 
             if (level !== preset?.value) {
                 selectPreset(level);
+                playX40ControlVoice(level);
             }
         },
         5_000

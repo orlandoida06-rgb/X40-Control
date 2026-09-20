@@ -1,4 +1,5 @@
 const express = require("express");
+const {execFile} = require("child_process");
 const fs = require("fs");
 const nestedProperty = require("nested-property");
 const RateLimit = require("express-rate-limit");
@@ -84,6 +85,47 @@ class ValetudoRouter {
                 release: Tools.GET_VALETUDO_VERSION(),
                 commit: Tools.GET_COMMIT_ID()
             });
+        });
+
+        this.router.post("/x40-control/voice", (req, res) => {
+            const id = Number(req.body?.id);
+
+            const validIds = new Set([
+                1001, 1002, 1003, 1004, 1005,
+                1101, 1102, 1103, 1104, 1105, 1106, 1107
+            ]);
+
+            if (!Number.isInteger(id) || !validIds.has(id)) {
+                return res.status(400).json({
+                    error: "ID de voz no válido"
+                });
+            }
+
+            execFile(
+                "/data/personalized_voice/X40-Control/play.sh",
+                [String(id)],
+                {
+                    timeout: 10000
+                },
+                (error, stdout, stderr) => {
+                    if (error) {
+                        Logger.warn(
+                            `X40ControlVoice: error reproduciendo voz ${id}`,
+                            {
+                                message: error.message,
+                                stdout,
+                                stderr
+                            }
+                        );
+
+                        return res.status(500).json({
+                            error: "No se pudo reproducir la voz"
+                        });
+                    }
+
+                    res.sendStatus(200);
+                }
+            );
         });
 
         this.router.get("/log/content", this.limiter, (req, res) => {
