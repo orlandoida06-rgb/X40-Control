@@ -20,6 +20,8 @@ import {
     sortPresets,
 } from "../presetUtils";
 
+import {playX40ControlVoice} from "../voice/X40ControlVoice";
+
 type PresetCapability =
     | Capability.FanSpeedControl
     | Capability.WaterUsageControl
@@ -152,6 +154,7 @@ const CompactPresetControl = ({
     ) => {
         if (value !== preset?.value) {
             selectPreset(value);
+            playX40ControlVoice(value, capability);
         }
 
         handleClose();
@@ -270,60 +273,60 @@ const CompactPresetControl = ({
                         value as Exclude<PresetSelectionState["value"], "custom">;
 
                     return (
-                    <MenuItem
-                        key={presetValue}
-                        selected={presetValue === preset?.value}
-                        onClick={() => handleSelect(presetValue)}
-                    >
-                        <Box
-                            sx={{
-                                width: "100%",
-                                display: "flex",
-                                alignItems: "center",
-                                gap: 1.1,
-                            }}
+                        <MenuItem
+                            key={presetValue}
+                            selected={presetValue === preset?.value}
+                            onClick={() => handleSelect(presetValue)}
                         >
                             <Box
                                 sx={{
-                                    width: 34,
-                                    height: 34,
-                                    borderRadius: "10px",
+                                    width: "100%",
                                     display: "flex",
                                     alignItems: "center",
-                                    justifyContent: "center",
-                                    background: value === preset?.value ?
-                                        "rgba(70,145,230,.16)" :
-                                        "rgba(120,160,210,.06)",
+                                    gap: 1.1,
                                 }}
                             >
-                                {getPresetIcon(
-                                    capability,
-                                    presetValue,
-                                    presetValue === preset?.value
+                                <Box
+                                    sx={{
+                                        width: 34,
+                                        height: 34,
+                                        borderRadius: "10px",
+                                        display: "flex",
+                                        alignItems: "center",
+                                        justifyContent: "center",
+                                        background: value === preset?.value ?
+                                            "rgba(70,145,230,.16)" :
+                                            "rgba(120,160,210,.06)",
+                                    }}
+                                >
+                                    {getPresetIcon(
+                                        capability,
+                                        presetValue,
+                                        presetValue === preset?.value
+                                    )}
+                                </Box>
+
+                                <Typography
+                                    sx={{
+                                        flex: 1,
+                                        fontSize: ".78rem",
+                                        fontWeight:
+                                            value === preset?.value ? 700 : 500,
+                                    }}
+                                >
+                                    {presetFriendlyNames[value]}
+                                </Typography>
+
+                                {value === preset?.value && (
+                                    <CheckIcon
+                                        sx={{
+                                            fontSize: 17,
+                                            color: "#19df8a",
+                                        }}
+                                    />
                                 )}
                             </Box>
-
-                            <Typography
-                                sx={{
-                                    flex: 1,
-                                    fontSize: ".78rem",
-                                    fontWeight:
-                                        value === preset?.value ? 700 : 500,
-                                }}
-                            >
-                                {presetFriendlyNames[value]}
-                            </Typography>
-
-                            {value === preset?.value && (
-                                <CheckIcon
-                                    sx={{
-                                        fontSize: 17,
-                                        color: "#19df8a",
-                                    }}
-                                />
-                            )}
-                        </Box>
-                    </MenuItem>
+                        </MenuItem>
                     );
                 })}
             </Menu>

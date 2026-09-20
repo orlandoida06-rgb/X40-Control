@@ -92,7 +92,8 @@ class ValetudoRouter {
 
             const validIds = new Set([
                 1001, 1002, 1003, 1004, 1005,
-                1101, 1102, 1103, 1104, 1105, 1106, 1107
+                1101, 1102, 1103, 1104, 1105, 1106, 1107,
+                1201, 1202, 1203, 1204, 1205, 1206
             ]);
 
             if (!Number.isInteger(id) || !validIds.has(id)) {

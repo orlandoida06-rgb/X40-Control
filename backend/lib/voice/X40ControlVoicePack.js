@@ -18,6 +18,14 @@ const VOICES = {
     1105: "1105.ogg", // Alto
     1106: "1106.ogg", // Máximo
     1107: "1107.ogg", // Turbo
+
+    // Agua
+    1201: "1201.ogg", // Desactivada
+    1202: "1202.ogg", // Mínima
+    1203: "1203.ogg", // Baja
+    1204: "1204.ogg", // Media
+    1205: "1205.ogg", // Alta
+    1206: "1206.ogg", // Máxima
 };
 
 function getVoicePath(id) {
