@@ -22,7 +22,7 @@ import {
 } from "@mui/icons-material";
 
 import LiveMapPage from "./map/LiveMapPage";
-// UNUSED_REMOVED BasicControls from "./controls/BasicControls";
+import BasicControls from "./controls/BasicControls";
 // UNUSED_REMOVED PresetSelectionControl from "./controls/PresetSelection";
 // UNUSED_REMOVED RobotStatus from "./controls/RobotStatus";
 import Dock from "./controls/Dock";
@@ -213,6 +213,7 @@ const HomePage = (): React.ReactElement => {
                     gridTemplateColumns: {xs: "1fr", md: "230px minmax(0,1fr) 390px"},
                     gap: 1.5,
                     height: {xs: "auto", md: "calc(100vh - 82px)"},
+                    minHeight: 0,
                     p: 1.5,
                 }}
             >
@@ -260,6 +261,8 @@ const HomePage = (): React.ReactElement => {
                     sx={{
                         ...glass,
                         minHeight: mobile ? 520 : 0,
+                        height: {xs: "520px", md: "100%"},
+                        minWidth: 0,
                         overflow: "hidden",
                         position: "relative",
                     }}
@@ -289,7 +292,7 @@ const HomePage = (): React.ReactElement => {
                             top: 15,
                             right: 15,
                             display: "flex",
-                            gap: 1,
+                            gap: 1.5,
                         }}
                     >
                         <Paper sx={{...glass, p: 1}}>
@@ -324,8 +327,18 @@ const HomePage = (): React.ReactElement => {
                         overflowY: {xs: "visible", md: "auto"},
                         overflowX: "hidden",
                         pr: 0.5,
+                        scrollbarWidth: "thin",
+                        "&::-webkit-scrollbar": {
+                            width: 7,
+                        },
+                        "&::-webkit-scrollbar-thumb": {
+                            background: "rgba(100,140,190,.45)",
+                            borderRadius: 10,
+                        },
                     }}
                 >
+
+
                     {/* ESTADO */}
                     <Paper
                         sx={{
@@ -345,7 +358,7 @@ const HomePage = (): React.ReactElement => {
                             sx={{
                                 display: "flex",
                                 alignItems: "center",
-                                gap: 1,
+                                gap: 1.5,
                                 px: 0.5,
                                 mb: 1.2,
                             }}
@@ -365,7 +378,7 @@ const HomePage = (): React.ReactElement => {
                             sx={{
                                 display: "flex",
                                 alignItems: "center",
-                                gap: 1,
+                                gap: 1.5,
                                 px: 0.5,
                                 mb: 1,
                             }}
@@ -456,7 +469,7 @@ const HomePage = (): React.ReactElement => {
                             sx={{
                                 display: "grid",
                                 gridTemplateColumns: "repeat(4, 1fr)",
-                                gap: 0.5,
+                                gap: 1.5,
                             }}
                         >
                             <Box
@@ -559,6 +572,10 @@ const HomePage = (): React.ReactElement => {
                                 </Typography>
                             </Box>
                         </Box>
+                    <Box sx={{mt: 1.5}}>
+                        <BasicControls />
+                    </Box>
+
                     </Paper>
 
                     {/* BASE */}
@@ -566,66 +583,39 @@ const HomePage = (): React.ReactElement => {
                         <Paper
                             sx={{
                                 ...glass,
-                                p: 2,
-                                overflow: "hidden",
+                                p: 1.5,
+                                flexShrink: 0,
                             }}
                         >
                             <Typography
                                 sx={{
-                                    fontSize: 18,
-                                    fontWeight: 700,
+                                    fontSize: 16,
+                                    fontWeight: 800,
                                     mb: 1,
                                 }}
                             >
-                                Estación de vaciado y limpieza
+                                ESTACIÓN
                             </Typography>
 
                             <Box
                                 sx={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                    gap: 1,
-                                    mb: 1,
-                                }}
-                            >
-                                <Box
-                                    sx={{
-                                        width: 9,
-                                        height: 9,
-                                        borderRadius: "50%",
-                                        bgcolor: "#19df8a",
-                                        boxShadow: "0 0 10px #19df8a",
-                                    }}
-                                />
-
-                                <Typography sx={{color: "#19df8a"}}>
-                                    Lista
-                                </Typography>
-                            </Box>
-
-                            <Box
-                                sx={{
                                     width: "100%",
+                                    height: 300,
                                     display: "flex",
                                     justifyContent: "center",
                                     alignItems: "center",
-                                    mb: 1.5,
-                                    borderRadius: "18px",
+                                    mb: 1,
+                                    borderRadius: "14px",
                                     overflow: "hidden",
-                                    background:
-                                        "linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.01))",
-                                    border: "1px solid rgba(120,160,210,.10)",
                                 }}
                             >
                                 <Box
                                     component="img"
                                     src="/estaccion.png"
-                                    alt="Estación de vaciado y limpieza"
+                                    alt="Estación"
                                     sx={{
-                                        display: "block",
                                         width: "100%",
-                                        maxWidth: 420,
-                                        height: 210,
+                                        height: "100%",
                                         objectFit: "contain",
                                     }}
                                 />
