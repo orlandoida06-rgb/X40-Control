@@ -1,3 +1,6 @@
+cd ~/tuasistente-miio/valetudo-ui
+
+cat > README.md <<'EOF'
 # X40-Control 🇪🇸
 
 Interfaz personalizada de Valetudo para el **Dreame X40 Ultra**, con una interfaz moderna y traducida al español.
@@ -32,8 +35,7 @@ Actualmente desarrollado y probado para:
 
 X40-Control puede instalarse desde cualquier ordenador que tenga acceso SSH al robot.
 
-Acceso SSH como root al robot mediante una clave SSH válida. La clave no tiene que llamarse id_rsa; puede utilizarse cualquier clave autorizada para acceder al robot.
-
+Necesitas acceso SSH como **root** al robot mediante una clave SSH válida. La clave no tiene que llamarse `id_rsa`; puedes utilizar cualquier clave autorizada para acceder al robot.
 
 ### 1. Descargar X40-Control
 
@@ -43,13 +45,10 @@ Clona el repositorio:
 git clone https://github.com/orlandoida06-rgb/X40-Control.git
 cd X40-Control
 
-2. Preparar el instalador
-
 Da permisos de ejecución:
-
 chmod +x install-x40control.sh
 
-3. Instalar X40-Control
+Instalar X40-Control
 
 Ejecuta el instalador indicando:
 
@@ -68,4 +67,12 @@ La IP y la ruta utilizadas en el ejemplo son únicamente orientativas.
 
 Cada usuario debe utilizar la IP de su propio robot y la ruta de su propia clave SSH.
 
-El instalador utiliza el usuario:root
+El instalador utiliza el usuario root.
+
+Cuando no encuentra una copia local del ejecutable, el instalador descarga automáticamente el binario de X40-Control desde la Release v1.0.0.
+
+📦 Instalación rápida
+git clone https://github.com/orlandoida06-rgb/X40-Control.git
+cd X40-Control
+chmod +x install-x40control.sh
+./install-x40control.sh IP_DEL_ROBOT RUTA_DE_LA_CLAVE_SSH
