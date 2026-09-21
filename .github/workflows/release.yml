@@ -94,15 +94,24 @@ jobs:
             --title "X40-Control ${VERSION}" \
             --notes-file /tmp/release-notes.md
 
+          cp ./build/armv7/valetudo /tmp/valetudo
+          cp ./build/armv7/valetudo-lowmem /tmp/valetudo-armv7-lowmem
+          cp ./build/aarch64/valetudo /tmp/valetudo-aarch64
+          cp ./build/armv7/valetudo.upx /tmp/valetudo-armv7.upx
+          cp ./build/armv7/valetudo-lowmem.upx /tmp/valetudo-armv7-lowmem.upx
+          cp ./build/aarch64/valetudo.upx /tmp/valetudo-aarch64.upx
+          cp ./build/valetudo_release_manifest.json /tmp/valetudo_release_manifest.json
+          cp ./build/valetudo.openapi.schema.json /tmp/valetudo-openapi.schema.json
+
           gh release upload "$TAG" \
-            ./build/armv7/valetudo#valetudo \
-            ./build/armv7/valetudo-lowmem#valetudo-armv7-lowmem \
-            ./build/aarch64/valetudo#valetudo-aarch64 \
-            ./build/armv7/valetudo.upx#valetudo-armv7.upx \
-            ./build/armv7/valetudo-lowmem.upx#valetudo-armv7-lowmem.upx \
-            ./build/aarch64/valetudo.upx#valetudo-aarch64.upx \
-            ./build/valetudo_release_manifest.json#valetudo_release_manifest.json \
-            ./build/valetudo.openapi.schema.json#valetudo-openapi.schema.json
+            /tmp/valetudo \
+            /tmp/valetudo-armv7-lowmem \
+            /tmp/valetudo-aarch64 \
+            /tmp/valetudo-armv7.upx \
+            /tmp/valetudo-armv7-lowmem.upx \
+            /tmp/valetudo-aarch64.upx \
+            /tmp/valetudo_release_manifest.json \
+            /tmp/valetudo-openapi.schema.json
 
       - name: Update X40Control OTA manifest
         env:
