@@ -1,27 +1,40 @@
 name: Release
 
 on:
-  release:
-    types: [published]
+  push:
+    branches:
+      - main
 
 permissions:
   contents: write
 
 jobs:
   publish-release:
+    if: "!contains(github.event.head_commit.message, 'chore: update OTA manifest')"
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [22.x]
 
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Calculate version
+        id: version
+        run: |
+          set -e
+
+          VERSION="$(date -u +'%Y.%m.%d').${GITHUB_RUN_NUMBER}"
+
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+          echo "tag=ota-${VERSION}" >> "$GITHUB_OUTPUT"
+
+          echo "VERSION=${VERSION}"
+          echo "TAG=ota-${VERSION}"
+
+      - name: Use Node.js 22
         uses: actions/setup-node@v6
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 22.x
 
       - name: Install
         run: npm ci
@@ -41,124 +54,73 @@ jobs:
       - name: Build Valetudo aarch64
         run: npm run build_aarch64 --workspace=backend
 
-      - name: Upload Valetudo armv7
-        uses: hypfer/upload-release-asset@v1.2.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./build/armv7/valetudo
-          asset_name: valetudo-armv7
-          asset_content_type: application/octet-stream
-
-      - name: Upload X40Control OTA
-        uses: hypfer/upload-release-asset@v1.2.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./build/armv7/valetudo
-          asset_name: valetudo
-          asset_content_type: application/octet-stream
-
-      - name: Upload Valetudo armv7 lowmem
-        uses: hypfer/upload-release-asset@v1.2.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./build/armv7/valetudo-lowmem
-          asset_name: valetudo-armv7-lowmem
-          asset_content_type: application/octet-stream
-
-      - name: Upload Valetudo aarch64
-        uses: hypfer/upload-release-asset@v1.2.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./build/aarch64/valetudo
-          asset_name: valetudo-aarch64
-          asset_content_type: application/octet-stream
-
       - name: UPX-compress valetudo binaries
         run: npm run upx
 
-      - name: Upload Valetudo armv7.upx
-        uses: hypfer/upload-release-asset@v1.2.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./build/armv7/valetudo.upx
-          asset_name: valetudo-armv7.upx
-          asset_content_type: application/octet-stream
-
-      - name: Upload Valetudo armv7 lowmem.upx
-        uses: hypfer/upload-release-asset@v1.2.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./build/armv7/valetudo-lowmem.upx
-          asset_name: valetudo-armv7-lowmem.upx
-          asset_content_type: application/octet-stream
-
-      - name: Upload Valetudo aarch64.upx
-        uses: hypfer/upload-release-asset@v1.2.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./build/aarch64/valetudo.upx
-          asset_name: valetudo-aarch64.upx
-          asset_content_type: application/octet-stream
-
-      - name: Build manifest
+      - name: Build release manifest
         run: npm run build_release_manifest
 
-      - name: Upload manifest
-        uses: hypfer/upload-release-asset@v1.2.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./build/valetudo_release_manifest.json
-          asset_name: valetudo_release_manifest.json
-          asset_content_type: application/json
-
-      - name: Upload OpenAPI spec
-        uses: hypfer/upload-release-asset@v1.2.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./build/valetudo.openapi.schema.json
-          asset_name: valetudo.openapi.schema.json
-          asset_content_type: application/json
-
-      - name: Update X40Control OTA manifest
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Calculate OTA information
+        id: ota
         run: |
           set -e
-
-          TAG="${{ github.event.release.tag_name }}"
-          VERSION="${TAG#ota-}"
-          RELEASE_URL="https://github.com/${{ github.repository }}/releases/download/${TAG}/valetudo"
 
           SHA256="$(sha256sum ./build/armv7/valetudo | awk '{print $1}')"
           SIZE="$(stat -c%s ./build/armv7/valetudo)"
 
-          CHANGELOG="$(printf '%s' '${{ github.event.release.body }}' | jq -Rs 'split("\n") | map(select(length > 0))')"
+          echo "sha256=${SHA256}" >> "$GITHUB_OUTPUT"
+          echo "size=${SIZE}" >> "$GITHUB_OUTPUT"
+
+      - name: Create GitHub Release
+        id: release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -e
+
+          TAG="${{ steps.version.outputs.tag }}"
+          VERSION="${{ steps.version.outputs.version }}"
+
+          cat > /tmp/release-notes.md <<EOF2
+          X40-Control ${VERSION}
+
+          Actualización automática desde main.
+
+          Cambios:
+          $(git log -1 --pretty=%B)
+          EOF2
+
+          gh release create "$TAG" \
+            ./build/armv7/valetudo#valetudo-armv7 \
+            ./build/armv7/valetudo#valetudo \
+            ./build/armv7/valetudo-lowmem#valetudo-armv7-lowmem \
+            ./build/aarch64/valetudo#valetudo-aarch64 \
+            ./build/armv7/valetudo.upx#valetudo-armv7.upx \
+            ./build/armv7/valetudo-lowmem.upx#valetudo-armv7-lowmem.upx \
+            ./build/aarch64/valetudo.upx#valetudo-aarch64.upx \
+            ./build/valetudo_release_manifest.json#valetudo_release_manifest.json \
+            ./build/valetudo.openapi.schema.json#valetudo.openapi.schema.json \
+            --title "X40-Control ${VERSION}" \
+            --notes-file /tmp/release-notes.md
+
+      - name: Update X40Control OTA manifest
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -e
+
+          VERSION="${{ steps.version.outputs.version }}"
+          TAG="${{ steps.version.outputs.tag }}"
+          RELEASE_URL="https://github.com/${{ github.repository }}/releases/download/${TAG}/valetudo"
+
+          SHA256="${{ steps.ota.outputs.sha256 }}"
+          SIZE="${{ steps.ota.outputs.size }}"
+
+          CHANGELOG="$(git log -1 --pretty=%B | jq -Rs 'split("\n") | map(select(length > 0))')"
 
           if [ "$CHANGELOG" = "[]" ]; then
             CHANGELOG='["Actualización de X40-Control"]'
           fi
-
-          git fetch origin main
-          git checkout main
-          git reset --hard origin/main
 
           jq -n \
             --arg product "X40Control" \
@@ -191,5 +153,5 @@ jobs:
             exit 0
           fi
 
-          git commit -m "chore: update OTA manifest to ${VERSION}"
+          git commit -m "chore: update OTA manifest to ${VERSION} [skip ci]"
           git push origin HEAD:main

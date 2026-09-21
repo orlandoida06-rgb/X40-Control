@@ -362,7 +362,9 @@ class ValetudoRouter {
                     "/sbin/reboot",
                     [],
                     {
-                        timeout: 10000
+                        timeout: 10000,
+                        detached: true,
+                        stdio: "ignore"
                     },
                     (error) => {
                         if (error) {
@@ -375,7 +377,7 @@ class ValetudoRouter {
                         }
                     }
                 );
-            }, 500);
+            }, 1000);
         });
 
         this.router.post("/x40-control/ota/update", (req, res) => {
