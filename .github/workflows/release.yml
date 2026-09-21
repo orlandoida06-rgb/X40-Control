@@ -52,6 +52,18 @@
                   },
               },
               {
+                'name': 'Upload X40Control OTA',
+                'uses': 'hypfer/upload-release-asset@v1.2.0',
+                'env': { 'GITHUB_TOKEN': '${{ secrets.GITHUB_TOKEN }}' },
+                'with':
+                  {
+                    'upload_url': '${{ github.event.release.upload_url }}',
+                    'asset_path': './build/armv7/valetudo',
+                    'asset_name': 'valetudo',
+                    'asset_content_type': 'application/octet-stream',
+                  },
+              },
+              {
                 'name': 'Upload Valetudo armv7 lowmem',
                 'uses': 'hypfer/upload-release-asset@v1.2.0',
                 'env': { 'GITHUB_TOKEN': '${{ secrets.GITHUB_TOKEN }}' },
