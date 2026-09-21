@@ -1,14 +1,14 @@
 {
   "product": "X40Control",
-  "version": "2026.09.20.4",
+  "version": "2026.09.21.1",
   "channel": "stable",
   "asset": "valetudo.x40control_final",
-  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.20.4/valetudo",
-  "sha256": "cfadf7fbcc3c163cfe4bd987339e10ab3a59b6f34193bcae41d795eb49f1ef4e",
+  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.21.1/valetudo",
+  "sha256": "959fcc6e6fc9fb2f75575cdfd1b977e592c463838c941542289acb95f1d3d28e",
   "size": 41681420,
   "requires_reboot": true,
   "changelog": [
-    "Actualiza automáticamente el manifest OTA desde GitHub al pulsar Buscar",
-    "Mantiene el manifest local como respaldo si no hay conexión"
+    "Actualiza autom\u00e1ticamente el manifest OTA desde GitHub al pulsar Buscar",
+    "Mantiene el manifest local como respaldo si no hay conexi\u00f3n"
   ]
 }
