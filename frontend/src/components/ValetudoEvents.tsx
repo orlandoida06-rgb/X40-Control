@@ -14,86 +14,113 @@ const ValetudoEvents = (): React.ReactElement => {
         error: eventDataError,
         refetch: eventDataRefetch,
     } = useValetudoEventsQuery();
+
     const {mutate: interactWithEvent} = useValetudoEventsInteraction();
 
     const [anchorElement, setAnchorElement] = React.useState<null | HTMLElement>(null);
+
     const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorElement(event.currentTarget);
     };
+
     const handleCerrar = () => {
         setAnchorElement(null);
     };
 
+    const unprocessedEventCount = React.useMemo(() => {
+        if (!eventData?.length) {
+            return 0;
+        }
+
+        return eventData.reduce((count, event) => {
+            return count + Number(!event.processed);
+        }, 0);
+    }, [eventData]);
+
     const icon = React.useMemo(() => {
-        const icon = <NotificationsIcon/>;
-        const unprocessedEventCount = eventData && eventData.length ? eventData.reduce((i, event) => {
-            return i + Number(!event.processed);
-        }, 0) : 0;
+        const notificationIcon = <NotificationsIcon/>;
 
         if (!eventDataPending) {
             if (eventDataError) {
                 return (
-                    <Badge badgeContent={"!"} color="error">
-                        {icon}
+                    <Badge badgeContent="!" color="error">
+                        {notificationIcon}
                     </Badge>
                 );
-            } else if (unprocessedEventCount > 0) {
+            }
+
+            if (unprocessedEventCount > 0) {
                 return (
-                    <Badge badgeContent={unprocessedEventCount} color="error">
-                        {icon}
+                    <Badge
+                        badgeContent={unprocessedEventCount}
+                        color="error"
+                        max={99}
+                    >
+                        {notificationIcon}
                     </Badge>
                 );
             }
         }
-        return icon;
-    }, [eventData, eventDataError, eventDataPending]);
+
+        return notificationIcon;
+    }, [eventDataError, eventDataPending, unprocessedEventCount]);
 
     const popoverContent = React.useMemo(() => {
-        const events = eventData && eventData.length ? eventData.map((event, i) => {
+        const events = eventData?.length ? eventData.map((event, i) => {
             const EventControl = eventControls[event.__class] || eventControls.Default;
+
             return (
                 <React.Fragment key={event.id}>
-                    { i > 0 && <Divider/> }
-                    <EventControl event={event} interact={(interaction) => {
-                        interactWithEvent({
-                            id: event.id,
-                            interaction: interaction
-                        });
-                    }}/>
+                    {i > 0 && <Divider/>}
+
+                    <EventControl
+                        event={event}
+                        interact={(interaction) => {
+                            interactWithEvent({
+                                id: event.id,
+                                interaction: interaction,
+                            });
+                        }}
+                    />
                 </React.Fragment>
             );
         }) : (
-            <Typography color="textSecondary" variant={"subtitle1"}>
-                No events
+            <Typography
+                color="textSecondary"
+                variant="subtitle1"
+                sx={{py: 2, textAlign: "center"}}
+            >
+                No hay avisos
             </Typography>
         );
 
         return (
             <ReloadableCard
                 divider={false}
-                title="Events"
+                title="Avisos"
                 loading={eventDataFetching}
                 onReload={() => {
                     return eventDataRefetch();
                 }}
             >
-                <Divider style={{marginBottom: "1rem"}}/>
+                <Divider sx={{mb: 2}}/>
+
                 <div className={styles.eventContainer}>
                     <Stack>
                         {events}
                     </Stack>
                 </div>
-                <Divider style={{marginTop: "1rem"}}/>
+
+                <Divider sx={{mt: 2}}/>
+
                 <Button
-                    style={{
-                        marginLeft: "auto",
+                    sx={{
+                        ml: "auto",
                         display: "flex",
-                        marginTop: "0.5rem",
-                        marginBottom: "-0.5rem" //eww :(
+                        mt: 1,
+                        mb: -1,
                     }}
-                    onClick={() => {
-                        handleCerrar();
-                    }}
+                    onClick={handleCerrar}
                 >
                     Cerrar
                 </Button>
@@ -105,10 +132,10 @@ const ValetudoEvents = (): React.ReactElement => {
         <>
             <IconButton
                 size="large"
-                aria-label="Events"
+                aria-label="Avisos y notificaciones"
                 onClick={handleMenu}
                 color="inherit"
-                title="Eventos y notificaciones"
+                title="Avisos y notificaciones"
             >
                 {icon}
             </IconButton>
