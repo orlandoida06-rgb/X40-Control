@@ -5,7 +5,7 @@
   "asset": "valetudo.x40control_final",
   "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.21.1/valetudo",
   "sha256": "959fcc6e6fc9fb2f75575cdfd1b977e592c463838c941542289acb95f1d3d28e",
-  "size": 41681420,
+  "size": 36941198,
   "requires_reboot": true,
   "changelog": [
     "Actualiza autom\u00e1ticamente el manifest OTA desde GitHub al pulsar Buscar",
