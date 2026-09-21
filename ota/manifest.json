@@ -1,10 +1,10 @@
 {
   "product": "X40Control",
-  "version": "2026.09.20",
+  "version": "2026.09.20.1",
   "channel": "stable",
   "asset": "valetudo.x40control_final",
-  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.20/valetudo.x40control_final",
-  "sha256": "18bab7352497c1d9403cb45a4d065e7b3c15cbc49d7b32ce2e317eb47b2508cc",
-  "size": 77484800,
+  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.20.1/valetudo.x40control_final",
+  "sha256": "267345ddf7c6fc0cc40af66d66de3c115527394b999b06b455fc235a23322a25",
+  "size": 41681118,
   "requires_reboot": true
 }
