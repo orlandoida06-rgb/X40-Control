@@ -1,14 +1,13 @@
 {
   "product": "X40Control",
-  "version": "2026.09.21.2",
+  "version": "2026.09.21.17",
   "channel": "stable",
   "asset": "valetudo.x40control_final",
-  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.21.2/valetudo",
-  "sha256": "a7c339893889b21f863c806b952f40a632d535872852f390c81986e391341a4f",
-  "size": 36943635,
+  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.21.17/valetudo",
+  "sha256": "50be11155a900c0cd54c9b042e4dea36cb92a98d9106add05d7ec4d36a64da70",
+  "size": 36943642,
   "requires_reboot": true,
   "changelog": [
-    "Añade la campana de avisos al encabezado de X40-Control",
-    "Mantiene el manifest OTA actualizado desde GitHub"
+    "ci: automate X40 OTA releases"
   ]
 }
