@@ -102,7 +102,7 @@ jobs:
             ./build/armv7/valetudo-lowmem.upx#valetudo-armv7-lowmem.upx \
             ./build/aarch64/valetudo.upx#valetudo-aarch64.upx \
             ./build/valetudo_release_manifest.json#valetudo_release_manifest.json \
-            ./build/valetudo.openapi.schema.json#valetudo.openapi.schema.json
+            ./build/valetudo.openapi.schema.json#valetudo-openapi.schema.json
 
       - name: Update X40Control OTA manifest
         env:
