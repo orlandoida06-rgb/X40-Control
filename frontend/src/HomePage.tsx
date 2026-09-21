@@ -35,6 +35,7 @@ import {useCapabilitiesSupported} from "./CapabilitiesProvider";
 import {Capability} from "./api";
 import LanguageSelector from "./i18n/LanguageSelector";
 import BatteryIndicator from "./components/BatteryIndicator";
+import ValetudoEvents from "./components/ValetudoEvents";
 import {useLanguage} from "./i18n";
 
 const glass = {
@@ -200,6 +201,7 @@ const HomePage = (): React.ReactElement => {
                         </Box>
 
                         <WifiIcon sx={{color: "#24d99a"}} />
+                        <ValetudoEvents />
                         <LanguageSelector />
                         <BatteryIndicator />
 
