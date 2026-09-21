@@ -6,5 +6,11 @@
   "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.20.2/valetudo",
   "sha256": "5b218f1122e590637dd1e28935fd66c0a3272e26e5ba7488f8738e5d47ebde26",
   "size": 41680950,
-  "requires_reboot": true
+  "requires_reboot": true,
+  "changelog": [
+    "Eliminados los controles + / − / centrar del mapa",
+    "Añadida gestión OTA de X40Control",
+    "Añadida información de versión instalada y disponible",
+    "Frontend recompilado con los cambios actuales"
+  ]
 }
