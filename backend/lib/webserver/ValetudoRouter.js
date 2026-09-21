@@ -292,7 +292,10 @@ class ValetudoRouter {
                             availableVersion: manifest.version,
                             installedSha256,
                             expectedSha256: manifest.sha256,
-                            requiresReboot: manifest.requires_reboot === true
+                            requiresReboot: manifest.requires_reboot === true,
+                            changelog: Array.isArray(manifest.changelog)
+                                ? manifest.changelog
+                                : []
                         });
                     }
                 );
@@ -308,6 +311,35 @@ class ValetudoRouter {
                     error: "No se pudo obtener el estado OTA"
                 });
             }
+        });
+
+        this.router.post("/x40-control/reboot", (req, res) => {
+            Logger.info("X40ControlOTA: reinicio solicitado por el usuario");
+
+            res.status(200).json({
+                success: true,
+                message: "El robot se reiniciará ahora"
+            });
+
+            setTimeout(() => {
+                execFile(
+                    "/sbin/reboot",
+                    [],
+                    {
+                        timeout: 10000
+                    },
+                    (error) => {
+                        if (error) {
+                            Logger.warn(
+                                "X40ControlOTA: error ejecutando reboot",
+                                {
+                                    message: error.message
+                                }
+                            );
+                        }
+                    }
+                );
+            }, 500);
         });
 
         this.router.post("/x40-control/ota/update", (req, res) => {

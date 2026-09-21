@@ -496,6 +496,7 @@ export interface X40ControlOTAInformation {
     installedSha256: string;
     expectedSha256: string;
     requiresReboot: boolean;
+    changelog: string[];
 }
 
 export const fetchX40ControlOTAInformation = async (): Promise<X40ControlOTAInformation> => {

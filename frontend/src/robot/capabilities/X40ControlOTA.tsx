@@ -14,6 +14,7 @@ interface X40ControlOTAInformation {
     installedSha256: string;
     expectedSha256: string;
     requiresReboot: boolean;
+    changelog: string[];
 }
 
 const compareVersions = (a: string, b: string): number => {
@@ -40,8 +41,10 @@ const X40ControlOTA = (): React.ReactElement => {
     const [ota, setOTA] = React.useState<X40ControlOTAInformation | null>(null);
     const [loading, setLoading] = React.useState(false);
     const [updating, setUpdating] = React.useState(false);
+    const [restarting, setRestarting] = React.useState(false);
     const [error, setError] = React.useState<string | null>(null);
     const [updateResult, setUpdateResult] = React.useState<string | null>(null);
+    const [showRestart, setShowRestart] = React.useState(false);
 
     const checkForUpdates = React.useCallback(async () => {
         setLoading(true);
@@ -66,6 +69,7 @@ const X40ControlOTA = (): React.ReactElement => {
         setUpdating(true);
         setError(null);
         setUpdateResult(null);
+        setShowRestart(false);
 
         try {
             const result = await sendX40ControlOTAUpdate();
@@ -75,8 +79,12 @@ const X40ControlOTA = (): React.ReactElement => {
             }
 
             setUpdateResult(
-                "Actualización instalada correctamente. Es necesario reiniciar el robot para aplicar la nueva versión."
+                `X40Control ${ota?.availableVersion || ""} se ha instalado correctamente.`
             );
+
+            if (ota?.requiresReboot) {
+                setShowRestart(true);
+            }
 
             await checkForUpdates();
         } catch (err) {
@@ -88,7 +96,33 @@ const X40ControlOTA = (): React.ReactElement => {
         } finally {
             setUpdating(false);
         }
-    }, [checkForUpdates]);
+    }, [checkForUpdates, ota]);
+
+    const restartRobot = React.useCallback(async () => {
+        setRestarting(true);
+        setError(null);
+
+        try {
+            const response = await fetch("/api/v2/valetudo/x40-control/reboot", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error("No se pudo solicitar el reinicio del robot");
+            }
+        } catch (err) {
+            if (err instanceof Error) {
+                setError(err.message);
+            } else {
+                setError("No se pudo reiniciar el robot");
+            }
+
+            setRestarting(false);
+        }
+    }, []);
 
     React.useEffect(() => {
         void checkForUpdates();
@@ -159,22 +193,45 @@ const X40ControlOTA = (): React.ReactElement => {
     ];
 
     if (updateAvailable && ota) {
-        const rebootText = ota.requiresReboot ?
-            " Será necesario reiniciar el robot para aplicar la nueva versión." :
+        const changes = ota.changelog.length > 0 ?
+            `\n\nCambios incluidos:\n${ota.changelog.map(change => `• ${change}`).join("\n")}` :
             "";
 
         items.push(
             <ButtonListMenuItem
                 key="update"
                 primaryLabel="Actualizar X40Control"
-                secondaryLabel={`Instalar ${ota.availableVersion}.${rebootText}`}
+                secondaryLabel={`Instalar ${ota.availableVersion}`}
                 buttonLabel="Actualizar"
                 buttonColor="warning"
                 action={updateX40Control}
                 actionLoading={updating}
                 confirmationDialog={{
-                    title: "Actualizar X40Control",
-                    body: `Se instalará la versión ${ota.availableVersion}.${rebootText} ¿Continuar?`
+                    title: `Nueva versión ${ota.availableVersion}`,
+                    body:
+                        `Hay una nueva versión de X40Control disponible.` +
+                        changes +
+                        `\n\n¿Quieres instalarla?`
+                }}
+            />
+        );
+    }
+
+    if (showRestart && ota?.requiresReboot) {
+        items.push(
+            <ButtonListMenuItem
+                key="restart"
+                primaryLabel="Reiniciar robot"
+                secondaryLabel="La actualización está instalada y necesita un reinicio."
+                buttonLabel="Reiniciar"
+                buttonColor="warning"
+                action={restartRobot}
+                actionLoading={restarting}
+                confirmationDialog={{
+                    title: "Reiniciar robot",
+                    body:
+                        "La actualización se ha instalado correctamente." +
+                        "\n\n¿Quieres reiniciar el robot ahora?"
                 }}
             />
         );
