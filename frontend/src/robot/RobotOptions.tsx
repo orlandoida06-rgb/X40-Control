@@ -77,6 +77,7 @@ import {
     Schema as BehaviourIcon,
     Settings as GeneralIcon,
     Star as QuirksIcon,
+    SystemUpdate as SystemUpdateIcon,
     TableBar as MopExtensionFurnitureLegHandlingControlIcon,
     Troubleshoot as CarpetSensorModeIcon,
     Tune as MiscIcon,
@@ -1267,6 +1268,16 @@ const RobotOptions = (): React.ReactElement => {
                 />
             );
         }
+
+        items.push(
+            <LinkListMenuItem
+                key="x40controlOTA"
+                url="/options/robot/ota"
+                primaryLabel="X40Control OTA"
+                secondaryLabel="Buscar e instalar actualizaciones de X40Control"
+                icon={<SystemUpdateIcon/>}
+            />
+        );
 
         if (quirksCapabilitySupported) {
             items.push(

@@ -22,6 +22,7 @@ class ValetudoRouter {
         this.config = options.config;
         this.robot = options.robot;
         this.validator = options.validator;
+        this.x40ControlOTAUpdateRunning = false;
 
         this.limiter = RateLimit.rateLimit({
             windowMs: 30*1000,
@@ -233,6 +234,136 @@ class ValetudoRouter {
             } else {
                 res.sendStatus(400);
             }
+        });
+
+        this.router.get("/x40-control/ota", (req, res) => {
+            const manifestPath = "/data/ota/manifest.json";
+            const targetPath = "/data/valetudo.x40control_final";
+
+            try {
+                if (!fs.existsSync(manifestPath)) {
+                    return res.status(404).json({
+                        error: "No existe el manifest OTA"
+                    });
+                }
+
+                if (!fs.existsSync(targetPath)) {
+                    return res.status(404).json({
+                        error: "No existe el binario X40Control"
+                    });
+                }
+
+                const manifest = JSON.parse(
+                    fs.readFileSync(manifestPath, "utf8")
+                );
+
+                execFile(
+                    "/usr/bin/sha256sum",
+                    [targetPath],
+                    {
+                        timeout: 10000
+                    },
+                    (error, stdout, stderr) => {
+                        if (error) {
+                            Logger.warn(
+                                "X40ControlOTA: error obteniendo SHA256",
+                                {
+                                    message: error.message,
+                                    stdout,
+                                    stderr
+                                }
+                            );
+
+                            return res.status(500).json({
+                                error: "No se pudo obtener el SHA256 del binario"
+                            });
+                        }
+
+                        const installedSha256 = stdout.trim().split(/\s+/)[0];
+                        const installed =
+                            installedSha256 === manifest.sha256;
+
+                        res.json({
+                            product: manifest.product,
+                            installed,
+                            installedVersion: installed
+                                ? manifest.version
+                                : null,
+                            availableVersion: manifest.version,
+                            installedSha256,
+                            expectedSha256: manifest.sha256,
+                            requiresReboot: manifest.requires_reboot === true
+                        });
+                    }
+                );
+            } catch (err) {
+                Logger.warn(
+                    "X40ControlOTA: error leyendo estado OTA",
+                    {
+                        message: err.message
+                    }
+                );
+
+                res.status(500).json({
+                    error: "No se pudo obtener el estado OTA"
+                });
+            }
+        });
+
+        this.router.post("/x40-control/ota/update", (req, res) => {
+            if (this.x40ControlOTAUpdateRunning) {
+                return res.status(409).json({
+                    success: false,
+                    error: "Ya hay una actualización OTA en curso."
+                });
+            }
+
+            const updateScript = "/data/ota/update.sh";
+
+            if (!fs.existsSync(updateScript)) {
+                return res.status(404).json({
+                    success: false,
+                    error: "No se encontró /data/ota/update.sh"
+                });
+            }
+
+            this.x40ControlOTAUpdateRunning = true;
+
+            execFile(
+                "/bin/sh",
+                [updateScript],
+                {
+                    timeout: 10 * 60 * 1000,
+                    maxBuffer: 1024 * 1024
+                },
+                (error, stdout, stderr) => {
+                    this.x40ControlOTAUpdateRunning = false;
+
+                    if (error) {
+                        Logger.warn(
+                            "X40ControlOTA: error durante la actualización",
+                            {
+                                message: error.message,
+                                stdout,
+                                stderr
+                            }
+                        );
+
+                        return res.status(500).json({
+                            success: false,
+                            error: error.message,
+                            output: stdout || "",
+                            stderr: stderr || ""
+                        });
+                    }
+
+                    res.status(200).json({
+                        success: true,
+                        output: stdout || "",
+                        stderr: stderr || ""
+                    });
+                }
+            );
         });
     }
 

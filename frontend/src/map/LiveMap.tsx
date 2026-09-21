@@ -207,29 +207,6 @@ class LiveMap extends BaseMap<LiveMapProps, LiveMapState> {
                     {/* ===== X40-CONTROL TESLA UI ===== */}
 
                     <MapControlsPanel>
-                        <ActionButton
-                            size="small"
-                            aria-label="Acercar"
-                            onClick={() => this.zoomIn()}
-                        >
-                        +
-                        </ActionButton>
-
-                        <ActionButton
-                            size="small"
-                            aria-label="Alejar"
-                            onClick={() => this.zoomOut()}
-                        >
-                        −
-                        </ActionButton>
-
-                        <ActionButton
-                            size="small"
-                            aria-label="Centrar mapa"
-                            onClick={() => {}}
-                        >
-                        ⌾
-                        </ActionButton>
 
 
 

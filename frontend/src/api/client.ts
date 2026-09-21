@@ -481,6 +481,39 @@ export const fetchValetudoVersionInformation = async (): Promise<ValetudoVersion
         });
 };
 
+export interface X40ControlOTAUpdateResult {
+    success: boolean;
+    output: string;
+    stderr?: string;
+    error?: string;
+}
+
+export interface X40ControlOTAInformation {
+    product: string;
+    installed: boolean;
+    installedVersion: string | null;
+    availableVersion: string;
+    installedSha256: string;
+    expectedSha256: string;
+    requiresReboot: boolean;
+}
+
+export const fetchX40ControlOTAInformation = async (): Promise<X40ControlOTAInformation> => {
+    return valetudoAPI
+        .get<X40ControlOTAInformation>("/valetudo/x40-control/ota")
+        .then(({data}) => {
+            return data;
+        });
+};
+
+export const sendX40ControlOTAUpdate = async (): Promise<X40ControlOTAUpdateResult> => {
+    return valetudoAPI
+        .post<X40ControlOTAUpdateResult>("/valetudo/x40-control/ota/update")
+        .then(({data}) => {
+            return data;
+        });
+};
+
 export const fetchValetudoLog = async (): Promise<string> => {
     return valetudoAPI
         .get<string>("/valetudo/log/content")
