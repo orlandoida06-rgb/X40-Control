@@ -136,3 +136,60 @@ jobs:
           asset_path: ./build/valetudo.openapi.schema.json
           asset_name: valetudo.openapi.schema.json
           asset_content_type: application/json
+
+      - name: Update X40Control OTA manifest
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -e
+
+          TAG="${{ github.event.release.tag_name }}"
+          VERSION="${TAG#ota-}"
+          RELEASE_URL="https://github.com/${{ github.repository }}/releases/download/${TAG}/valetudo"
+
+          SHA256="$(sha256sum ./build/armv7/valetudo | awk '{print $1}')"
+          SIZE="$(stat -c%s ./build/armv7/valetudo)"
+
+          CHANGELOG="$(printf '%s' '${{ github.event.release.body }}' | jq -Rs 'split("\n") | map(select(length > 0))')"
+
+          if [ "$CHANGELOG" = "[]" ]; then
+            CHANGELOG='["Actualización de X40-Control"]'
+          fi
+
+          git fetch origin main
+          git checkout main
+          git reset --hard origin/main
+
+          jq -n \
+            --arg product "X40Control" \
+            --arg version "$VERSION" \
+            --arg channel "stable" \
+            --arg asset "valetudo.x40control_final" \
+            --arg url "$RELEASE_URL" \
+            --arg sha256 "$SHA256" \
+            --argjson size "$SIZE" \
+            --argjson changelog "$CHANGELOG" \
+            '{
+              product: $product,
+              version: $version,
+              channel: $channel,
+              asset: $asset,
+              url: $url,
+              sha256: $sha256,
+              size: $size,
+              requires_reboot: true,
+              changelog: $changelog
+            }' > ota/manifest.json
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add ota/manifest.json
+
+          if git diff --cached --quiet; then
+            echo "OTA manifest already up to date."
+            exit 0
+          fi
+
+          git commit -m "chore: update OTA manifest to ${VERSION}"
+          git push origin HEAD:main
