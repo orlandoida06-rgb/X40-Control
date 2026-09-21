@@ -239,25 +239,59 @@ class ValetudoRouter {
         this.router.get("/x40-control/ota", (req, res) => {
             const manifestPath = "/data/ota/manifest.json";
             const targetPath = "/data/valetudo.x40control_final";
+            const manifestUrl =
+                "https://raw.githubusercontent.com/orlandoida06-rgb/X40-Control/main/ota/manifest.json";
 
             try {
-                if (!fs.existsSync(manifestPath)) {
-                    return res.status(404).json({
-                        error: "No existe el manifest OTA"
-                    });
-                }
-
                 if (!fs.existsSync(targetPath)) {
                     return res.status(404).json({
                         error: "No existe el binario X40Control"
                     });
                 }
 
-                const manifest = JSON.parse(
-                    fs.readFileSync(manifestPath, "utf8")
-                );
-
                 execFile(
+                    "/usr/bin/curl",
+                    ["-fsSL", "--max-time", "15", manifestUrl],
+                    {
+                        timeout: 20000,
+                        maxBuffer: 1024 * 1024
+                    },
+                    (manifestError, manifestStdout, manifestStderr) => {
+                        let manifest;
+
+                        if (!manifestError) {
+                            try {
+                                manifest = JSON.parse(manifestStdout);
+                                fs.writeFileSync(manifestPath, manifestStdout);
+                            } catch (err) {
+                                Logger.warn(
+                                    "X40ControlOTA: manifest remoto inválido",
+                                    {
+                                        message: err.message
+                                    }
+                                );
+                            }
+                        }
+
+                        if (!manifest) {
+                            try {
+                                if (!fs.existsSync(manifestPath)) {
+                                    return res.status(404).json({
+                                        error: "No se pudo obtener el manifest OTA"
+                                    });
+                                }
+
+                                manifest = JSON.parse(
+                                    fs.readFileSync(manifestPath, "utf8")
+                                );
+                            } catch (err) {
+                                return res.status(500).json({
+                                    error: "No se pudo leer el manifest OTA"
+                                });
+                            }
+                        }
+
+                        execFile(
                     "/usr/bin/sha256sum",
                     [targetPath],
                     {
@@ -297,6 +331,8 @@ class ValetudoRouter {
                                 ? manifest.changelog
                                 : []
                         });
+                    }
+                        );
                     }
                 );
             } catch (err) {
