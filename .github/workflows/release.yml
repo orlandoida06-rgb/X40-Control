@@ -91,6 +91,10 @@ jobs:
           EOF2
 
           gh release create "$TAG" \
+            --title "X40-Control ${VERSION}" \
+            --notes-file /tmp/release-notes.md
+
+          gh release upload "$TAG" \
             ./build/armv7/valetudo#valetudo-armv7 \
             ./build/armv7/valetudo#valetudo \
             ./build/armv7/valetudo-lowmem#valetudo-armv7-lowmem \
@@ -99,9 +103,7 @@ jobs:
             ./build/armv7/valetudo-lowmem.upx#valetudo-armv7-lowmem.upx \
             ./build/aarch64/valetudo.upx#valetudo-aarch64.upx \
             ./build/valetudo_release_manifest.json#valetudo_release_manifest.json \
-            ./build/valetudo.openapi.schema.json#valetudo.openapi.schema.json \
-            --title "X40-Control ${VERSION}" \
-            --notes-file /tmp/release-notes.md
+            ./build/valetudo.openapi.schema.json#valetudo.openapi.schema.json
 
       - name: Update X40Control OTA manifest
         env:
