@@ -95,7 +95,6 @@ jobs:
             --notes-file /tmp/release-notes.md
 
           gh release upload "$TAG" \
-            ./build/armv7/valetudo#valetudo-armv7 \
             ./build/armv7/valetudo#valetudo \
             ./build/armv7/valetudo-lowmem#valetudo-armv7-lowmem \
             ./build/aarch64/valetudo#valetudo-aarch64 \
