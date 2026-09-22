@@ -17,7 +17,7 @@ import {
     Home as HomeIcon,
     Pause as PauseIcon,
     PlayArrow as StartIcon,
-    LocationOn as LocationIcon,
+    Stop as StopIcon,
     SvgIconComponent,
 } from "@mui/icons-material";
 import ConfirmationDialog from "../components/ConfirmationDialog";
@@ -106,8 +106,8 @@ const BasicControls = (): React.ReactElement => {
         {
             command: "stop",
             enabled: stopEnabled,
-            label: "Estoy aquí",
-            Icon: LocationIcon,
+            label: "Parar",
+            Icon: StopIcon,
         },
     ];
 
@@ -262,7 +262,7 @@ const BasicControls = (): React.ReactElement => {
                                     basicControlIsExecuting
                                 }
                                 onClick={() => sendCommand("stop")}
-                                startIcon={<LocationIcon />}
+                                startIcon={<StopIcon />}
                                 sx={{
                                     minHeight: 48,
                                     borderRadius: "15px",
