@@ -58,7 +58,7 @@ class ValetudoUpdaterCheckStep extends ValetudoUpdaterStep {
         if (!(statusAttribute && statusAttribute.value === stateAttrs.StatusStateAttribute.VALUE.DOCKED)) {
             throw new ValetudoUpdaterError(
                 ValetudoUpdaterError.ERROR_TYPE.NOT_DOCKED,
-                "Updating is only possible while the robot is docked"
+                "La actualización solo es posible cuando el robot está en la base de carga."
             );
         }
 
