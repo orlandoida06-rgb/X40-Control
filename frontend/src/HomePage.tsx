@@ -14,6 +14,7 @@ import {
     History as HistoryIcon,
     Inventory2 as ConsumablesIcon,
     Settings as SettingsIcon,
+    SystemUpdateAlt as OTAIcon,
     Wifi as WifiIcon,
     WaterDrop as WaterDropIcon,
     GridView as RoomsIcon,
@@ -238,6 +239,7 @@ const HomePage = (): React.ReactElement => {
                         <DashboardButton icon={<HistoryIcon/>} label={t("history")} route="/robot/total_statistics" />
                         <DashboardButton icon={<ConsumablesIcon/>} label={t("consumables")} route="/robot/consumables" />
                         <DashboardButton icon={<SettingsIcon/>} label={t("settings")} route="/options/robot" />
+                        <DashboardButton icon={<OTAIcon/>} label="OTA" route="/valetudo/updater" />
 
                         <Box sx={{flex: 1}} />
 
