@@ -3,7 +3,11 @@ cd ~/tuasistente-miio/valetudo-ui
 cat > README.md <<'EOF'
 # X40-Control 🇪🇸 frontend para valetudo
 
-Interfaz personalizada de Valetudo para el **Dreame X40 Ultra**, con una interfaz moderna y traducida al español.
+**Interfaz personalizada de Valetudo para Dreame X40 Ultra.**
+
+X40-Control es una interfaz personalizada basada en Valetudo y orientada al **Dreame X40 Ultra**, con una experiencia moderna, traducida al español y con funciones adicionales para el control y diagnóstico del robot.
+
+> Proyecto independiente para usuarios del Dreame X40 Ultra y Valetudo.
 
 ![X40-Control](screenshot.png)
 
