@@ -239,7 +239,7 @@ const HomePage = (): React.ReactElement => {
                         <DashboardButton icon={<HistoryIcon/>} label={t("history")} route="/robot/total_statistics" />
                         <DashboardButton icon={<ConsumablesIcon/>} label={t("consumables")} route="/robot/consumables" />
                         <DashboardButton icon={<SettingsIcon/>} label={t("settings")} route="/options/robot" />
-                        <DashboardButton icon={<OTAIcon/>} label="OTA" route="/valetudo/x40-ota" />
+                        <DashboardButton icon={<OTAIcon/>} label="OTA" route="/options/robot/ota" />
 
                         <Box sx={{flex: 1}} />
 
