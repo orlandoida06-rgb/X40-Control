@@ -92,9 +92,18 @@ class ValetudoRouter {
             const id = Number(req.body?.id);
 
             const validIds = new Set([
+                // X40-Control: presets
                 1001, 1002, 1003, 1004, 1005,
+
+                // X40-Control: suction
                 1101, 1102, 1103, 1104, 1105, 1106, 1107,
-                1201, 1202, 1203, 1204, 1205, 1206
+
+                // X40-Control: water
+                1201, 1202, 1203, 1204, 1205, 1206,
+
+                // X40-Control: Dreame/GLADOS error voices
+                34, 35, 36, 42, 49, 50, 51, 53, 70,
+                91, 92, 93, 96, 98, 99
             ]);
 
             if (!Number.isInteger(id) || !validIds.has(id)) {

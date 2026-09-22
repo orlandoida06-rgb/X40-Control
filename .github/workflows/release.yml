@@ -103,6 +103,20 @@ jobs:
           cp ./build/valetudo_release_manifest.json /tmp/valetudo_release_manifest.json
           cp ./build/valetudo.openapi.schema.json /tmp/valetudo-openapi.schema.json
 
+          tar -czf /tmp/X40-Control-voices.tar.gz \
+            -C assets/X40-Control \
+            34.ogg 35.ogg 36.ogg 42.ogg 49.ogg 50.ogg 51.ogg \
+            53.ogg 70.ogg 91.ogg 92.ogg 93.ogg 96.ogg 98.ogg 99.ogg
+
+          VOICES_SHA256="$(sha256sum /tmp/X40-Control-voices.tar.gz | awk '{print $1}')"
+          VOICES_SIZE="$(stat -c%s /tmp/X40-Control-voices.tar.gz)"
+
+          echo "voices_sha256=${VOICES_SHA256}" >> "$GITHUB_OUTPUT"
+          echo "voices_size=${VOICES_SIZE}" >> "$GITHUB_OUTPUT"
+
+          echo "Voces SHA256: ${VOICES_SHA256}"
+          echo "Voces tamaño: ${VOICES_SIZE}"
+
           gh release upload "$TAG" \
             /tmp/valetudo \
             /tmp/valetudo-armv7-lowmem \
@@ -111,7 +125,8 @@ jobs:
             /tmp/valetudo-armv7-lowmem.upx \
             /tmp/valetudo-aarch64.upx \
             /tmp/valetudo_release_manifest.json \
-            /tmp/valetudo-openapi.schema.json
+            /tmp/valetudo-openapi.schema.json \
+            /tmp/X40-Control-voices.tar.gz
 
       - name: Update X40Control OTA manifest
         env:
@@ -121,10 +136,15 @@ jobs:
 
           VERSION="${{ steps.version.outputs.version }}"
           TAG="${{ steps.version.outputs.tag }}"
+
           RELEASE_URL="https://github.com/${{ github.repository }}/releases/download/${TAG}/valetudo"
+          VOICES_URL="https://github.com/${{ github.repository }}/releases/download/${TAG}/X40-Control-voices.tar.gz"
 
           SHA256="${{ steps.ota.outputs.sha256 }}"
           SIZE="${{ steps.ota.outputs.size }}"
+
+          VOICES_SHA256="${{ steps.release.outputs.voices_sha256 }}"
+          VOICES_SIZE="${{ steps.release.outputs.voices_size }}"
 
           CHANGELOG="$(git log -1 --pretty=%B | jq -Rs 'split("\n") | map(select(length > 0))')"
 
@@ -140,6 +160,9 @@ jobs:
             --arg url "$RELEASE_URL" \
             --arg sha256 "$SHA256" \
             --argjson size "$SIZE" \
+            --arg voices_url "$VOICES_URL" \
+            --arg voices_sha256 "$VOICES_SHA256" \
+            --argjson voices_size "$VOICES_SIZE" \
             --argjson changelog "$CHANGELOG" \
             '{
               product: $product,
@@ -149,6 +172,9 @@ jobs:
               url: $url,
               sha256: $sha256,
               size: $size,
+              voices_url: $voices_url,
+              voices_sha256: $voices_sha256,
+              voices_size: $voices_size,
               requires_reboot: true,
               changelog: $changelog
             }' > ota/manifest.json

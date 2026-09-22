@@ -433,464 +433,464 @@ DreameValetudoRobot.MAP_ERROR_CODE = (vendorErrorCode) => {
 
     switch (vendorErrorCode) {
         case "0":
-            parameters.message = "No error";
+            parameters.message = "Sin error";
             break;
         case "1":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.TRANSIENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.ERROR;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.CORE;
-            parameters.message = "Wheel lost floor contact";
+            parameters.message = "La rueda ha perdido el contacto con el suelo";
             break;
         case "2":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.PERMANENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.ERROR;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.SENSORS;
-            parameters.message = "Cliff sensor dirty or robot on the verge of falling";
+            parameters.message = "El sensor de desnivel está sucio o el robot está al borde de una caída";
             break;
         case "3":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.PERMANENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.ERROR;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.SENSORS;
-            parameters.message = "Stuck front bumper";
+            parameters.message = "El parachoques delantero está atascado";
             break;
         case "4":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.TRANSIENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.WARNING;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.SENSORS;
-            parameters.message = "Tilted robot";
+            parameters.message = "El robot está inclinado";
             break;
         case "5":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.PERMANENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.ERROR;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.SENSORS;
-            parameters.message = "Stuck front bumper";
+            parameters.message = "El parachoques delantero está atascado";
             break;
         case "6":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.TRANSIENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.ERROR;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.CORE;
-            parameters.message = "Wheel lost floor contact";
+            parameters.message = "La rueda ha perdido el contacto con el suelo";
             break;
         case "7":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.UNKNOWN;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.UNKNOWN;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.CORE;
-            parameters.message = `Internal error ${vendorErrorCode}`;
+            parameters.message = `Error interno ${vendorErrorCode}`;
             break;
         case "8":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.TRANSIENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.WARNING;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.ATTACHMENTS;
-            parameters.message = "Dustbin missing";
+            parameters.message = "El depósito de polvo no está instalado";
             break;
         case "9":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.TRANSIENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.WARNING;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.ATTACHMENTS;
-            parameters.message = "Water tank missing";
+            parameters.message = "El depósito de agua no está instalado";
             break;
         case "10":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.TRANSIENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.WARNING;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.ATTACHMENTS;
-            parameters.message = "Water tank empty";
+            parameters.message = "El depósito de agua está vacío";
             break;
         case "11":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.TRANSIENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.WARNING;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.ATTACHMENTS;
-            parameters.message = "Dustbin full";
+            parameters.message = "El depósito de polvo está lleno";
             break;
         case "12":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.PERMANENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.ERROR;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.MOTORS;
-            parameters.message = "Main brush jammed";
+            parameters.message = "El cepillo principal está atascado";
             break;
         case "13":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.PERMANENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.ERROR;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.MOTORS;
-            parameters.message = "Side brush jammed";
+            parameters.message = "El cepillo lateral está atascado";
             break;
         case "14":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.TRANSIENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.WARNING;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.ATTACHMENTS;
-            parameters.message = "Filter jammed";
+            parameters.message = "El filtro está obstruido";
             break;
         case "15":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.TRANSIENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.WARNING;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.NAVIGATION;
-            parameters.message = "Robot stuck or trapped";
+            parameters.message = "El robot está atascado";
             break;
         case "16":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.TRANSIENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.WARNING;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.NAVIGATION;
-            parameters.message = "Robot stuck or trapped";
+            parameters.message = "El robot está atascado";
             break;
         case "17":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.TRANSIENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.WARNING;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.NAVIGATION;
-            parameters.message = "Robot stuck or trapped";
+            parameters.message = "El robot está atascado";
             break;
         case "18":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.TRANSIENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.WARNING;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.NAVIGATION;
-            parameters.message = "Robot stuck or trapped";
+            parameters.message = "El robot está atascado";
             break;
         case "19":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.TRANSIENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.WARNING;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.POWER;
-            parameters.message = "Charging station without power";
+            parameters.message = "La estación base no tiene alimentación";
             break;
         case "20":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.TRANSIENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.INFO;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.POWER;
-            parameters.message = "Low battery";
+            parameters.message = "Batería baja";
             break;
         case "21":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.PERMANENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.WARNING;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.POWER;
-            parameters.message = "Charging error";
+            parameters.message = "Error de carga";
             break;
         //22
         case "23":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.UNKNOWN;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.UNKNOWN;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.CORE;
-            parameters.message = `Internal error ${vendorErrorCode}`; //"AVA_HEALTH_STATUS_TYPE_HEART" //TODO What does the dreame error string mean?
+            parameters.message = `Error interno ${vendorErrorCode}`; //"AVA_HEALTH_STATUS_TYPE_HEART" //TODO What does the dreame error string mean?
             break;
         case "24":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.PERMANENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.WARNING;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.SENSORS;
-            parameters.message = "Camera dirty";
+            parameters.message = "La cámara está sucia";
             break;
         case "25":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.UNKNOWN;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.UNKNOWN;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.CORE;
-            parameters.message = `Internal error ${vendorErrorCode}`; //"AVA_HEALTH_STATUS_TYPE_MOVE" //TODO What does the dreame error string mean?
+            parameters.message = `Error interno ${vendorErrorCode}`; //"AVA_HEALTH_STATUS_TYPE_MOVE" //TODO What does the dreame error string mean?
             break;
         case "26":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.PERMANENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.WARNING;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.SENSORS;
-            parameters.message = "Camera dirty";
+            parameters.message = "La cámara está sucia";
             break;
         case "27":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.PERMANENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.WARNING;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.SENSORS;
-            parameters.message = "Sensor dirty";
+            parameters.message = "El sensor está sucio";
             break;
         case "28":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.TRANSIENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.WARNING;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.POWER;
-            parameters.message = "Charging station without power";
+            parameters.message = "La estación base no tiene alimentación";
             break;
         case "29":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.TRANSIENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.ERROR;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.POWER;
-            parameters.message = "Battery temperature out of operating range";
+            parameters.message = "La temperatura de la batería está fuera del rango de funcionamiento";
             break;
         case "30":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.PERMANENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.CATASTROPHIC;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.MOTORS;
-            parameters.message = "Fan speed abnormal";
+            parameters.message = "Velocidad del ventilador anormal";
             break;
         case "31":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.TRANSIENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.WARNING;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.NAVIGATION;
-            parameters.message = "Robot stuck or trapped";
+            parameters.message = "El robot está atascado";
             break;
         case "32":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.TRANSIENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.WARNING;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.NAVIGATION;
-            parameters.message = "Robot stuck or trapped";
+            parameters.message = "El robot está atascado";
             break;
         case "33":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.PERMANENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.CATASTROPHIC;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.SENSORS;
-            parameters.message = "Accelerometer sensor error";
+            parameters.message = "Error del sensor del acelerómetro";
             break;
         case "34":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.PERMANENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.CATASTROPHIC;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.SENSORS;
-            parameters.message = "Gyroscope sensor error";
+            parameters.message = "Error del sensor giroscópico";
             break;
         case "35":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.PERMANENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.CATASTROPHIC;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.SENSORS;
-            parameters.message = "Gyroscope sensor error";
+            parameters.message = "Error del sensor giroscópico";
             break;
         case "36":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.PERMANENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.CATASTROPHIC;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.SENSORS;
-            parameters.message = "Left magnetic field sensor error";
+            parameters.message = "Error del sensor magnético izquierdo";
             break;
         case "37":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.PERMANENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.CATASTROPHIC;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.SENSORS;
-            parameters.message = "Right magnetic field sensor error";
+            parameters.message = "Error del sensor magnético derecho";
             break;
         case "38":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.UNKNOWN;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.UNKNOWN;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.CORE;
-            parameters.message = `Internal error ${vendorErrorCode}`; //"AVA_HEALTH_STATUS_TYPE_I_FLOW_ERROR" //TODO What does the dreame error string mean?
+            parameters.message = `Error interno ${vendorErrorCode}`; //"AVA_HEALTH_STATUS_TYPE_I_FLOW_ERROR" //TODO What does the dreame error string mean?
             break;
         case "39":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.UNKNOWN;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.UNKNOWN;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.CORE;
-            parameters.message = `Internal error ${vendorErrorCode}`; //"AVA_HEALTH_STATUS_TYPE_INFRARED_FAULT" //TODO What does the dreame error string mean?
+            parameters.message = `Error interno ${vendorErrorCode}`; //"AVA_HEALTH_STATUS_TYPE_INFRARED_FAULT" //TODO What does the dreame error string mean?
             break;
         case "40":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.PERMANENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.CATASTROPHIC;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.SENSORS;
-            parameters.message = "Camera fault";
+            parameters.message = "Fallo de la cámara";
             break;
         case "41":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.TRANSIENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.INFO;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.SENSORS;
-            parameters.message = "Magnetic interference";
+            parameters.message = "Interferencia magnética";
             break;
         case "42":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.PERMANENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.CATASTROPHIC;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.ATTACHMENTS;
-            parameters.message = "Water pump fault";
+            parameters.message = "Fallo de la bomba de agua";
             break;
         case "43":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.PERMANENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.CATASTROPHIC;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.CORE;
-            parameters.message = "RTC fault";
+            parameters.message = "Fallo del reloj interno";
             break;
         case "44":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.UNKNOWN;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.UNKNOWN;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.CORE;
-            parameters.message = `Internal error ${vendorErrorCode}`; //"AVA_HEALTH_STATUS_TYPE_I_AUTO_KEY_TRIG" //TODO What does the dreame error string mean?
+            parameters.message = `Error interno ${vendorErrorCode}`; //"AVA_HEALTH_STATUS_TYPE_I_AUTO_KEY_TRIG" //TODO What does the dreame error string mean?
             break;
         case "45":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.PERMANENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.CATASTROPHIC;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.CORE;
-            parameters.message = "3.3V rail abnormal";
+            parameters.message = "Tensión de 3,3 V anormal";
             break;
         case "46":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.UNKNOWN;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.UNKNOWN;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.CORE;
-            parameters.message = `Internal error ${vendorErrorCode}`;
+            parameters.message = `Error interno ${vendorErrorCode}`;
             break;
         case "47":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.TRANSIENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.WARNING;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.NAVIGATION;
-            parameters.message = "Cannot reach target";
+            parameters.message = "No se puede llegar al destino";
             break;
         case "48":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.PERMANENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.ERROR;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.SENSORS;
-            parameters.message = "LDS jammed";
+            parameters.message = "El LDS está atascado";
             break;
         case "49":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.PERMANENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.ERROR;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.SENSORS;
-            parameters.message = "LDS bumper jammed";
+            parameters.message = "El parachoques del LDS está atascado";
             break;
         case "50":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.UNKNOWN;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.UNKNOWN;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.CORE;
-            parameters.message = `Internal error ${vendorErrorCode}`;
+            parameters.message = `Error interno ${vendorErrorCode}`;
             break;
         case "51":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.TRANSIENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.WARNING;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.ATTACHMENTS;
-            parameters.message = "Filter jammed";
+            parameters.message = "El filtro está obstruido";
             break;
         case "52":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.UNKNOWN;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.UNKNOWN;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.CORE;
-            parameters.message = `Internal error ${vendorErrorCode}`;
+            parameters.message = `Error interno ${vendorErrorCode}`;
             break;
         case "53":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.PERMANENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.CATASTROPHIC;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.SENSORS;
-            parameters.message = "ToF Sensor offline";
+            parameters.message = "El sensor ToF no está disponible";
             break;
         case "54":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.TRANSIENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.WARNING;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.SENSORS;
-            parameters.message = "Wall sensor dirty";
+            parameters.message = "El sensor de pared está sucio";
             break;
         case "55":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.UNKNOWN;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.UNKNOWN;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.CORE;
-            parameters.message = `Internal error ${vendorErrorCode}`; //"AVA_HEALTH_STATUS_TYPE_CARPET_WATEBOX_START" //TODO What does the dreame error string mean?
+            parameters.message = `Error interno ${vendorErrorCode}`; //"AVA_HEALTH_STATUS_TYPE_CARPET_WATEBOX_START" //TODO What does the dreame error string mean?
             break;
         case "56":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.UNKNOWN;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.UNKNOWN;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.CORE;
-            parameters.message = `Internal error ${vendorErrorCode}`;
+            parameters.message = `Error interno ${vendorErrorCode}`;
             break;
         case "57":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.UNKNOWN;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.UNKNOWN;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.CORE;
-            parameters.message = `Internal error ${vendorErrorCode}`;
+            parameters.message = `Error interno ${vendorErrorCode}`;
             break;
         case "58":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.UNKNOWN;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.UNKNOWN;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.CORE;
-            parameters.message = `Internal error ${vendorErrorCode}`;
+            parameters.message = `Error interno ${vendorErrorCode}`;
             break;
         case "59":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.TRANSIENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.WARNING;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.NAVIGATION;
-            parameters.message = "Robot trapped by virtual restrictions";
+            parameters.message = "El robot está atrapado por restricciones virtuales";
             break;
         case "60":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.UNKNOWN;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.UNKNOWN;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.CORE;
-            parameters.message = `Internal error ${vendorErrorCode}`;
+            parameters.message = `Error interno ${vendorErrorCode}`;
             break;
         case "61":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.TRANSIENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.WARNING;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.NAVIGATION;
-            parameters.message = "Cannot reach target";
+            parameters.message = "No se puede llegar al destino";
             break;
         case "62":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.TRANSIENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.WARNING;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.NAVIGATION;
-            parameters.message = "Cannot reach target";
+            parameters.message = "No se puede llegar al destino";
             break;
         case "63":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.TRANSIENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.WARNING;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.NAVIGATION;
-            parameters.message = "Cannot reach target";
+            parameters.message = "No se puede llegar al destino";
             break;
         case "64":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.TRANSIENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.WARNING;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.NAVIGATION;
-            parameters.message = "Cannot reach target";
+            parameters.message = "No se puede llegar al destino";
             break;
         case "65":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.TRANSIENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.WARNING;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.NAVIGATION;
-            parameters.message = "Cannot reach target";
+            parameters.message = "No se puede llegar al destino";
             break;
         case "66":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.TRANSIENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.WARNING;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.NAVIGATION;
-            parameters.message = "Cannot reach target";
+            parameters.message = "No se puede llegar al destino";
             break;
         case "67":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.TRANSIENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.WARNING;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.NAVIGATION;
-            parameters.message = "Cannot reach target";
+            parameters.message = "No se puede llegar al destino";
             break;
         // 68: Not an Error. "Docked but mop is still attached. Please remove the mop"
         case "69":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.TRANSIENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.ERROR;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.ATTACHMENTS;
-            parameters.message = "Lost mop pad";
+            parameters.message = "La mopa se ha desprendido";
             break;
         case "70":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.TRANSIENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.ERROR;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.ATTACHMENTS;
-            parameters.message = "Lost mop pad";
+            parameters.message = "La mopa se ha desprendido";
             break;
 
         case "71":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.PERMANENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.CATASTROPHIC;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.MOTORS;
-            parameters.message = "Mop motor fault";
+            parameters.message = "Fallo del motor de la mopa";
             break;
         case "72":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.PERMANENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.CATASTROPHIC;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.MOTORS;
-            parameters.message = "Mop motor current abnormal";
+            parameters.message = "Corriente anormal del motor de la mopa";
             break;
 
         case "74":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.TRANSIENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.ERROR;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.ATTACHMENTS;
-            parameters.message = "Failed to attach mop pads";
+            parameters.message = "No se han podido colocar las mopas";
             break;
 
         case "82":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.TRANSIENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.WARNING;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.NAVIGATION;
-            parameters.message = "Robot stuck or trapped";
+            parameters.message = "El robot está atascado";
             break;
 
         case "91":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.TRANSIENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.WARNING;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.NAVIGATION;
-            parameters.message = "Cannot reach target";
+            parameters.message = "No se puede llegar al destino";
             break;
         case "96":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.TRANSIENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.WARNING;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.NAVIGATION;
-            parameters.message = "Cannot reach target";
+            parameters.message = "No se puede llegar al destino";
             break;
 
         case "98":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.TRANSIENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.WARNING;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.NAVIGATION;
-            parameters.message = "Robot stuck or trapped";
+            parameters.message = "El robot está atascado";
             break;
 
 
@@ -898,7 +898,7 @@ DreameValetudoRobot.MAP_ERROR_CODE = (vendorErrorCode) => {
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.TRANSIENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.WARNING;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.NAVIGATION;
-            parameters.message = "Stuck inside restricted area";
+            parameters.message = "El robot está atrapado dentro de una zona restringida";
             break;
 
 
@@ -906,25 +906,25 @@ DreameValetudoRobot.MAP_ERROR_CODE = (vendorErrorCode) => {
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.PERMANENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.WARNING;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.DOCK;
-            parameters.message = "Auto-Empty Dock dust bag full or dust duct clogged";
+            parameters.message = "La bolsa de polvo de la base está llena o el conducto de polvo está obstruido";
             break;
         case "102":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.TRANSIENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.WARNING;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.DOCK;
-            parameters.message = "Auto-Empty Dock cover open or missing dust bag";
+            parameters.message = "La tapa de la base está abierta o falta la bolsa de polvo";
             break;
         case "103":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.TRANSIENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.WARNING;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.DOCK;
-            parameters.message = "Auto-Empty Dock cover open or missing dust bag";
+            parameters.message = "La tapa de la base está abierta o falta la bolsa de polvo";
             break;
         case "104":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.PERMANENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.WARNING;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.DOCK;
-            parameters.message = "Auto-Empty Dock dust bag full or dust duct clogged";
+            parameters.message = "La bolsa de polvo de la base está llena o el conducto de polvo está obstruido";
             break;
 
 
@@ -933,80 +933,80 @@ DreameValetudoRobot.MAP_ERROR_CODE = (vendorErrorCode) => {
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.PERMANENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.WARNING;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.DOCK;
-            parameters.message = "Mop Dock Clean Water Tank not installed";
+            parameters.message = "El depósito de agua limpia no está instalado";
             break;
         case "106":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.PERMANENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.WARNING;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.DOCK;
-            parameters.message = "Mop Dock Wastewater Tank not installed or full";
+            parameters.message = "El depósito de agua sucia no está instalado o está lleno";
             break;
         case "107":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.PERMANENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.WARNING;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.DOCK;
-            parameters.message = "Mop Dock Clean Water Tank empty";
+            parameters.message = "El depósito de agua limpia está vacío";
             break;
         case "108":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.PERMANENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.WARNING;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.DOCK;
-            parameters.message = "Mop Dock Wastewater Tank not installed or full";
+            parameters.message = "El depósito de agua sucia no está instalado o está lleno";
             break;
         case "109":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.PERMANENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.ERROR;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.DOCK;
-            parameters.message = "Mop Dock Wastewater pipe clogged";
+            parameters.message = "El conducto de agua sucia de la base está obstruido";
             break;
         case "110":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.PERMANENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.CATASTROPHIC;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.DOCK;
-            parameters.message = "Mop Dock Wastewater pump damaged";
+            parameters.message = "La bomba de agua sucia de la base está dañada";
             break;
         case "111":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.PERMANENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.WARNING;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.DOCK;
-            parameters.message = "Mop Dock Tray not installed";
+            parameters.message = "La bandeja de lavado de la base no está instalada";
             break;
         case "112":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.PERMANENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.ERROR;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.DOCK;
-            parameters.message = "Mop Dock Tray full of water";
+            parameters.message = "La bandeja de lavado de la base está llena de agua";
             break;
         // 114: Not an Error. "Please remember to clean the mop tray"
         case "116":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.PERMANENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.WARNING;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.DOCK;
-            parameters.message = "Mop Dock Clean Water Tank empty";
+            parameters.message = "El depósito de agua limpia está vacío";
             break;
         case "117":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.TRANSIENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.WARNING;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.NAVIGATION;
-            parameters.message = "Cannot navigate to the dock";
+            parameters.message = "No se puede llegar a la estación base";
             break;
         case "118":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.PERMANENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.WARNING;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.DOCK;
-            parameters.message = "Mop Dock Wastewater Tank not installed or full";
+            parameters.message = "El depósito de agua sucia no está instalado o está lleno";
             break;
         case "119":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.PERMANENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.ERROR;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.DOCK;
-            parameters.message = "Mop Dock Tray full of water";
+            parameters.message = "La bandeja de lavado de la base está llena de agua";
             break;
         case "121":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.PERMANENT;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.WARNING;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.DOCK;
-            parameters.message = "Auto-Empty Dock dust bag full or dust duct clogged";
+            parameters.message = "La bolsa de polvo de la base está llena o el conducto de polvo está obstruido";
             break;
     }
 

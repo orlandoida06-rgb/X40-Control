@@ -7,6 +7,14 @@ const DreameUtils = require("./DreameUtils");
 const DreameValetudoRobot = require("./DreameValetudoRobot");
 const entities = require("../../entities");
 const ErrorStateValetudoEvent = require("../../valetudo_events/events/ErrorStateValetudoEvent");
+const {
+    getVoiceIdForError
+} = require("../../x40-control/X40ErrorVoiceMap");
+
+const {
+    playVoice
+} = require("../../x40-control/X40ErrorVoicePlayer");
+
 const LinuxTools = require("../../utils/LinuxTools");
 const Logger = require("../../Logger");
 const MopAttachmentReminderValetudoEvent = require("../../valetudo_events/events/MopAttachmentReminderValetudoEvent");
@@ -21,6 +29,8 @@ const MIOT_SERVICES = DreameMiotServices["GEN2"];
 
 
 class DreameGen2ValetudoRobot extends DreameValetudoRobot {
+    _lastX40VoiceErrorCode = null;
+
     /**
      *
      * @param {object} options
@@ -806,6 +816,10 @@ class DreameGen2ValetudoRobot extends DreameValetudoRobot {
 
 
             if (this.ephemeralState.errorCode === "0" || this.ephemeralState.errorCode === "") {
+                // X40-Control: clear the last announced error so it can
+                // be announced again if the same error returns later.
+                this._lastX40VoiceErrorCode = null;
+
                 statusValue = DreameValetudoRobot.STATUS_MAP[this.ephemeralState.mode]?.value ?? stateAttrs.StatusStateAttribute.VALUE.IDLE;
                 statusFlag = DreameValetudoRobot.STATUS_MAP[this.ephemeralState.mode]?.flag;
 
@@ -834,6 +848,19 @@ class DreameGen2ValetudoRobot extends DreameValetudoRobot {
                     statusValue = stateAttrs.StatusStateAttribute.VALUE.ERROR;
 
                     statusError = DreameValetudoRobot.MAP_ERROR_CODE(this.ephemeralState.errorCode);
+
+                    // X40-Control: announce mapped Dreame errors using GLADOS voice.
+                    const errorCode = String(this.ephemeralState.errorCode);
+                    const voiceId = getVoiceIdForError(errorCode);
+
+                    if (
+                        voiceId !== null &&
+                        voiceId !== undefined &&
+                        errorCode !== this._lastX40VoiceErrorCode
+                    ) {
+                        this._lastX40VoiceErrorCode = errorCode;
+                        playVoice(voiceId);
+                    }
                 }
 
             }

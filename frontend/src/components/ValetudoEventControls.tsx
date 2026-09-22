@@ -36,7 +36,7 @@ const ConsumableDepletedEventControl: FunctionComponent<ValetudoEventRenderProps
         if (!event.type || !event.subType) {
             return (
                 <Typography color={"error"}>
-                    Consumable without type/subType depleted
+                    Consumible sin tipo/subtipo agotado
                 </Typography>
             );
         }
@@ -76,7 +76,7 @@ const ErrorEventControl: FunctionComponent<ValetudoEventRenderProps> =
                 <Stack>
                     <EventTimestamp timestamp={event.timestamp}/>
                     <Typography color={color} style={textStyle} sx={{mr: 1}}>
-                        An error occurred: {event.message || "Unknown error"}
+                        Se ha producido un error: {event.message || "Error desconocido"}
                     </Typography>
                 </Stack>
                 <Button
@@ -90,7 +90,7 @@ const ErrorEventControl: FunctionComponent<ValetudoEventRenderProps> =
                     }}
                     color="error"
                 >
-                    Dismiss
+                    Cerrar
                 </Button>
             </EventRow>
         );
@@ -137,8 +137,8 @@ const PendingMapChangeEventControl: FunctionComponent<ValetudoEventRenderProps> 
         );
     };
 
-const CreateDismissableEventControl = (message: string) : FunctionComponent<ValetudoEventRenderProps> => {
-    return function DismissableEventControl({event, interact}) {
+const CreateCerrarableEventControl = (message: string) : FunctionComponent<ValetudoEventRenderProps> => {
+    return function CerrarableEventControl({event, interact}) {
         const color = event.processed ? "textSecondary" : "textPrimary";
         const textStyle = event.processed ? {textDecoration: "line-through"} : {};
 
@@ -161,7 +161,7 @@ const CreateDismissableEventControl = (message: string) : FunctionComponent<Vale
                     }}
                     color="info"
                 >
-                    Dismiss
+                    Cerrar
                 </Button>
             </EventRow>
         );
@@ -192,7 +192,7 @@ const MissingResourceEventControl: FunctionComponent<ValetudoEventRenderProps> =
                     }}
                     color="warning"
                 >
-                    Dismiss
+                    Cerrar
                 </Button>
             </EventRow>
         );
@@ -208,7 +208,7 @@ const ValetudoUpdatedEventControl: FunctionComponent<ValetudoEventRenderProps> =
                 <Stack>
                     <EventTimestamp timestamp={event.timestamp}/>
                     <Typography color={color} style={textStyle} sx={{mr: 1}}>
-                        Valetudo was successfully updated from &apos;{event.previousVersion ?? "unknown"}&apos; to &apos;{event.newVersion ?? "unknown"}&apos;.
+                        Valetudo se ha actualizado correctamente de &apos;{event.previousVersion ?? "desconocida"}&apos; a &apos;{event.newVersion ?? "desconocida"}&apos;.
                     </Typography>
                 </Stack>
                 <Button
@@ -222,7 +222,7 @@ const ValetudoUpdatedEventControl: FunctionComponent<ValetudoEventRenderProps> =
                     }}
                     color="info"
                 >
-                    Dismiss
+                    Cerrar
                 </Button>
             </EventRow>
         );
@@ -239,7 +239,7 @@ const ValetudoRuntimeErrorEventControl: FunctionComponent<ValetudoEventRenderPro
                     <EventTimestamp timestamp={event.timestamp}/>
                     <Typography color={color} style={textStyle} sx={{mr: 1}}>
                         Valetudo ha encontrado un problema y se ha reiniciado. Esto no debería ocurrir.<br/><br/>
-                        {event.description ? event.description: `Reason: ${event.reason}`}
+                        {event.description ? event.description: `Motivo: ${event.reason}`}
                     </Typography>
                 </Stack>
                 <Button
@@ -253,7 +253,7 @@ const ValetudoRuntimeErrorEventControl: FunctionComponent<ValetudoEventRenderPro
                     }}
                     color="error"
                 >
-                    Dismiss
+                    Cerrar
                 </Button>
             </EventRow>
         );
@@ -263,7 +263,7 @@ const UnknownEventControl: FunctionComponent<ValetudoEventRenderProps> =
     ({event}) => {
         return (
             <Typography color={"error"}>
-                Unknown event type: ${event.__class}
+                Tipo de evento desconocido: ${event.__class}
             </Typography>
         );
     };
@@ -272,8 +272,8 @@ export const eventControls: Record<string, React.ComponentType<ValetudoEventRend
     ConsumableDepletedValetudoEvent: ConsumableDepletedEventControl,
     ErrorStateValetudoEvent: ErrorEventControl,
     PendingMapChangeValetudoEvent: PendingMapChangeEventControl,
-    DustBinFullValetudoEvent: CreateDismissableEventControl("The dust bin is full. Please empty it."),
-    MopAttachmentReminderValetudoEvent: CreateDismissableEventControl("The mop is still attached to the robot."),
+    DustBinFullValetudoEvent: CreateCerrarableEventControl("El depósito de polvo está lleno. Vacíalo, por favor."),
+    MopAttachmentReminderValetudoEvent: CreateCerrarableEventControl("La mopa sigue colocada en el robot."),
     MissingResourceValetudoEvent: MissingResourceEventControl,
     ValetudoUpdatedValetudoEvent: ValetudoUpdatedEventControl,
     ValetudoRuntimeErrorValetudoEvent: ValetudoRuntimeErrorEventControl,
