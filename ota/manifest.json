@@ -1,13 +1,16 @@
 {
   "product": "X40Control",
-  "version": "2026.09.22.18",
+  "version": "2026.09.22.19",
   "channel": "stable",
   "asset": "valetudo.x40control_final",
-  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.22.18/valetudo",
-  "sha256": "69606407e4f3445e023bf82f45ef2619e1d493800a49a373f12860b75a2c5392",
-  "size": 36943651,
+  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.22.19/valetudo",
+  "sha256": "e5b6fb9287133f79b3b66d79e5a607d3950ca571269c3f473a4c0e6586a76ed1",
+  "size": 36945855,
+  "voices_url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.22.19/X40-Control-voices.tar.gz",
+  "voices_sha256": "01d6cc63c0ac590848246bb1affd70d1f99e1132c72f5d4371c11c0eec1a0b19",
+  "voices_size": 535518,
   "requires_reboot": true,
   "changelog": [
-    "Actualizar README.md"
+    "feat: add X40 error voices and automated voice OTA"
   ]
 }
