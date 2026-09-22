@@ -1,16 +1,16 @@
 {
   "product": "X40Control",
-  "version": "2026.09.22.24",
+  "version": "2026.09.22.25",
   "channel": "stable",
   "asset": "valetudo.x40control_final",
-  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.22.24/valetudo",
-  "sha256": "6d552ea0cbef4afb36282439e974e927d9bdab3fd174fca54656fa01c381bf72",
-  "size": 36945827,
-  "voices_url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.22.24/X40-Control-voices.tar.gz",
-  "voices_sha256": "b84e9622199f9876b4ccb2d266ecb738120c216eb94fb1e4ddf4bf685e6d3d56",
-  "voices_size": 535509,
+  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.22.25/valetudo",
+  "sha256": "214e4d8ae30d98c78b431011423d7b44f5360915cc54d3905facc8ba2ba3a83b",
+  "size": 36945819,
+  "voices_url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.22.25/X40-Control-voices.tar.gz",
+  "voices_sha256": "a7814fa5f2f7fcc7c4dd6eafd7d4ac9d767c41563153f93b8ddedbd70a5cd003",
+  "voices_size": 535518,
   "requires_reboot": true,
   "changelog": [
-    "Update README.md"
+    "Actualizar captura principal de X40"
   ]
 }
