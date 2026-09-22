@@ -1,13 +1,13 @@
 {
   "product": "X40Control",
-  "version": "2026.09.21.17",
+  "version": "2026.09.22.18",
   "channel": "stable",
   "asset": "valetudo.x40control_final",
-  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.21.17/valetudo",
-  "sha256": "50be11155a900c0cd54c9b042e4dea36cb92a98d9106add05d7ec4d36a64da70",
-  "size": 36943642,
+  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.22.18/valetudo",
+  "sha256": "69606407e4f3445e023bf82f45ef2619e1d493800a49a373f12860b75a2c5392",
+  "size": 36943651,
   "requires_reboot": true,
   "changelog": [
-    "ci: automate X40 OTA releases"
+    "Actualizar README.md"
   ]
 }
