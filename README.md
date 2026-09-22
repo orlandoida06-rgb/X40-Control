@@ -1,6 +1,4 @@
-cd ~/tuasistente-miio/valetudo-ui
-
-cat > README.md <<'EOF'
+dreame x40 ultra
 # X40-Control 🇪🇸 frontend para valetudo
 
 **Interfaz personalizada de Valetudo para Dreame X40 Ultra.**
