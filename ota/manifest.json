@@ -1,14 +1,14 @@
 {
   "product": "X40Control",
-  "version": "2026.09.22.20",
+  "version": "2026.09.22.21",
   "channel": "stable",
   "asset": "valetudo.x40control_final",
-  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.22.20/valetudo",
-  "sha256": "bfe4e9aaf0effcb1c8550efb3a07d120eb39f5225ed1c9f0e0c5e9a6db0a1054",
-  "size": 36945886,
-  "voices_url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.22.20/X40-Control-voices.tar.gz",
-  "voices_sha256": "6fb45e69adf2347092a981ffc188dc20e65fb4a91265f30fa51d1df9bf2d5bd7",
-  "voices_size": 535520,
+  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.22.21/valetudo",
+  "sha256": "c86d88c0c694e6ec55337f37ac2b399d30e0c81985b3055112e30a463554368b",
+  "size": 36945936,
+  "voices_url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.22.21/X40-Control-voices.tar.gz",
+  "voices_sha256": "4451d7c9d93ed6f9b5a2a27c26d75b72edaf03536181c3bf6dcb7e4ff8d79612",
+  "voices_size": 535518,
   "requires_reboot": true,
   "changelog": [
     "Merge remote-tracking branch 'origin/main'"
