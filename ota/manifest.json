@@ -1,16 +1,16 @@
 {
   "product": "X40Control",
-  "version": "2026.09.22.23",
+  "version": "2026.09.22.24",
   "channel": "stable",
   "asset": "valetudo.x40control_final",
-  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.22.23/valetudo",
-  "sha256": "ca28f2539ead398dc648afa74cbfd86777ed7c07cf7b79ca6282684f55a71919",
-  "size": 36945814,
-  "voices_url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.22.23/X40-Control-voices.tar.gz",
-  "voices_sha256": "b2a501788a5b4f00c84c105c507bf8d2c5e8d3708aadf80298883e1518e2e56d",
-  "voices_size": 535514,
+  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.22.24/valetudo",
+  "sha256": "6d552ea0cbef4afb36282439e974e927d9bdab3fd174fca54656fa01c381bf72",
+  "size": 36945827,
+  "voices_url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.22.24/X40-Control-voices.tar.gz",
+  "voices_sha256": "b84e9622199f9876b4ccb2d266ecb738120c216eb94fb1e4ddf4bf685e6d3d56",
+  "voices_size": 535509,
   "requires_reboot": true,
   "changelog": [
-    "fix: point sidebar OTA to X40Control"
+    "Update README.md"
   ]
 }
