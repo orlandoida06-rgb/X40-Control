@@ -33,6 +33,16 @@ class VoicePackManagementCapability extends Capability {
     }
 
     /**
+     * Activa una voz ya instalada en el robot.
+     *
+     * @param {string} language
+     * @returns {Promise<void>}
+     */
+    async activateVoicePack(language) {
+        throw new NotImplementedError();
+    }
+
+    /**
      * This method should return the status of the current voice pack operation, if one is ongoing.
      *
      * @abstract

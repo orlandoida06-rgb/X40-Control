@@ -56,6 +56,24 @@ class DreameVoicePackManagementCapability extends VoicePackManagementCapability 
     }
 
     /**
+     * Activates an already installed voice pack.
+     *
+     * @param {string} language
+     * @returns {Promise<void>}
+     */
+    async activateVoicePack(language) {
+        if (typeof language !== "string" || !language.trim()) {
+            throw new Error("Invalid voice pack language");
+        }
+
+        await this.robot.miotHelper.writeProperty(
+            this.siid,
+            this.active_voicepack_piid,
+            language.trim().toUpperCase()
+        );
+    }
+
+    /**
      * This method should return the status of the current voice pack operation, if one is ongoing.
      *
      * @returns {Promise<ValetudoVoicePackOperationStatus>}

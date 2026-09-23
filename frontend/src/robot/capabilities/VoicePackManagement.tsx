@@ -152,6 +152,20 @@ const VoicePackControl: FunctionComponent = () => {
         setHash(voice.hash);
     };
 
+    const activateVoice = React.useCallback(
+        (voice: VoiceCatalogEntry): void => {
+            if (!voice.installed || voice.url) {
+                return;
+            }
+
+            sendVoicePackCommand({
+                action: "activate",
+                language: voice.language
+            });
+        },
+        [sendVoicePackCommand]
+    );
+
     const voicePackContent = React.useMemo(() => {
         if (voicePackError) {
             return (
@@ -246,9 +260,10 @@ const VoicePackControl: FunctionComponent = () => {
                                 ) : (
                                     <Button
                                         variant="outlined"
-                                        disabled
+                                        disabled={commandDisabled || isCurrent}
+                                        onClick={() => activateVoice(voice)}
                                     >
-                                        Instalada en X40
+                                        {isCurrent ? "Voz activa" : "Activar"}
                                     </Button>
                                 )}
                             </CardContent>

@@ -372,7 +372,6 @@ class ValetudoRouter {
                     [],
                     {
                         timeout: 10000,
-                        stdio: "ignore"
                     },
                     (error) => {
                         if (error) {

@@ -444,12 +444,17 @@ export interface VoicePackManagementStatus {
     }
 }
 
-export interface VoicePackManagementCommand {
-    action: "download";
-    url: string;
-    language: string;
-    hash: string;
-}
+export type VoicePackManagementCommand =
+    | {
+        action: "download";
+        url: string;
+        language: string;
+        hash: string;
+    }
+    | {
+        action: "activate";
+        language: string;
+    };
 
 export interface DoNotDisturbTime {
     hour: number;

@@ -14,6 +14,16 @@ class VoicePackManagementCapabilityRouter extends CapabilityRouter {
         });
 
         this.router.put("/", this.validator, async (req, res) => {
+            if (req.body.action === "activate" && req.body.language) {
+                try {
+                    await this.capability.activateVoicePack(req.body.language);
+                    res.sendStatus(200);
+                } catch (e) {
+                    this.sendErrorResponse(req, res, e);
+                }
+                return;
+            }
+
             if (req.body.action === "download" && req.body.url) {
                 try {
                     await this.capability.downloadVoicePack({
@@ -25,9 +35,10 @@ class VoicePackManagementCapabilityRouter extends CapabilityRouter {
                 } catch (e) {
                     this.sendErrorResponse(req, res, e);
                 }
-            } else {
-                res.sendStatus(400);
+                return;
             }
+
+            res.sendStatus(400);
         });
     }
 }
