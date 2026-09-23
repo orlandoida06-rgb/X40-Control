@@ -88,7 +88,7 @@ const DoNotDisturbControl: FunctionComponent = () => {
                         }}
                     />
                     <TextField
-                        label="End time"
+                        label="Hora de finalización"
                         type="time"
                         value={`${endTimeValue.getHours().toString().padStart(2, "0")}:${endTimeValue.getMinutes().toString().padStart(2, "0")}`}
                         InputLabelProps={{ shrink: true }}
@@ -122,7 +122,7 @@ const DoNotDisturbControl: FunctionComponent = () => {
     const loading = dndConfigurationUpdating || dndConfigurationFetching || !dndConfiguration;
     return (
         <CapabilityItem
-            title={"Do not disturb"}
+            title={"No molestar"}
             loading={loading}
             helpText={DoNotDisturbHelp}
         >

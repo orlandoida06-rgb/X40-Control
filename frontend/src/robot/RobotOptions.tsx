@@ -1284,8 +1284,8 @@ const RobotOptions = (): React.ReactElement => {
                 <LinkListMenuItem
                     key="quirks"
                     url="/options/robot/quirks"
-                    primaryLabel="Quirks"
-                    secondaryLabel="Configure firmware-specific quirks"
+                    primaryLabel="Particularidades"
+                    secondaryLabel="Configura los ajustes específicos del firmware"
                     icon={<QuirksIcon/>}
                 />
             );

@@ -2,22 +2,32 @@ import {Button, Divider, Grid2, IconButton, styled, Typography} from "@mui/mater
 import React, {FunctionComponent} from "react";
 import {
     Help as HelpIcon,
-    Refresh as RefreshIcon,
+    Refresh as RefreshIcon
 } from "@mui/icons-material";
 import HelpDialog from "./HelpDialog";
 
 const TopRightRefreshButton = styled(Button)(({theme}) => {
     return {
-        minWidth: 0
+        minWidth: 0,
+        borderRadius: "50%",
+        width: "42px",
+        height: "42px",
+        padding: 0,
+        color: theme.palette.text.secondary,
+        transition: "all .2s ease",
+        "&:hover": {
+            backgroundColor: theme.palette.action.hover,
+            transform: "rotate(25deg)"
+        }
     };
 });
 
 interface DetailPageHeaderRowProps {
     title: string;
     icon: React.ReactElement;
-    helpText?: string,
-    onRefreshClick?: () => void,
-    isRefreshing?: boolean
+    helpText?: string;
+    onRefreshClick?: () => void;
+    isRefreshing?: boolean;
 }
 
 const DetailPageHeaderRow: FunctionComponent<DetailPageHeaderRowProps> = ({
@@ -31,28 +41,76 @@ const DetailPageHeaderRow: FunctionComponent<DetailPageHeaderRowProps> = ({
 
     return (
         <>
-            <Grid2 container alignItems="center" spacing={1} justifyContent="space-between">
-                <Grid2 style={{display:"flex"}}>
-                    <Grid2 style={{paddingRight: "8px"}}>
-                        {icon}
-                    </Grid2>
-                    <Grid2>
-                        <Typography>{title}</Typography>
+            <Grid2
+                container
+                alignItems="center"
+                spacing={1}
+                justifyContent="space-between"
+            >
+                <Grid2
+                    container
+                    alignItems="center"
+                    spacing={1}
+                    sx={{
+                        minWidth: 0
+                    }}
+                >
+                    <Grid2
+                        container
+                        alignItems="center"
+                        sx={{
+                            minWidth: 0
+                        }}
+                    >
+                        <Grid2
+                            sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                pr: 1
+                            }}
+                        >
+                            {icon}
+                        </Grid2>
+
+                        <Grid2
+                            sx={{
+                                minWidth: 0
+                            }}
+                        >
+                            <Typography
+                                sx={{
+                                    fontWeight: 700,
+                                    fontSize: {
+                                        xs: "1rem",
+                                        sm: "1.1rem"
+                                    },
+                                    whiteSpace: "nowrap",
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis"
+                                }}
+                            >
+                                {title}
+                            </Typography>
+                        </Grid2>
                     </Grid2>
                 </Grid2>
+
                 <Grid2>
-                    <Grid2 container>
+                    <Grid2
+                        container
+                        alignItems="center"
+                        spacing={0.5}
+                    >
                         {
                             helpText !== undefined &&
                             <>
-                                <Grid2
-                                    style={{marginTop:"-0.125rem"}} //:(
-                                >
+                                <Grid2>
                                     <IconButton
                                         onClick={() => {
-                                            return setHelpDialogOpen(true);
+                                            setHelpDialogOpen(true);
                                         }}
                                         title="Ayuda"
+                                        aria-label="Ayuda"
                                     >
                                         <HelpIcon/>
                                     </IconButton>
@@ -74,7 +132,8 @@ const DetailPageHeaderRow: FunctionComponent<DetailPageHeaderRowProps> = ({
                                 <TopRightRefreshButton
                                     loading={isRefreshing ?? false}
                                     onClick={onRefreshClick}
-                                    title="Refresh"
+                                    title="Actualizar"
+                                    aria-label="Actualizar"
                                 >
                                     <RefreshIcon/>
                                 </TopRightRefreshButton>
@@ -83,6 +142,7 @@ const DetailPageHeaderRow: FunctionComponent<DetailPageHeaderRowProps> = ({
                     </Grid2>
                 </Grid2>
             </Grid2>
+
             <Divider sx={{mt: 1}}/>
         </>
     );

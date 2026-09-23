@@ -1,5 +1,10 @@
 import React from "react";
-import { ListItem, ListItemIcon, ListItemText } from "@mui/material";
+import {
+    Box,
+    ListItem,
+    ListItemIcon,
+    ListItemText
+} from "@mui/material";
 
 interface SubHeaderListMenuItemProps {
     primaryLabel: string;
@@ -11,19 +16,43 @@ export const SubHeaderListMenuItem = ({
     icon
 }: SubHeaderListMenuItemProps): React.ReactElement => {
     return (
-        <ListItem>
+        <ListItem
+            sx={{
+                mt: 1.5,
+                mb: 0.75,
+                px: {xs: 1.5, sm: 2},
+                py: 1,
+                borderRadius: 2.5,
+                backgroundColor: "action.hover",
+                border: "1px solid",
+                borderColor: "divider"
+            }}
+        >
             {icon && (
-                <ListItemIcon sx={{ minWidth: "auto", mr: 2 }}>
+                <ListItemIcon
+                    sx={{
+                        minWidth: 40,
+                        color: "text.secondary"
+                    }}
+                >
                     {icon}
                 </ListItemIcon>
             )}
+
             <ListItemText
-                primary={primaryLabel}
-                primaryTypographyProps={{
-                    variant: "subtitle1",
-                    fontSize: "1.25rem"
-                }}
-                sx={{marginTop: "0.2rem"}}
+                primary={
+                    <Box
+                        component="span"
+                        sx={{
+                            fontSize: {xs: "0.9rem", sm: "0.95rem"},
+                            fontWeight: 800,
+                            letterSpacing: "0.02em",
+                            textTransform: "uppercase"
+                        }}
+                    >
+                        {primaryLabel}
+                    </Box>
+                }
             />
         </ListItem>
     );

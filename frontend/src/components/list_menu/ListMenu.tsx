@@ -1,9 +1,16 @@
-import {Divider, Grid2, IconButton, List, ListItemText} from "@mui/material";
+import {
+    Help as HelpIcon
+} from "@mui/icons-material";
+import {
+    Divider,
+    Grid2,
+    IconButton,
+    List,
+    ListItemText
+} from "@mui/material";
 import React from "react";
 import {SpacerListMenuItem} from "./SpacerListMenuItem";
 import HelpDialog from "../HelpDialog";
-import {Help as HelpIcon} from "@mui/icons-material";
-
 
 export const ListMenu: React.FunctionComponent<{
     primaryHeader: string,
@@ -25,35 +32,52 @@ export const ListMenu: React.FunctionComponent<{
             <List
                 style={style}
                 sx={{
-                    width: "100%",
+                    width: "100%"
                 }}
                 subheader={
-                    <Grid2 container>
+                    <Grid2
+                        container
+                        alignItems="center"
+                        sx={{
+                            width: "100%",
+                            px: {xs: 0.5, sm: 1},
+                            py: 0.5
+                        }}
+                    >
                         <Grid2
-                            style={{
-                                maxWidth: helpText ? "84%" : undefined //Unfortunately, 85% does not fit next to the help on an iphone 5
+                            sx={{
+                                flex: 1,
+                                minWidth: 0,
+                                maxWidth: helpText ? "84%" : undefined
                             }}
                         >
                             <ListItemText
-                                style={{
-                                    paddingBottom: "1rem",
-                                    paddingLeft: "1rem",
-                                    paddingRight: "1rem",
-                                    userSelect: "none"
+                                sx={{
+                                    px: 1,
+                                    py: 1
                                 }}
-                                primary={primaryHeader}
+                                primary={
+                                    <span
+                                        style={{
+                                            fontWeight: 700,
+                                            fontSize: "1.05rem"
+                                        }}
+                                    >
+                                        {primaryHeader}
+                                    </span>
+                                }
                                 secondary={secondaryHeader}
                             />
                         </Grid2>
+
                         {helpText && (
-                            <Grid2
-                                style={{marginLeft: "auto", marginRight: "0.5rem"}}
-                            >
+                            <Grid2>
                                 <IconButton
                                     onClick={() => {
-                                        return setHelpDialogOpen(true);
+                                        setHelpDialogOpen(true);
                                     }}
                                     title="Ayuda"
+                                    aria-label="Ayuda"
                                 >
                                     <HelpIcon/>
                                 </IconButton>
@@ -63,7 +87,14 @@ export const ListMenu: React.FunctionComponent<{
                 }
             >
                 {listItems.map((item, idx) => {
-                    const divider = (<Divider variant="middle" component="li" key={idx + "_divider"} />);
+                    const divider = (
+                        <Divider
+                            variant="middle"
+                            component="li"
+                            key={idx + "_divider"}
+                        />
+                    );
+
                     const elem = item;
 
                     if (
@@ -72,11 +103,12 @@ export const ListMenu: React.FunctionComponent<{
                         listItems[idx - 1].type !== SpacerListMenuItem
                     ) {
                         return [divider, elem];
-                    } else {
-                        return elem;
                     }
+
+                    return elem;
                 })}
             </List>
+
             {
                 helpText &&
                 <HelpDialog

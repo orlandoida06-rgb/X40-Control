@@ -1,10 +1,26 @@
 import React from "react";
-import SystemUpdateIcon from "@mui/icons-material/SystemUpdate";
+import {
+    Alert,
+    Box,
+    Button,
+    Chip,
+    Divider,
+    Paper,
+    Stack,
+    Typography
+} from "@mui/material";
+import {
+    CheckCircle as CheckCircleIcon,
+    Download as DownloadIcon,
+    Refresh as RefreshIcon,
+    RestartAlt as RestartAltIcon,
+    SystemUpdate as SystemUpdateIcon
+} from "@mui/icons-material";
 import PaperContainer from "../../components/PaperContainer";
-import {ListMenu} from "../../components/list_menu/ListMenu";
-import {SubHeaderListMenuItem} from "../../components/list_menu/SubHeaderListMenuItem";
-import {ButtonListMenuItem} from "../../components/list_menu/ButtonListMenuItem";
-import {fetchX40ControlOTAInformation, sendX40ControlOTAUpdate} from "../../api/client";
+import {
+    fetchX40ControlOTAInformation,
+    sendX40ControlOTAUpdate
+} from "../../api/client";
 
 interface X40ControlOTAInformation {
     product: string;
@@ -128,36 +144,6 @@ const X40ControlOTA = (): React.ReactElement => {
         void checkForUpdates();
     }, [checkForUpdates]);
 
-    let secondaryLabel = "Consultando el estado OTA...";
-
-    if (error) {
-        secondaryLabel = `Error: ${error}`;
-    } else if (updateResult) {
-        secondaryLabel = updateResult;
-    } else if (ota) {
-        if (!ota.installed) {
-            secondaryLabel = "El binario instalado no coincide con la versión OTA";
-        } else if (compareVersions(ota.availableVersion, ota.installedVersion || "0") > 0) {
-            secondaryLabel = `Nueva versión disponible: ${ota.availableVersion}`;
-        } else {
-            secondaryLabel = `X40Control está actualizado: ${ota.installedVersion}`;
-        }
-    }
-
-    let buttonLabel = "Buscar";
-
-    if (loading) {
-        buttonLabel = "Comprobando...";
-    }
-
-    const installedLabel = ota?.installedVersion ?
-        `Versión instalada: ${ota.installedVersion}` :
-        "Versión instalada: —";
-
-    const availableLabel = ota ?
-        `Última versión disponible: ${ota.availableVersion}` :
-        "Última versión disponible: —";
-
     const updateAvailable =
         ota !== null &&
         compareVersions(
@@ -165,85 +151,314 @@ const X40ControlOTA = (): React.ReactElement => {
             ota.installedVersion || "0"
         ) > 0;
 
-    const items = [
-        <SubHeaderListMenuItem
-            key="ota-status"
-            primaryLabel="Actualización X40Control"
-            icon={<SystemUpdateIcon/>}
-        />,
+    const statusLabel = (() => {
+        if (loading) {
+            return "Comprobando...";
+        }
 
-        <ButtonListMenuItem
-            key="check"
-            primaryLabel="Estado OTA"
-            secondaryLabel={secondaryLabel}
-            buttonLabel={buttonLabel}
-            action={() => void checkForUpdates()}
-            actionLoading={loading}
-        />,
+        if (error) {
+            return "Error";
+        }
 
-        <SubHeaderListMenuItem
-            key="installed"
-            primaryLabel={installedLabel}
-        />,
+        if (updateResult) {
+            return "Actualizado";
+        }
 
-        <SubHeaderListMenuItem
-            key="available"
-            primaryLabel={availableLabel}
-        />,
-    ];
+        if (!ota) {
+            return "Sin información";
+        }
 
-    if (updateAvailable && ota) {
-        const changes = ota.changelog.length > 0 ?
-            `\n\nCambios incluidos:\n${ota.changelog.map(change => `• ${change}`).join("\n")}` :
-            "";
+        if (!ota.installed) {
+            return "Instalación no reconocida";
+        }
 
-        items.push(
-            <ButtonListMenuItem
-                key="update"
-                primaryLabel="Actualizar X40Control"
-                secondaryLabel={`Instalar ${ota.availableVersion}`}
-                buttonLabel="Actualizar"
-                buttonColor="warning"
-                action={updateX40Control}
-                actionLoading={updating}
-                confirmationDialog={{
-                    title: `Nueva versión ${ota.availableVersion}`,
-                    body:
-                        `Hay una nueva versión de X40Control disponible.` +
-                        changes +
-                        `\n\n¿Quieres instalarla?`
-                }}
-            />
-        );
-    }
+        if (updateAvailable) {
+            return "Nueva versión";
+        }
 
-    if (showRestart && ota?.requiresReboot) {
-        items.push(
-            <ButtonListMenuItem
-                key="restart"
-                primaryLabel="Reiniciar robot"
-                secondaryLabel="La actualización está instalada y necesita un reinicio."
-                buttonLabel="Reiniciar"
-                buttonColor="warning"
-                action={restartRobot}
-                actionLoading={restarting}
-                confirmationDialog={{
-                    title: "Reiniciar robot",
-                    body:
-                        "La actualización se ha instalado correctamente." +
-                        "\n\n¿Quieres reiniciar el robot ahora?"
-                }}
-            />
-        );
-    }
+        return "Al día";
+    })();
+
+    const statusColor =
+        error ?
+            "error" :
+            updateAvailable ?
+                "warning" :
+                updateResult || ota ?
+                    "success" :
+                    "default";
 
     return (
         <PaperContainer>
-            <ListMenu
-                primaryHeader="Actualización X40Control"
-                secondaryHeader="Actualización del firmware personalizado mediante OTA"
-                listItems={items}
-            />
+            <Box sx={{width: "100%"}}>
+                <Paper
+                    elevation={0}
+                    sx={{
+                        p: {xs: 2, sm: 2.5},
+                        borderRadius: 4,
+                        border: "1px solid",
+                        borderColor: "divider",
+                        position: "relative",
+                        overflow: "hidden",
+                        background: "background.paper",
+                        transition: "all .2s ease",
+                        "&:hover": {
+                            boxShadow: 3
+                        },
+                        "&::before": {
+                            content: "\"\"",
+                            position: "absolute",
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                            height: 4,
+                            background: "linear-gradient(90deg, #1976d2, #42a5f5)"
+                        }
+                    }}
+                >
+                    <Stack spacing={2.5}>
+                        <Stack
+                            direction={{xs: "column", sm: "row"}}
+                            spacing={2}
+                            alignItems={{xs: "flex-start", sm: "center"}}
+                            justifyContent="space-between"
+                        >
+                            <Stack direction="row" spacing={1.5} alignItems="center">
+                                <Paper
+                                    elevation={0}
+                                    sx={{
+                                        width: 48,
+                                        height: 48,
+                                        borderRadius: 3,
+                                        display: "flex",
+                                        alignItems: "center",
+                                        justifyContent: "center",
+                                        backgroundColor: "action.hover"
+                                    }}
+                                >
+                                    <SystemUpdateIcon/>
+                                </Paper>
+
+                                <Box>
+                                    <Typography
+                                        variant="h6"
+                                        fontWeight={700}
+                                    >
+                                        Actualización X40Control
+                                    </Typography>
+
+                                    <Typography
+                                        variant="body2"
+                                        color="text.secondary"
+                                    >
+                                        Gestiona las actualizaciones de la capa personalizada
+                                    </Typography>
+                                </Box>
+                            </Stack>
+
+                            <Chip
+                                label={statusLabel}
+                                color={statusColor}
+                                size="small"
+                                icon={
+                                    statusLabel === "Al día" ||
+                                    statusLabel === "Actualizado" ?
+                                        <CheckCircleIcon/> :
+                                        undefined
+                                }
+                                sx={{
+                                    fontWeight: 700,
+                                    borderRadius: 2
+                                }}
+                            />
+                        </Stack>
+
+                        <Divider/>
+
+                        <Stack
+                            direction={{xs: "column", sm: "row"}}
+                            spacing={1.5}
+                        >
+                            <Paper
+                                elevation={0}
+                                sx={{
+                                    flex: 1,
+                                    p: 2,
+                                    borderRadius: 3,
+                                    backgroundColor: "action.hover"
+                                }}
+                            >
+                                <Typography
+                                    variant="caption"
+                                    color="text.secondary"
+                                >
+                                    Versión instalada
+                                </Typography>
+
+                                <Typography
+                                    variant="h6"
+                                    fontWeight={700}
+                                    sx={{mt: .5}}
+                                >
+                                    {ota?.installedVersion || "—"}
+                                </Typography>
+                            </Paper>
+
+                            <Paper
+                                elevation={0}
+                                sx={{
+                                    flex: 1,
+                                    p: 2,
+                                    borderRadius: 3,
+                                    backgroundColor: "action.hover"
+                                }}
+                            >
+                                <Typography
+                                    variant="caption"
+                                    color="text.secondary"
+                                >
+                                    Última versión disponible
+                                </Typography>
+
+                                <Typography
+                                    variant="h6"
+                                    fontWeight={700}
+                                    sx={{mt: .5}}
+                                >
+                                    {ota?.availableVersion || "—"}
+                                </Typography>
+                            </Paper>
+                        </Stack>
+
+                        {error && (
+                            <Alert
+                                severity="error"
+                                sx={{borderRadius: 3}}
+                            >
+                                {error}
+                            </Alert>
+                        )}
+
+                        {updateResult && (
+                            <Alert
+                                severity="success"
+                                sx={{borderRadius: 3}}
+                            >
+                                {updateResult}
+                            </Alert>
+                        )}
+
+                        {ota && updateAvailable && (
+                            <Paper
+                                elevation={0}
+                                sx={{
+                                    p: 2,
+                                    borderRadius: 3,
+                                    border: "1px solid",
+                                    borderColor: "warning.main",
+                                    backgroundColor: "warning.50"
+                                }}
+                            >
+                                <Typography
+                                    variant="subtitle1"
+                                    fontWeight={700}
+                                >
+                                    Nueva versión disponible
+                                </Typography>
+
+                                <Typography
+                                    variant="body2"
+                                    color="text.secondary"
+                                    sx={{mt: .5}}
+                                >
+                                    Hay una versión más reciente de X40Control lista
+                                    para instalar.
+                                </Typography>
+
+                                {ota.changelog.length > 0 && (
+                                    <Stack spacing={.5} sx={{mt: 1.5}}>
+                                        {ota.changelog.map((change, index) => (
+                                            <Typography
+                                                key={`${change}-${index}`}
+                                                variant="body2"
+                                            >
+                                                • {change}
+                                            </Typography>
+                                        ))}
+                                    </Stack>
+                                )}
+                            </Paper>
+                        )}
+
+                        <Stack
+                            direction={{xs: "column", sm: "row"}}
+                            spacing={1}
+                        >
+                            <Button
+                                variant="outlined"
+                                startIcon={<RefreshIcon/>}
+                                onClick={() => void checkForUpdates()}
+                                disabled={loading || updating}
+                                sx={{
+                                    borderRadius: 2.5,
+                                    minHeight: 44,
+                                    fontWeight: 700
+                                }}
+                            >
+                                {loading ? "Comprobando..." : "Comprobar actualizaciones"}
+                            </Button>
+
+                            {updateAvailable && (
+                                <Button
+                                    variant="contained"
+                                    color="warning"
+                                    startIcon={<DownloadIcon/>}
+                                    onClick={() => void updateX40Control()}
+                                    disabled={updating || loading}
+                                    sx={{
+                                        borderRadius: 2.5,
+                                        minHeight: 44,
+                                        fontWeight: 700
+                                    }}
+                                >
+                                    {updating ?
+                                        "Actualizando..." :
+                                        `Actualizar a ${ota?.availableVersion}`}
+                                </Button>
+                            )}
+
+                            {showRestart && ota?.requiresReboot && (
+                                <Button
+                                    variant="contained"
+                                    color="warning"
+                                    startIcon={<RestartAltIcon/>}
+                                    onClick={() => void restartRobot()}
+                                    disabled={restarting}
+                                    sx={{
+                                        borderRadius: 2.5,
+                                        minHeight: 44,
+                                        fontWeight: 700
+                                    }}
+                                >
+                                    {restarting ? "Reiniciando..." : "Reiniciar robot"}
+                                </Button>
+                            )}
+                        </Stack>
+
+                        {ota && (
+                            <Typography
+                                variant="caption"
+                                color="text.secondary"
+                                sx={{textAlign: "center"}}
+                            >
+                                {ota.requiresReboot ?
+                                    "Esta versión puede requerir reiniciar el robot después de actualizar." :
+                                    "No se requiere reinicio para esta actualización."}
+                            </Typography>
+                        )}
+                    </Stack>
+                </Paper>
+            </Box>
         </PaperContainer>
     );
 };
