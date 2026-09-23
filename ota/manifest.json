@@ -1,16 +1,16 @@
 {
   "product": "X40Control",
-  "version": "2026.09.22.25",
+  "version": "2026.09.23.26",
   "channel": "stable",
   "asset": "valetudo.x40control_final",
-  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.22.25/valetudo",
-  "sha256": "214e4d8ae30d98c78b431011423d7b44f5360915cc54d3905facc8ba2ba3a83b",
-  "size": 36945819,
-  "voices_url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.22.25/X40-Control-voices.tar.gz",
-  "voices_sha256": "a7814fa5f2f7fcc7c4dd6eafd7d4ac9d767c41563153f93b8ddedbd70a5cd003",
+  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.23.26/valetudo",
+  "sha256": "56e94ec22f6371bbe676af130605d6c57c4da645a9a478a7170c357b3890123a",
+  "size": 36952478,
+  "voices_url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.23.26/X40-Control-voices.tar.gz",
+  "voices_sha256": "15a60e495b8a410949838128d76e3d7422cc038ccb7fe621d91908f7b873740f",
   "voices_size": 535518,
   "requires_reboot": true,
   "changelog": [
-    "Actualizar captura principal de X40"
+    "Merge remote-tracking branch 'origin/main'"
   ]
 }
