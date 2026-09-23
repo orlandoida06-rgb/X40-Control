@@ -372,7 +372,6 @@ class ValetudoRouter {
                     [],
                     {
                         timeout: 10000,
-                        detached: true,
                         stdio: "ignore"
                     },
                     (error) => {
