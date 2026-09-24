@@ -154,7 +154,31 @@ const VoicePackControl: FunctionComponent = () => {
 
     const activateVoice = React.useCallback(
         (voice: VoiceCatalogEntry): void => {
-            if (!voice.installed || voice.url) {
+            if (!voice.installed) {
+                return;
+            }
+
+            if (voice.id === "nico") {
+                sendVoicePackCommand({
+                    action: "download",
+                    url: "https://raw.githubusercontent.com/orlandoida06-rgb/voces-spanish_dreame_x40-ultra/main/voice_pack_nico.tar.gz",
+                    language: voice.language,
+                    hash: voice.hash
+                });
+                return;
+            }
+
+            if (voice.id === "xiana") {
+                sendVoicePackCommand({
+                    action: "download",
+                    url: "https://raw.githubusercontent.com/orlandoida06-rgb/voces-spanish_dreame_x40-ultra/main/voice_pack_spanish_xiana.tar.gz",
+                    language: voice.language,
+                    hash: voice.hash
+                });
+                return;
+            }
+
+            if (voice.url) {
                 return;
             }
 
