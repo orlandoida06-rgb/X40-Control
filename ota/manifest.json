@@ -1,16 +1,16 @@
 {
   "product": "X40Control",
-  "version": "2026.09.24.30",
+  "version": "2026.09.24.31",
   "channel": "stable",
   "asset": "valetudo.x40control_final",
-  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.24.30/valetudo",
-  "sha256": "b880645b3010aa57d8be2efd342f9cba7e0167da58cbcd3bcdc6ce646a72e6be",
-  "size": 36953536,
-  "voices_url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.24.30/X40-Control-voices.tar.gz",
-  "voices_sha256": "9b129840ad3a33158b92cea8526c990ccf309fdaf339077af43424593901d248",
-  "voices_size": 535517,
+  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.24.31/valetudo",
+  "sha256": "c66b443fd408a47970b8093696bbe3543e5fae479d0e5c0717ba42c3c5cc3a4f",
+  "size": 36953498,
+  "voices_url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.24.31/X40-Control-voices.tar.gz",
+  "voices_sha256": "ea2ba533d9e9ded93cdbb9bd29afb8266507a752a70b91a55e8b01f97d700eb6",
+  "voices_size": 535519,
   "requires_reboot": true,
   "changelog": [
-    "Use active voice for X40-Control sounds"
+    "Fix X40-Control active voice path resolution"
   ]
 }
