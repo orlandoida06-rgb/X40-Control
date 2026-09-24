@@ -1,16 +1,16 @@
 {
   "product": "X40Control",
-  "version": "2026.09.24.29",
+  "version": "2026.09.24.30",
   "channel": "stable",
   "asset": "valetudo.x40control_final",
-  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.24.29/valetudo",
-  "sha256": "fb8ff41a72426935951c4b7c0f04601d9fe365f27aa9fa5cead4d73a947adf70",
-  "size": 36952786,
-  "voices_url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.24.29/X40-Control-voices.tar.gz",
-  "voices_sha256": "010141f26f0e74c26d5a56b8e535415bf58d45c861a94c359c4e7ea11c413764",
-  "voices_size": 535519,
+  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.24.30/valetudo",
+  "sha256": "b880645b3010aa57d8be2efd342f9cba7e0167da58cbcd3bcdc6ce646a72e6be",
+  "size": 36953536,
+  "voices_url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.24.30/X40-Control-voices.tar.gz",
+  "voices_sha256": "9b129840ad3a33158b92cea8526c990ccf309fdaf339077af43424593901d248",
+  "voices_size": 535517,
   "requires_reboot": true,
   "changelog": [
-    "Use native voice installer for Xiana and Nico"
+    "Use active voice for X40-Control sounds"
   ]
 }
