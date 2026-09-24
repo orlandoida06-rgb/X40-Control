@@ -1,16 +1,16 @@
 {
   "product": "X40Control",
-  "version": "2026.09.23.27",
+  "version": "2026.09.24.28",
   "channel": "stable",
   "asset": "valetudo.x40control_final",
-  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.23.27/valetudo",
-  "sha256": "00e755c2257554dbbd9aa47eeb316667df6b061d01fd655c9fe1a2471b537a52",
-  "size": 36952786,
-  "voices_url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.23.27/X40-Control-voices.tar.gz",
-  "voices_sha256": "8e9147fad04a4f95c247b6426e800debd6ff7f9d5ae279b9e86d1859302826b3",
+  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.24.28/valetudo",
+  "sha256": "afecb454badf1b03773b074ae3a114501b6a33a569aa1908c23e6af39bb1c9bd",
+  "size": 36952830,
+  "voices_url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.24.28/X40-Control-voices.tar.gz",
+  "voices_sha256": "22d01e99d2cc56e9335a89ad9616cb4efcd35327ae75b1ca573532ea3dc3da1f",
   "voices_size": 535521,
   "requires_reboot": true,
   "changelog": [
-    "feat: allow switching installed X40 voices"
+    "fix: allow activate action in voice pack OpenAPI"
   ]
 }
