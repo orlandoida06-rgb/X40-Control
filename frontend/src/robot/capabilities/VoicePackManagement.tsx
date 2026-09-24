@@ -35,8 +35,8 @@ const VOICE_CATALOG: VoiceCatalogEntry[] = [
         name: "XIANA",
         description: "Voz femenina en español",
         language: "XIANA",
-        hash: "27b0f9ed565ed22df9b7bfb90f64a44a",
-        size: 8021849,
+        hash: "2da72c71c4602e1ca6729c2f05fbafcf",
+        size: 8221442,
         installed: true
     },
     {
@@ -44,8 +44,8 @@ const VOICE_CATALOG: VoiceCatalogEntry[] = [
         name: "Nico",
         description: "Voz masculina en español",
         language: "NICO",
-        hash: "b4cb7b36fb7582d15db72fe48b123902",
-        size: 10293331,
+        hash: "14cb9b7dd53ab1e08c696c307c49089d",
+        size: 10464967,
         installed: true
     },
     {

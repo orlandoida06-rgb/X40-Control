@@ -7,6 +7,7 @@ const RateLimit = require("express-rate-limit");
 const Logger = require("../Logger");
 const Tools = require("../utils/Tools");
 const {SSEHub, SSEMiddleware} = require("./middlewares/sse");
+const {getVoicePath, isX40ControlVoice} = require("../voice/X40ControlVoicePack");
 
 class ValetudoRouter {
     /**
@@ -112,9 +113,24 @@ class ValetudoRouter {
                 });
             }
 
+            let voicePath;
+
+            if (isX40ControlVoice(id)) {
+                voicePath = getVoicePath(id);
+
+                if (!voicePath) {
+                    return res.status(404).json({
+                        error: "No se encontró el audio X40-Control en la voz activa"
+                    });
+                }
+            } else {
+                // Voces de errores Dreame/GLADOS existentes.
+                voicePath = `/data/personalized_voice/X40-Control/${id}.ogg`;
+            }
+
             execFile(
                 "/usr/bin/dmr_client",
-                ["-f", `/data/personalized_voice/X40-Control/${id}.ogg`],
+                ["-f", voicePath],
                 {
                     timeout: 10000
                 },

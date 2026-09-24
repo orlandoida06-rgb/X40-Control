@@ -1,32 +1,48 @@
 "use strict";
 
-const VOICE_PACK_PATH = "/data/personalized_voice/X40-Control";
+const fs = require("fs");
+
+const VOICE_BASE_PATH = "/data/personalized_voice";
+const ACTIVE_VOICE_FILE = "/data/config/ava/language_in_use";
 
 const VOICES = {
     // Modos de limpieza
-    1001: "1001.ogg", // Aspirar
-    1002: "1002.ogg", // Fregar
-    1003: "1003.ogg", // Aspirar y fregar
-    1004: "1004.ogg", // Aspirar y después fregar
-    1005: "1005.ogg", // Personalizado
+    1001: "1001.ogg",
+    1002: "1002.ogg",
+    1003: "1003.ogg",
+    1004: "1004.ogg",
+    1005: "1005.ogg",
 
     // Potencia de aspiración
-    1101: "1101.ogg", // Apagado
-    1102: "1102.ogg", // Mínimo
-    1103: "1103.ogg", // Bajo
-    1104: "1104.ogg", // Medio
-    1105: "1105.ogg", // Alto
-    1106: "1106.ogg", // Máximo
-    1107: "1107.ogg", // Turbo
+    1101: "1101.ogg",
+    1102: "1102.ogg",
+    1103: "1103.ogg",
+    1104: "1104.ogg",
+    1105: "1105.ogg",
+    1106: "1106.ogg",
+    1107: "1107.ogg",
 
     // Agua
-    1201: "1201.ogg", // Desactivada
-    1202: "1202.ogg", // Mínima
-    1203: "1203.ogg", // Baja
-    1204: "1204.ogg", // Media
-    1205: "1205.ogg", // Alta
-    1206: "1206.ogg", // Máxima
+    1201: "1201.ogg",
+    1202: "1202.ogg",
+    1203: "1203.ogg",
+    1204: "1204.ogg",
+    1205: "1205.ogg",
+    1206: "1206.ogg",
 };
+
+function getActiveVoiceLanguage() {
+    try {
+        const language = fs
+            .readFileSync(ACTIVE_VOICE_FILE, "utf8")
+            .trim()
+            .toUpperCase();
+
+        return language || null;
+    } catch {
+        return null;
+    }
+}
 
 function getVoicePath(id) {
     const file = VOICES[id];
@@ -35,11 +51,26 @@ function getVoicePath(id) {
         return null;
     }
 
-    return `${VOICE_PACK_PATH}/${file}`;
+    const language = getActiveVoiceLanguage();
+
+    if (!language) {
+        return null;
+    }
+
+    const path = `${VOICE_BASE_PATH}/${language}/${file}`;
+
+    return fs.existsSync(path) ? path : null;
+}
+
+function isX40ControlVoice(id) {
+    return Object.prototype.hasOwnProperty.call(VOICES, id);
 }
 
 module.exports = {
-    VOICE_PACK_PATH,
+    VOICE_BASE_PATH,
+    ACTIVE_VOICE_FILE,
     VOICES,
+    getActiveVoiceLanguage,
     getVoicePath,
+    isX40ControlVoice,
 };
