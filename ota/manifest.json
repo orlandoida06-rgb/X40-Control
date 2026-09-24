@@ -1,16 +1,16 @@
 {
   "product": "X40Control",
-  "version": "2026.09.24.28",
+  "version": "2026.09.24.29",
   "channel": "stable",
   "asset": "valetudo.x40control_final",
-  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.24.28/valetudo",
-  "sha256": "afecb454badf1b03773b074ae3a114501b6a33a569aa1908c23e6af39bb1c9bd",
-  "size": 36952830,
-  "voices_url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.24.28/X40-Control-voices.tar.gz",
-  "voices_sha256": "22d01e99d2cc56e9335a89ad9616cb4efcd35327ae75b1ca573532ea3dc3da1f",
-  "voices_size": 535521,
+  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.24.29/valetudo",
+  "sha256": "fb8ff41a72426935951c4b7c0f04601d9fe365f27aa9fa5cead4d73a947adf70",
+  "size": 36952786,
+  "voices_url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.24.29/X40-Control-voices.tar.gz",
+  "voices_sha256": "010141f26f0e74c26d5a56b8e535415bf58d45c861a94c359c4e7ea11c413764",
+  "voices_size": 535519,
   "requires_reboot": true,
   "changelog": [
-    "fix: allow activate action in voice pack OpenAPI"
+    "Use native voice installer for Xiana and Nico"
   ]
 }
