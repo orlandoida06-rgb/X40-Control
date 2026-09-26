@@ -1,16 +1,16 @@
 {
   "product": "X40Control",
-  "version": "2026.09.24.31",
+  "version": "2026.09.26.32",
   "channel": "stable",
   "asset": "valetudo.x40control_final",
-  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.24.31/valetudo",
-  "sha256": "c66b443fd408a47970b8093696bbe3543e5fae479d0e5c0717ba42c3c5cc3a4f",
-  "size": 36953498,
-  "voices_url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.24.31/X40-Control-voices.tar.gz",
-  "voices_sha256": "ea2ba533d9e9ded93cdbb9bd29afb8266507a752a70b91a55e8b01f97d700eb6",
-  "voices_size": 535519,
+  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.26.32/valetudo",
+  "sha256": "dfdc216034fe1d434c2f0eb979eb971d9f659bcdbe51afb943a54ad204600499",
+  "size": 36953975,
+  "voices_url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.26.32/X40-Control-voices.tar.gz",
+  "voices_sha256": "95d83b4a12f887466c0b6bd1be6be018cb23c6f2f403e402638544df0615e988",
+  "voices_size": 535516,
   "requires_reboot": true,
   "changelog": [
-    "Fix X40-Control active voice path resolution"
+    "Mejorar traducciones y menú de voces"
   ]
 }
