@@ -270,7 +270,7 @@ const DockComponents = ({
                             ml: 0.5,
                         }}
                     >
-                        Components
+                        Componentes
                     </Typography>
                 </Grid2>
 
@@ -425,7 +425,7 @@ const Dock = (): React.ReactElement => {
         ) {
             return (
                 <Typography color="error">
-                    Error loading dock controls
+                    Error al cargar los controles de la estación
                 </Typography>
             );
         }
@@ -434,6 +434,23 @@ const Dock = (): React.ReactElement => {
 
         const supportedComponents =
             robotInfo?.modelDetails?.supportedDockComponents ?? [];
+
+        let dockStateText: string = dockState;
+
+        switch (dockState) {
+            case "idle":
+                dockStateText = "En espera";
+                break;
+            case "cleaning":
+                dockStateText = "Limpiando";
+                break;
+            case "drying":
+                dockStateText = "Secando";
+                break;
+            case "pause":
+                dockStateText = "Pausado";
+                break;
+        }
 
         return (
             <>
@@ -466,7 +483,7 @@ const Dock = (): React.ReactElement => {
                             opacity: 0.7,
                         }}
                     >
-                        {dockState}
+                        {dockStateText}
                     </Typography>
                 </Box>
 
