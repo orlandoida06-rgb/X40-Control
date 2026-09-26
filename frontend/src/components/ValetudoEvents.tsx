@@ -1,7 +1,24 @@
 import React from "react";
-import {Badge, Button, Divider, IconButton, Popover, Stack, Typography} from "@mui/material";
-import {Notifications as NotificationsIcon} from "@mui/icons-material";
-import {useValetudoEventsInteraction, useValetudoEventsQuery} from "../api";
+import {
+    Alert,
+    Badge,
+    Button,
+    Divider,
+    IconButton,
+    Popover,
+    Stack,
+    Typography
+} from "@mui/material";
+import {
+    Notifications as NotificationsIcon,
+    SystemUpdateAlt as OTAIcon
+} from "@mui/icons-material";
+import {useQuery} from "@tanstack/react-query";
+import {
+    fetchX40ControlOTAInformation,
+    useValetudoEventsInteraction,
+    useValetudoEventsQuery
+} from "../api";
 import {eventControls} from "./ValetudoEventControls";
 import ReloadableCard from "./ReloadableCard";
 import styles from "./ValetudoEvents.module.css";
@@ -14,6 +31,19 @@ const ValetudoEvents = (): React.ReactElement => {
         error: eventDataError,
         refetch: eventDataRefetch,
     } = useValetudoEventsQuery();
+
+    const {
+        data: otaData,
+        isFetching: otaDataFetching,
+        error: otaDataError,
+        refetch: otaDataRefetch,
+    } = useQuery({
+        queryKey: ["x40_control_ota"],
+        queryFn: fetchX40ControlOTAInformation,
+        staleTime: 60_000,
+        refetchInterval: 60_000,
+        retry: false,
+    });
 
     const {mutate: interactWithEvent} = useValetudoEventsInteraction();
 
@@ -37,6 +67,16 @@ const ValetudoEvents = (): React.ReactElement => {
         }, 0);
     }, [eventData]);
 
+    const otaUpdateAvailable = React.useMemo(() => {
+        if (!otaData?.availableVersion) {
+            return false;
+        }
+
+        return otaData.availableVersion !== otaData.installedVersion;
+    }, [otaData]);
+
+    const notificationCount = unprocessedEventCount + Number(otaUpdateAvailable);
+
     const icon = React.useMemo(() => {
         const notificationIcon = <NotificationsIcon/>;
 
@@ -49,10 +89,10 @@ const ValetudoEvents = (): React.ReactElement => {
                 );
             }
 
-            if (unprocessedEventCount > 0) {
+            if (notificationCount > 0) {
                 return (
                     <Badge
-                        badgeContent={unprocessedEventCount}
+                        badgeContent={notificationCount}
                         color="error"
                         max={99}
                     >
@@ -63,15 +103,15 @@ const ValetudoEvents = (): React.ReactElement => {
         }
 
         return notificationIcon;
-    }, [eventDataError, eventDataPending, unprocessedEventCount]);
+    }, [eventDataError, eventDataPending, notificationCount]);
 
     const popoverContent = React.useMemo(() => {
-        const events = eventData?.length ? eventData.map((event, i) => {
+        const events = (eventData ?? []).map((event, i) => {
             const EventControl = eventControls[event.__class] || eventControls.Default;
 
             return (
                 <React.Fragment key={event.id}>
-                    {i > 0 && <Divider/>}
+                    {(i > 0 || otaUpdateAvailable) && <Divider/>}
 
                     <EventControl
                         event={event}
@@ -84,30 +124,86 @@ const ValetudoEvents = (): React.ReactElement => {
                     />
                 </React.Fragment>
             );
-        }) : (
-            <Typography
-                color="textSecondary"
-                variant="subtitle1"
-                sx={{py: 2, textAlign: "center"}}
-            >
-                No hay avisos
-            </Typography>
-        );
+        });
+
+        const hasEvents = events.length > 0;
+        const hasNotifications = hasEvents || otaUpdateAvailable;
 
         return (
             <ReloadableCard
                 divider={false}
                 title="Avisos"
-                loading={eventDataFetching}
+                loading={eventDataFetching || otaDataFetching}
                 onReload={() => {
-                    return eventDataRefetch();
+                    return Promise.all([
+                        eventDataRefetch(),
+                        otaDataRefetch(),
+                    ]);
                 }}
             >
                 <Divider sx={{mb: 2}}/>
 
                 <div className={styles.eventContainer}>
-                    <Stack>
+                    <Stack spacing={1}>
+                        {otaUpdateAvailable && (
+                            <Alert
+                                severity="info"
+                                icon={<OTAIcon/>}
+                                sx={{
+                                    alignItems: "flex-start",
+                                    "& .MuiAlert-message": {
+                                        width: "100%",
+                                    },
+                                }}
+                            >
+                                <Typography
+                                    variant="subtitle1"
+                                    sx={{fontWeight: 700}}
+                                >
+                                    Nueva actualización OTA
+                                </Typography>
+
+                                <Typography variant="body2" sx={{mt: 0.5}}>
+                                    Hay una nueva versión de X40-Control disponible:
+                                    {" "}
+                                    <strong>{otaData?.availableVersion}</strong>
+                                </Typography>
+
+                                <Button
+                                    size="small"
+                                    variant="contained"
+                                    sx={{mt: 1}}
+                                    onClick={() => {
+                                        handleCerrar();
+                                        window.location.href = "/options/robot/ota";
+                                    }}
+                                >
+                                    Actualizar
+                                </Button>
+                            </Alert>
+                        )}
+
                         {events}
+
+                        {!hasNotifications && (
+                            <Typography
+                                color="textSecondary"
+                                variant="subtitle1"
+                                sx={{py: 2, textAlign: "center"}}
+                            >
+                                No hay avisos
+                            </Typography>
+                        )}
+
+                        {otaDataError && !hasEvents && (
+                            <Typography
+                                color="textSecondary"
+                                variant="body2"
+                                sx={{pt: 1, textAlign: "center"}}
+                            >
+                                No se pudo comprobar el estado de OTA
+                            </Typography>
+                        )}
                     </Stack>
                 </div>
 
@@ -126,7 +222,17 @@ const ValetudoEvents = (): React.ReactElement => {
                 </Button>
             </ReloadableCard>
         );
-    }, [eventData, eventDataFetching, eventDataRefetch, interactWithEvent]);
+    }, [
+        eventData,
+        eventDataFetching,
+        eventDataRefetch,
+        interactWithEvent,
+        otaData,
+        otaDataError,
+        otaDataFetching,
+        otaDataRefetch,
+        otaUpdateAvailable,
+    ]);
 
     return (
         <>
