@@ -103,6 +103,33 @@ const formatSize = (size: number): string => {
     return `${(size / 1024 / 1024).toFixed(1)} MB`;
 };
 
+const voiceBackground = (voiceId: string): string => {
+    const flags: Record<string, string> = {
+        xiana:
+            "linear-gradient(rgba(0,0,0,.48), rgba(0,0,0,.48)), linear-gradient(to bottom, #aa151b 0 25%, #f1bf00 25% 75%, #aa151b 75% 100%)",
+
+        nico:
+            "linear-gradient(rgba(0,0,0,.48), rgba(0,0,0,.48)), linear-gradient(to bottom, #aa151b 0 25%, #f1bf00 25% 75%, #aa151b 75% 100%)",
+
+        italiano:
+            "linear-gradient(rgba(0,0,0,.48), rgba(0,0,0,.48)), linear-gradient(to right, #009246 0 33.33%, #ffffff 33.33% 66.66%, #ce2b37 66.66% 100%)",
+
+        francais:
+            "linear-gradient(rgba(0,0,0,.48), rgba(0,0,0,.48)), linear-gradient(to right, #0055a4 0 33.33%, #ffffff 33.33% 66.66%, #ef4135 66.66% 100%)",
+
+        english:
+            "linear-gradient(rgba(0,0,0,.48), rgba(0,0,0,.48)), linear-gradient(135deg, transparent 37%, #ffffff 37% 43%, #c8102e 43% 57%, #ffffff 57% 63%, transparent 63%), linear-gradient(45deg, transparent 37%, #ffffff 37% 43%, #c8102e 43% 57%, #ffffff 57% 63%, transparent 63%), linear-gradient(to right, transparent 0 40%, #ffffff 40% 60%, transparent 60%), linear-gradient(to bottom, transparent 0 40%, #ffffff 40% 60%, transparent 60%), #012169",
+
+        deutsch:
+            "linear-gradient(rgba(0,0,0,.48), rgba(0,0,0,.48)), linear-gradient(to bottom, #000000 0 33.33%, #dd0000 33.33% 66.66%, #ffce00 66.66% 100%)",
+
+        portugues:
+            "linear-gradient(rgba(0,0,0,.48), rgba(0,0,0,.48)), linear-gradient(to right, #046a38 0 40%, #da291c 40% 100%)"
+    };
+
+    return flags[voiceId] || "rgba(20,29,43,.95)";
+};
+
 const VoicePackControl: FunctionComponent = () => {
     const {
         data: voicePack,
@@ -230,17 +257,43 @@ const VoicePackControl: FunctionComponent = () => {
                         <Card
                             key={voice.id}
                             variant="outlined"
-                            sx={{mb: 1}}
+                            sx={{
+                                mb: 1,
+                                overflow: "hidden",
+                                color: "#ffffff",
+                                background: voiceBackground(voice.id),
+                                backgroundSize: "cover",
+                                backgroundPosition: "center",
+                                borderColor: "rgba(255,255,255,.14)",
+                                boxShadow: isCurrent ?
+                                    "0 0 0 1px rgba(80,180,255,.55), 0 8px 24px rgba(0,0,0,.28)" :
+                                    "0 6px 18px rgba(0,0,0,.22)",
+                            }}
                         >
-                            <CardContent>
-                                <Typography variant="h6">
+                            <CardContent
+                                sx={{
+                                    background:
+                                        "linear-gradient(90deg, rgba(10,15,22,.58), rgba(10,15,22,.30))"
+                                }}
+                            >
+                                <Typography
+                                    variant="h6"
+                                    sx={{
+                                        color: "#ffffff",
+                                        fontWeight: 700,
+                                        textShadow: "0 2px 4px rgba(0,0,0,.75)"
+                                    }}
+                                >
                                     {voice.name}
                                 </Typography>
 
                                 <Typography
                                     variant="body2"
-                                    color="text.secondary"
-                                    sx={{mb: 1}}
+                                    sx={{
+                                        mb: 1,
+                                        color: "rgba(255,255,255,.88)",
+                                        textShadow: "0 1px 3px rgba(0,0,0,.8)"
+                                    }}
                                 >
                                     {voice.description}
                                 </Typography>
@@ -248,9 +301,11 @@ const VoicePackControl: FunctionComponent = () => {
                                 {voice.size > 0 && (
                                     <Typography
                                         variant="caption"
-                                        color="text.secondary"
-                                        display="block"
-                                        sx={{mb: 1}}
+                                        sx={{
+                                            mb: 1,
+                                            display: "block",
+                                            color: "rgba(255,255,255,.78)"
+                                        }}
                                     >
                                         {formatSize(voice.size)}
                                     </Typography>
@@ -259,8 +314,12 @@ const VoicePackControl: FunctionComponent = () => {
                                 {isCurrent && (
                                     <Typography
                                         variant="body2"
-                                        color="success.main"
-                                        sx={{mb: 1}}
+                                        sx={{
+                                            mb: 1,
+                                            color: "#76ff8a",
+                                            fontWeight: 700,
+                                            textShadow: "0 1px 3px rgba(0,0,0,.8)"
+                                        }}
                                     >
                                         Voz activa
                                     </Typography>
@@ -270,6 +329,10 @@ const VoicePackControl: FunctionComponent = () => {
                                     <Button
                                         variant="outlined"
                                         disabled
+                                        sx={{
+                                            color: "rgba(255,255,255,.72)",
+                                            borderColor: "rgba(255,255,255,.28)"
+                                        }}
                                     >
                                         Próximamente
                                     </Button>
