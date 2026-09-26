@@ -1,16 +1,16 @@
 {
   "product": "X40Control",
-  "version": "2026.09.26.33",
+  "version": "2026.09.26.34",
   "channel": "stable",
   "asset": "valetudo.x40control_final",
-  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.26.33/valetudo",
-  "sha256": "389c1e896e8ef1048dea40f29ffbfa7e22a8ed45685830a335ce9b88e778e164",
-  "size": 36954208,
-  "voices_url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.26.33/X40-Control-voices.tar.gz",
-  "voices_sha256": "6d6955b7b27b945a86d44594319f4705194d4cb05753e38eda387b7bc5cc9523",
-  "voices_size": 535519,
+  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.26.34/valetudo",
+  "sha256": "b8296a1159e8db2e74080a1bcb635888826058b5560336e702c856d854c1c89e",
+  "size": 36954470,
+  "voices_url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.26.34/X40-Control-voices.tar.gz",
+  "voices_sha256": "73a650c9ace3afd00e1cf6ad98e10c0557a55e98909becddc2abc02289c0ac5c",
+  "voices_size": 535520,
   "requires_reboot": true,
   "changelog": [
-    "Mejorar banderas del selector de idiomas"
+    "Mostrar avisos OTA en la campana"
   ]
 }
