@@ -71,10 +71,13 @@ echo
 echo "[3/6] Configurando arranque X40-Control..."
 
 $SSH root@"$ROBOT" "
-if [ -f /data/_root_postboot.sh ]; then
-    sed -i 's#-f /data/valetudo#-f /data/valetudo.x40control_final#' /data/_root_postboot.sh
-    sed -i 's#/data/valetudo > /dev/null 2>\\&1 \\&#/data/valetudo.x40control_final > /dev/null 2>\\&1 \\&#' /data/_root_postboot.sh
+if [ ! -f /data/_root_postboot.sh ]; then
+    echo '[ERROR] No existe /data/_root_postboot.sh'
+    exit 1
 fi
+
+sed -i 's#^if \[\[ -f /data/.*#if [[ -f /data/valetudo.x40control_final ]]; then#' /data/_root_postboot.sh
+sed -i 's#^        VALETUDO_CONFIG_PATH=.*#        VALETUDO_CONFIG_PATH=/data/valetudo_config.json /data/valetudo.x40control_final > /dev/null 2>\&1 \&#' /data/_root_postboot.sh
 "
 
 echo "[OK] Postboot configurado para X40-Control"
