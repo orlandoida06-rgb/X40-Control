@@ -1,16 +1,16 @@
 {
   "product": "X40Control",
-  "version": "2026.09.27.35",
+  "version": "2026.09.27.36",
   "channel": "stable",
   "asset": "valetudo.x40control_final",
-  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.27.35/valetudo",
-  "sha256": "2281f2ce758934343de1106268ac4eb17890c737c6428530a897b4b93e3cc8ac",
-  "size": 36954527,
-  "voices_url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.27.35/X40-Control-voices.tar.gz",
-  "voices_sha256": "02c943d507f4951f5a33a1d70e377ef42c38959b0cbef45a6ec4586392f0474f",
-  "voices_size": 535519,
+  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.27.36/valetudo",
+  "sha256": "87f99286c1fb4495c312a6c2448beaeda38fe6d6ee590542ae9cc14c66642040",
+  "size": 36954521,
+  "voices_url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.27.36/X40-Control-voices.tar.gz",
+  "voices_sha256": "4e9c25a71dfc26f4ac653b9735664a2aee5d592c7ae1b9371ec69eac4513d7cc",
+  "voices_size": 535520,
   "requires_reboot": true,
   "changelog": [
-    "Actualizar paquetes de voz X40"
+    "Limitar backups OTA a dos copias"
   ]
 }
