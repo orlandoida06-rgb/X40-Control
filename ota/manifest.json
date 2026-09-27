@@ -1,16 +1,16 @@
 {
   "product": "X40Control",
-  "version": "2026.09.27.40",
+  "version": "2026.09.27.41",
   "channel": "stable",
   "asset": "valetudo.x40control_final",
-  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.27.40/valetudo",
-  "sha256": "46e89b19a095a110384ae35e050c99115de9239578ba98942f63b23b25192365",
-  "size": 36954513,
-  "voices_url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.27.40/X40-Control-voices.tar.gz",
-  "voices_sha256": "bf947e3f78cbe36b637fac842da3fe7fd867c998a3136c643b9fcc03e03eea58",
+  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.27.41/valetudo",
+  "sha256": "f04efada4ee7b603a1dddf27e3ce4ff74d9b7b9d73fb7f3544ad18a6d706b1cf",
+  "size": 36954516,
+  "voices_url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.27.41/X40-Control-voices.tar.gz",
+  "voices_sha256": "74dd6f3aa039abf5e52404993f38fe06df606fa58433b14d418f6942d660b8cc",
   "voices_size": 535519,
   "requires_reboot": true,
   "changelog": [
-    "Reiniciar robot al finalizar instalación"
+    "Descargar último release según arquitectura"
   ]
 }
