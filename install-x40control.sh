@@ -68,6 +68,18 @@ chmod 755 '$BACKUP'
 echo "[OK] Valetudo oficial guardado en $BACKUP"
 echo
 
+echo "[3/6] Configurando arranque X40-Control..."
+
+$SSH root@"$ROBOT" "
+if [ -f /data/_root_postboot.sh ]; then
+    sed -i 's#-f /data/valetudo#-f /data/valetudo.x40control_final#' /data/_root_postboot.sh
+    sed -i 's#/data/valetudo > /dev/null 2>\\&1 \\&#/data/valetudo.x40control_final > /dev/null 2>\\&1 \\&#' /data/_root_postboot.sh
+fi
+"
+
+echo "[OK] Postboot configurado para X40-Control"
+echo
+
 echo "[4/6] Copiando binario..."
 
 cat "$BIN" | $SSH root@"$ROBOT" "cat > '$NEW'"
