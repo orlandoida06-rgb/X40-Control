@@ -1,16 +1,16 @@
 {
   "product": "X40Control",
-  "version": "2026.09.27.36",
+  "version": "2026.09.27.38",
   "channel": "stable",
   "asset": "valetudo.x40control_final",
-  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.27.36/valetudo",
-  "sha256": "87f99286c1fb4495c312a6c2448beaeda38fe6d6ee590542ae9cc14c66642040",
-  "size": 36954521,
-  "voices_url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.27.36/X40-Control-voices.tar.gz",
-  "voices_sha256": "4e9c25a71dfc26f4ac653b9735664a2aee5d592c7ae1b9371ec69eac4513d7cc",
-  "voices_size": 535520,
+  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.27.38/valetudo",
+  "sha256": "23add33af8f5d875159380ca3753361561540b177180ee1526cf10d19b7b9ee6",
+  "size": 36954517,
+  "voices_url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.27.38/X40-Control-voices.tar.gz",
+  "voices_sha256": "351bc3eb1fd89a363eb47676390e4c8164a72f5f73baeb1d03fe863165867d1a",
+  "voices_size": 535518,
   "requires_reboot": true,
   "changelog": [
-    "Limitar backups OTA a dos copias"
+    "Configurar postboot para iniciar X40-Control"
   ]
 }
