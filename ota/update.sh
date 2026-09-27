@@ -188,6 +188,14 @@ BACKUP="$BACKUP_DIR/valetudo.x40control_final.$TIMESTAMP"
 if [ "$BINARY_NEEDS_UPDATE" -eq 1 ]; then
     cp -p "$TARGET" "$BACKUP"
     echo "Backup creado: $BACKUP"
+
+    # Mantener solamente las 2 copias OTA más recientes.
+    ls -1t "$BACKUP_DIR"/valetudo.x40control_final.* 2>/dev/null |
+        tail -n +3 |
+        while IFS= read -r OLD_BACKUP; do
+            echo "Eliminando backup OTA antiguo: $OLD_BACKUP"
+            rm -f "$OLD_BACKUP"
+        done
 fi
 
 echo
