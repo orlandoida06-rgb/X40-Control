@@ -1,16 +1,16 @@
 {
   "product": "X40Control",
-  "version": "2026.09.26.34",
+  "version": "2026.09.27.35",
   "channel": "stable",
   "asset": "valetudo.x40control_final",
-  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.26.34/valetudo",
-  "sha256": "b8296a1159e8db2e74080a1bcb635888826058b5560336e702c856d854c1c89e",
-  "size": 36954470,
-  "voices_url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.26.34/X40-Control-voices.tar.gz",
-  "voices_sha256": "73a650c9ace3afd00e1cf6ad98e10c0557a55e98909becddc2abc02289c0ac5c",
-  "voices_size": 535520,
+  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.27.35/valetudo",
+  "sha256": "2281f2ce758934343de1106268ac4eb17890c737c6428530a897b4b93e3cc8ac",
+  "size": 36954527,
+  "voices_url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.27.35/X40-Control-voices.tar.gz",
+  "voices_sha256": "02c943d507f4951f5a33a1d70e377ef42c38959b0cbef45a6ec4586392f0474f",
+  "voices_size": 535519,
   "requires_reboot": true,
   "changelog": [
-    "Mostrar avisos OTA en la campana"
+    "Actualizar paquetes de voz X40"
   ]
 }
