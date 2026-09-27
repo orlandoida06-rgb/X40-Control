@@ -9,22 +9,69 @@ REMOTE="/data/valetudo.x40control_final"
 NEW="/data/valetudo.x40control_final.new"
 BACKUP="/data/valetudo.original-2026.08.0"
 
-RELEASE_URL="https://github.com/orlandoida06-rgb/X40-Control/releases/download/v1.0.0/valetudo.x40control_final"
 
 SSH="ssh -i $KEY"
+RELEASE_API="https://api.github.com/repos/orlandoida06-rgb/X40-Control/releases/latest"
 
 echo "========================================"
 echo "     INSTALADOR X40-CONTROL"
 echo "========================================"
 echo
 
-echo "[1/6] Preparando binario..."
+echo "[1/6] Comprobando arquitectura del robot..."
+
+$SSH root@"$ROBOT" "echo '[OK] SSH'"
+
+ARCH=$($SSH root@"$ROBOT" "uname -m")
+
+case "$ARCH" in
+    aarch64)
+        ASSET="valetudo-aarch64"
+        ;;
+    armv7l|armv7)
+        ASSET="valetudo-armv7"
+        ;;
+    *)
+        echo "[ERROR] Arquitectura no soportada: $ARCH"
+        exit 1
+        ;;
+esac
+
+echo "[OK] Arquitectura: $ARCH"
+echo "[OK] Asset: $ASSET"
+
+echo
+echo "[2/6] Preparando binario..."
 
 if [ ! -f "$BIN" ]; then
     echo "[INFO] Binario local no encontrado."
-    echo "[INFO] Descargando X40-Control v1.0.0..."
+    echo "[INFO] Consultando el último Release de X40-Control..."
 
     mkdir -p "$(dirname "$BIN")"
+
+    RELEASE_JSON=$(curl -fsSL "$RELEASE_API")
+
+    RELEASE_TAG=$(
+        printf '%s\n' "$RELEASE_JSON" |
+        sed -n 's#.*"tag_name": *"\([^"]*\)".*#\1#p' |
+        head -n 1
+    )
+
+    RELEASE_URL=$(
+        printf '%s\n' "$RELEASE_JSON" |
+        sed -n "s#.*\"browser_download_url\": *\"\([^\"]*/$ASSET\)\"[,]*#\1#p" |
+        head -n 1
+    )
+
+    if [ -z "$RELEASE_TAG" ] || [ -z "$RELEASE_URL" ]; then
+        echo "[ERROR] No se encontró $ASSET en el último Release"
+        echo "[ERROR] Release detectado: ${RELEASE_TAG:-desconocido}"
+        exit 1
+    fi
+
+    echo "[OK] Último Release: $RELEASE_TAG"
+    echo "[INFO] Descargando:"
+    echo "       $RELEASE_URL"
 
     curl -fL \
         --progress-bar \
@@ -37,21 +84,6 @@ if [ ! -f "$BIN" ]; then
 else
     echo "[OK] Binario local encontrado"
 fi
-
-echo
-echo "[2/6] Comprobando robot..."
-
-$SSH root@"$ROBOT" "echo '[OK] SSH'"
-
-ARCH=$($SSH root@"$ROBOT" "uname -m")
-
-if [ "$ARCH" != "aarch64" ]; then
-    echo "[ERROR] Arquitectura incorrecta: $ARCH"
-    exit 1
-fi
-
-echo "[OK] Arquitectura aarch64"
-echo
 
 echo "[3/6] Guardando Valetudo oficial..."
 
