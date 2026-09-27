@@ -1,16 +1,16 @@
 {
   "product": "X40Control",
-  "version": "2026.09.27.38",
+  "version": "2026.09.27.39",
   "channel": "stable",
   "asset": "valetudo.x40control_final",
-  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.27.38/valetudo",
-  "sha256": "23add33af8f5d875159380ca3753361561540b177180ee1526cf10d19b7b9ee6",
-  "size": 36954517,
-  "voices_url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.27.38/X40-Control-voices.tar.gz",
-  "voices_sha256": "351bc3eb1fd89a363eb47676390e4c8164a72f5f73baeb1d03fe863165867d1a",
-  "voices_size": 535518,
+  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.27.39/valetudo",
+  "sha256": "10d3b41d7e40df22f3b55c10546667434fd1616a794709f92060e48846116873",
+  "size": 36954515,
+  "voices_url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.27.39/X40-Control-voices.tar.gz",
+  "voices_sha256": "1fb4fd967f6550580a8623f8363a2bb5cf7c71c5b7e911c933fb768cce0946fb",
+  "voices_size": 535505,
   "requires_reboot": true,
   "changelog": [
-    "Configurar postboot para iniciar X40-Control"
+    "Corregir configuración del postboot"
   ]
 }
