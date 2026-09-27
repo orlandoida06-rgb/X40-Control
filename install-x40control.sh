@@ -7,12 +7,11 @@ KEY="${2:-$HOME/Documents/j69495894cbde7.id_rsa}"
 BIN="$(pwd)/build/aarch64/valetudo.x40control_final"
 REMOTE="/data/valetudo.x40control_final"
 NEW="/data/valetudo.x40control_final.new"
-BACKUP="/data/valetudo.x40control_final.backup"
+BACKUP="/data/valetudo.original-2026.08.0"
 
 RELEASE_URL="https://github.com/orlandoida06-rgb/X40-Control/releases/download/v1.0.0/valetudo.x40control_final"
 
 SSH="ssh -i $KEY"
-SCP="scp -O -i $KEY"
 
 echo "========================================"
 echo "     INSTALADOR X40-CONTROL"
@@ -54,27 +53,32 @@ fi
 echo "[OK] Arquitectura aarch64"
 echo
 
-echo "[3/6] Creando backup..."
+echo "[3/6] Guardando Valetudo oficial..."
 
 $SSH root@"$ROBOT" "
-if [ -f '$REMOTE' ]; then
-    cp '$REMOTE' '$BACKUP'
+if [ ! -f /data/valetudo ]; then
+    echo '[ERROR] No existe /data/valetudo'
+    exit 1
 fi
+
+cp /data/valetudo '$BACKUP'
+chmod 755 '$BACKUP'
 "
 
-echo "[OK] Backup creado"
+echo "[OK] Valetudo oficial guardado en $BACKUP"
 echo
 
 echo "[4/6] Copiando binario..."
 
-$SCP "$BIN" root@"$ROBOT":"$NEW"
+cat "$BIN" | $SSH root@"$ROBOT" "cat > '$NEW'"
+$SSH root@"$ROBOT" "chmod 755 '$NEW'"
 
+echo "[OK] Binario copiado"
 echo
 
-echo "[5/6] Instalando y reiniciando..."
+echo "[5/6] Instalando y lanzando..."
 
 $SSH root@"$ROBOT" "
-chmod 755 '$NEW'
 mv '$NEW' '$REMOTE'
 chmod 755 '$REMOTE'
 
@@ -85,7 +89,7 @@ if [ -n \"\$PID\" ]; then
     sleep 2
 fi
 
-nohup sh -c \"VALETUDO_CONFIG_PATH=/data/valetudo_config.json /data/valetudo.x40control_final >/tmp/x40control-update.log 2>&1\" >/dev/null 2>&1 &
+nohup sh -c \"VALETUDO_CONFIG_PATH=/data/valetudo_config.json /data/valetudo.x40control_final >/tmp/x40control-install.log 2>&1\" >/dev/null 2>&1 &
 "
 
 echo "[OK] Binario instalado"
@@ -127,7 +131,7 @@ else
     echo "[ERROR] La web no responde después de 30 segundos"
     echo
     echo "===== LOG DEL ROBOT ====="
-    $SSH root@"$ROBOT" "cat /tmp/x40control-update.log 2>/dev/null || true"
+    $SSH root@"$ROBOT" "cat /tmp/x40control-install.log 2>/dev/null || true"
     exit 1
 fi
 
