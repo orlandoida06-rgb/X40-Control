@@ -158,3 +158,11 @@ echo
 echo "Robot: $ROBOT"
 echo "Web:   http://$ROBOT"
 echo
+
+echo
+echo "[INFO] Reiniciando el robot..."
+echo
+
+$SSH root@"$ROBOT" "reboot" || true
+
+echo "[OK] Reinicio solicitado"
