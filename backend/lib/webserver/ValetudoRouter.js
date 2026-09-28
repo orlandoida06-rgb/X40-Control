@@ -263,7 +263,7 @@ class ValetudoRouter {
 
         this.router.get("/x40-control/ota", (req, res) => {
             const manifestPath = "/data/ota/manifest.json";
-            const targetPath = "/data/valetudo.x40control_final";
+            const targetPath = "/data/valetudo";
             const manifestUrl =
                 "https://raw.githubusercontent.com/orlandoida06-rgb/X40-Control/main/ota/manifest.json";
 
