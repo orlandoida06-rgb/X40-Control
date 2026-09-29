@@ -1,17 +1,16 @@
 {
   "product": "X40Control",
-  "version": "2026.09.29.45",
+  "version": "2026.09.29.47",
   "channel": "stable",
   "asset": "valetudo",
-  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.29.45/valetudo",
-  "sha256": "c579569e9214557693f6a4ff975124d0f670e7487188170d3171ad5c587340e8",
-  "size": 36954496,
-  "voices_url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.29.45/X40-Control-voices.tar.gz",
-  "voices_sha256": "42827fbaaa1bc3788b235cf0f28274d7d3cbe02750925152734a629ccf30e4e6",
-  "voices_size": 535519,
+  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.29.47/valetudo",
+  "sha256": "b5acc94962423cac8bd41cc6405c38cf2f7992c984672a4a4debaea4cdeef05c",
+  "size": 36954501,
+  "voices_url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.29.47/X40-Control-voices.tar.gz",
+  "voices_sha256": "2fbd28d2f24c18bdb661cb8275c41aa47b0c197fd32d81c48748babeaa44ac45",
+  "voices_size": 535518,
   "requires_reboot": true,
   "changelog": [
-    "Unificar instalador y OTA en /data/valetudo",
-    "Instalación reversible con backup del Valetudo original"
+    "fix: usar binario valetudo en instalador"
   ]
 }
