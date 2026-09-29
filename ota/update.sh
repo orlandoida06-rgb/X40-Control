@@ -3,8 +3,8 @@
 set -eu
 
 BASE="/data/ota"
-TARGET="/data/valetudo.x40control_final"
-TMP="$BASE/valetudo.x40control_final.new"
+TARGET="/data/valetudo"
+TMP="$BASE/valetudo.new"
 MANIFEST="$BASE/manifest.json"
 BACKUP_DIR="$BASE/backups"
 
@@ -50,6 +50,12 @@ fi
 
 echo
 echo "===== HASH ACTUAL ====="
+
+if [ ! -f "$TARGET" ]; then
+    echo "ERROR: no existe $TARGET"
+    exit 1
+fi
+
 CURRENT_SHA256="$(sha256sum "$TARGET" | awk "{print \$1}")"
 echo "$CURRENT_SHA256"
 
@@ -90,6 +96,7 @@ if [ "$BINARY_NEEDS_UPDATE" -eq 1 ]; then
     echo "===== VERIFICACION BINARIO ====="
 
     DOWNLOADED_SHA256="$(sha256sum "$TMP" | awk "{print \$1}")"
+
     echo "Descargado: $DOWNLOADED_SHA256"
     echo "Esperado:   $EXPECTED_SHA256"
 
@@ -137,7 +144,6 @@ if [ "$VOICE_NEEDS_UPDATE" -eq 1 ]; then
     echo "===== EXTRACCION VOCES ====="
 
     mkdir -p "$VOICE_EXTRACT"
-
     tar -xzf "$VOICE_TMP" -C "$VOICE_EXTRACT"
 
     EXPECTED_VOICES="
@@ -183,14 +189,13 @@ echo
 echo "===== BACKUP ====="
 
 TIMESTAMP="$(date +%Y%m%d-%H%M%S)"
-BACKUP="$BACKUP_DIR/valetudo.x40control_final.$TIMESTAMP"
+BACKUP="$BACKUP_DIR/valetudo.$TIMESTAMP"
 
 if [ "$BINARY_NEEDS_UPDATE" -eq 1 ]; then
     cp -p "$TARGET" "$BACKUP"
     echo "Backup creado: $BACKUP"
 
-    # Mantener solamente las 2 copias OTA más recientes.
-    ls -1t "$BACKUP_DIR"/valetudo.x40control_final.* 2>/dev/null |
+    ls -1t "$BACKUP_DIR"/valetudo.* 2>/dev/null |
         tail -n +3 |
         while IFS= read -r OLD_BACKUP; do
             echo "Eliminando backup OTA antiguo: $OLD_BACKUP"
@@ -222,6 +227,7 @@ echo "===== VERIFICACION FINAL ====="
 
 if [ "$BINARY_NEEDS_UPDATE" -eq 1 ]; then
     FINAL_SHA256="$(sha256sum "$TARGET" | awk "{print \$1}")"
+
     echo "Binario:"
     echo "$FINAL_SHA256"
 

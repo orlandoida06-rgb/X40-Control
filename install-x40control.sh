@@ -5,10 +5,12 @@ ROBOT="${1:-192.168.1.33}"
 KEY="${2:-$HOME/Documents/j69495894cbde7.id_rsa}"
 
 BIN="$(pwd)/build/aarch64/valetudo.x40control_final"
-REMOTE="/data/valetudo.x40control_final"
-NEW="/data/valetudo.x40control_final.new"
-BACKUP="/data/valetudo.original-2026.08.0"
+REMOTE="/data/valetudo"
+NEW="/data/valetudo.new"
 
+BACKUP_DIR="/data/x40-control-backup"
+BACKUP_VALETUDO="$BACKUP_DIR/valetudo.original"
+BACKUP_POSTBOOT="$BACKUP_DIR/_root_postboot.sh.original"
 
 SSH="ssh -i $KEY"
 RELEASE_API="https://api.github.com/repos/orlandoida06-rgb/X40-Control/releases/latest"
@@ -39,8 +41,8 @@ esac
 
 echo "[OK] Arquitectura: $ARCH"
 echo "[OK] Asset: $ASSET"
-
 echo
+
 echo "[2/6] Preparando binario..."
 
 if [ ! -f "$BIN" ]; then
@@ -85,31 +87,51 @@ else
     echo "[OK] Binario local encontrado"
 fi
 
-echo "[3/6] Guardando Valetudo oficial..."
+echo
+echo "[3/6] Guardando instalación original..."
 
 $SSH root@"$ROBOT" "
+set -e
+
 if [ ! -f /data/valetudo ]; then
     echo '[ERROR] No existe /data/valetudo'
     exit 1
 fi
 
-cp /data/valetudo '$BACKUP'
-chmod 755 '$BACKUP'
-"
-
-echo "[OK] Valetudo oficial guardado en $BACKUP"
-echo
-
-echo "[3/6] Configurando arranque X40-Control..."
-
-$SSH root@"$ROBOT" "
 if [ ! -f /data/_root_postboot.sh ]; then
     echo '[ERROR] No existe /data/_root_postboot.sh'
     exit 1
 fi
 
-sed -i 's#^if \[\[ -f /data/.*#if [[ -f /data/valetudo.x40control_final ]]; then#' /data/_root_postboot.sh
-sed -i 's#^        VALETUDO_CONFIG_PATH=.*#        VALETUDO_CONFIG_PATH=/data/valetudo_config.json /data/valetudo.x40control_final > /dev/null 2>\&1 \&#' /data/_root_postboot.sh
+mkdir -p '$BACKUP_DIR'
+
+if [ ! -f '$BACKUP_VALETUDO' ]; then
+    cp /data/valetudo '$BACKUP_VALETUDO'
+    chmod 755 '$BACKUP_VALETUDO'
+    echo '[OK] Valetudo original guardado'
+else
+    echo '[OK] Backup de Valetudo ya existe; no se sobrescribe'
+fi
+
+if [ ! -f '$BACKUP_POSTBOOT' ]; then
+    cp /data/_root_postboot.sh '$BACKUP_POSTBOOT'
+    chmod 755 '$BACKUP_POSTBOOT'
+    echo '[OK] Postboot original guardado'
+else
+    echo '[OK] Backup de postboot ya existe; no se sobrescribe'
+fi
+"
+
+echo "[OK] Backup protegido en $BACKUP_DIR"
+echo
+
+echo "[3/6] Configurando arranque X40-Control..."
+
+$SSH root@"$ROBOT" "
+set -e
+
+sed -i 's#^if \[\[ -f /data/.*#if [[ -f /data/valetudo ]]; then#' /data/_root_postboot.sh
+sed -i 's#^        VALETUDO_CONFIG_PATH=.*#        VALETUDO_CONFIG_PATH=/data/valetudo_config.json /data/valetudo > /dev/null 2>\&1 \&#' /data/_root_postboot.sh
 "
 
 echo "[OK] Postboot configurado para X40-Control"
@@ -126,17 +148,19 @@ echo
 echo "[5/6] Instalando y lanzando..."
 
 $SSH root@"$ROBOT" "
+set -e
+
 mv '$NEW' '$REMOTE'
 chmod 755 '$REMOTE'
 
-PID=\$(ps | grep '/data/valetudo.x40control_final' | grep -v grep | awk '{print \$1}' | head -n 1)
+PID=\$(ps | grep '/data/valetudo' | grep -v grep | grep -v x40control-install | awk '{print \$1}' | head -n 1)
 
 if [ -n \"\$PID\" ]; then
     kill \"\$PID\" 2>/dev/null || true
     sleep 2
 fi
 
-nohup sh -c \"VALETUDO_CONFIG_PATH=/data/valetudo_config.json /data/valetudo.x40control_final >/tmp/x40control-install.log 2>&1\" >/dev/null 2>&1 &
+nohup sh -c \"VALETUDO_CONFIG_PATH=/data/valetudo_config.json /data/valetudo >/tmp/x40control-install.log 2>&1\" >/dev/null 2>&1 &
 "
 
 echo "[OK] Binario instalado"
@@ -151,7 +175,7 @@ HTTP_OK=0
 for i in $(seq 1 15); do
 
     if $SSH root@"$ROBOT" \
-        "ps | grep '/data/valetudo.x40control_final' | grep -v grep >/dev/null 2>&1"; then
+        "ps | grep '/data/valetudo' | grep -v grep >/dev/null 2>&1"; then
         PROCESS_OK=1
     fi
 
@@ -190,8 +214,13 @@ echo
 echo "Robot: $ROBOT"
 echo "Web:   http://$ROBOT"
 echo
-
+echo "Backup original:"
+echo "  $BACKUP_DIR"
 echo
+echo "Para restaurar:"
+echo "  ./uninstall-x40control.sh $ROBOT \"$KEY\""
+echo
+
 echo "[INFO] Reiniciando el robot..."
 echo
 

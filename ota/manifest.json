@@ -2,7 +2,7 @@
   "product": "X40Control",
   "version": "2026.09.29.45",
   "channel": "stable",
-  "asset": "valetudo.x40control_final",
+  "asset": "valetudo",
   "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.29.45/valetudo",
   "sha256": "c579569e9214557693f6a4ff975124d0f670e7487188170d3171ad5c587340e8",
   "size": 36954496,
@@ -11,6 +11,7 @@
   "voices_size": 535519,
   "requires_reboot": true,
   "changelog": [
-    "fix: publish correct OTA manifest 2026.09.29.1"
+    "Unificar instalador y OTA en /data/valetudo",
+    "Instalación reversible con backup del Valetudo original"
   ]
 }
