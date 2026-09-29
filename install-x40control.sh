@@ -4,7 +4,7 @@ set -e
 ROBOT="${1:-192.168.1.33}"
 KEY="${2:-$HOME/Documents/j69495894cbde7.id_rsa}"
 
-BIN="$(pwd)/build/aarch64/valetudo.x40control_final"
+BIN="$(pwd)/build/aarch64/valetudo"
 REMOTE="/data/valetudo"
 NEW="/data/valetudo.new"
 
