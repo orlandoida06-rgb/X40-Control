@@ -1,17 +1,16 @@
 {
   "product": "X40Control",
-  "version": "2026.09.29.1",
+  "version": "2026.09.29.45",
   "channel": "stable",
-  "asset": "valetudo",
-  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.29.1/valetudo-aarch64",
-  "sha256": "c59065542671f6c466558ef177822bd4626fafb179e493714f3e578f1319780a",
-  "size": 41694714,
-  "voices_url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.27.41/X40-Control-voices.tar.gz",
-  "voices_sha256": "74dd6f3aa039abf5e52404993f38fe06df606fa58433b14d418f6942d660b8cc",
+  "asset": "valetudo.x40control_final",
+  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.29.45/valetudo",
+  "sha256": "c579569e9214557693f6a4ff975124d0f670e7487188170d3171ad5c587340e8",
+  "size": 36954496,
+  "voices_url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.29.45/X40-Control-voices.tar.gz",
+  "voices_sha256": "42827fbaaa1bc3788b235cf0f28274d7d3cbe02750925152734a629ccf30e4e6",
   "voices_size": 535519,
   "requires_reboot": true,
   "changelog": [
-    "Corregir OTA para usar /data/valetudo",
-    "Nuevo binario aarch64 con OTA funcional"
+    "fix: publish correct OTA manifest 2026.09.29.1"
   ]
 }
