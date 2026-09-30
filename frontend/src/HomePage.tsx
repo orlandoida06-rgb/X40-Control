@@ -36,6 +36,7 @@ import {useCapabilitiesSupported} from "./CapabilitiesProvider";
 import {Capability} from "./api";
 import LanguageSelector from "./i18n/LanguageSelector";
 import BatteryIndicator from "./components/BatteryIndicator";
+import {MQTTIcon} from "./components/CustomIcons";
 import ValetudoEvents from "./components/ValetudoEvents";
 import {useLanguage} from "./i18n";
 
@@ -239,6 +240,7 @@ const HomePage = (): React.ReactElement => {
                         <DashboardButton icon={<HistoryIcon/>} label={t("history")} route="/robot/total_statistics" />
                         <DashboardButton icon={<ConsumablesIcon/>} label={t("consumables")} route="/robot/consumables" />
                         <DashboardButton icon={<SettingsIcon/>} label={t("settings")} route="/options/robot" />
+                        <DashboardButton icon={<MQTTIcon/>} label="MQTT" route="/options/connectivity/mqtt" />
                         <DashboardButton icon={<OTAIcon/>} label="OTA" route="/options/robot/ota" />
 
                         <Box sx={{flex: 1}} />
