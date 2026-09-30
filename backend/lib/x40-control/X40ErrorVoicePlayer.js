@@ -1,5 +1,6 @@
 "use strict";
 
+const Logger = require("../Logger");
 const {execFile} = require("child_process");
 
 const VOICE_DIR = "/data/personalized_voice/X40-Control";
@@ -29,15 +30,15 @@ function playVoice(voiceId) {
             currentlyPlaying = false;
 
             if (error) {
-                console.warn(
+                Logger.warn(
                     `[X40Control] Error reproduciendo voz ${voiceId}: ${error.message}`
                 );
 
                 if (stdout || stderr) {
-                    console.warn(
+                    Logger.warn(
                         `[X40Control] voz ${voiceId} stdout: ${stdout}`
                     );
-                    console.warn(
+                    Logger.warn(
                         `[X40Control] voz ${voiceId} stderr: ${stderr}`
                     );
                 }
@@ -47,5 +48,5 @@ function playVoice(voiceId) {
 }
 
 module.exports = {
-    playVoice
+    playVoice: playVoice
 };

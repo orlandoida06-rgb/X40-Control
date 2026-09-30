@@ -64,11 +64,11 @@ function isX40ControlVoice(id) {
 }
 
 module.exports = {
-    VOICE_BASE_PATH,
-    ACTIVE_VOICE_FILE,
-    VOICES,
-    WATER_VOICE_IDS,
-    getActiveVoiceLanguage,
-    getVoicePath,
-    isX40ControlVoice,
+    VOICE_BASE_PATH: VOICE_BASE_PATH,
+    ACTIVE_VOICE_FILE: ACTIVE_VOICE_FILE,
+    VOICES: VOICES,
+    WATER_VOICE_IDS: WATER_VOICE_IDS,
+    getActiveVoiceLanguage: getActiveVoiceLanguage,
+    getVoicePath: getVoicePath,
+    isX40ControlVoice: isX40ControlVoice,
 };

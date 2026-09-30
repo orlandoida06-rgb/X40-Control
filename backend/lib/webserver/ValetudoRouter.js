@@ -1,13 +1,13 @@
 const express = require("express");
-const {execFile} = require("child_process");
 const fs = require("fs");
 const nestedProperty = require("nested-property");
 const RateLimit = require("express-rate-limit");
+const {execFile} = require("child_process");
 
 const Logger = require("../Logger");
 const Tools = require("../utils/Tools");
-const {SSEHub, SSEMiddleware} = require("./middlewares/sse");
 const {getVoicePath, isX40ControlVoice} = require("../voice/X40ControlVoicePack");
+const {SSEHub, SSEMiddleware} = require("./middlewares/sse");
 
 class ValetudoRouter {
     /**
@@ -140,8 +140,8 @@ class ValetudoRouter {
                             `X40ControlVoice: error reproduciendo voz ${id}`,
                             {
                                 message: error.message,
-                                stdout,
-                                stderr
+                                stdout: stdout,
+                                stderr: stderr
                             }
                         );
 
@@ -317,46 +317,65 @@ class ValetudoRouter {
                         }
 
                         execFile(
-                    "/usr/bin/sha256sum",
-                    [targetPath],
-                    {
-                        timeout: 10000
-                    },
-                    (error, stdout, stderr) => {
-                        if (error) {
-                            Logger.warn(
-                                "X40ControlOTA: error obteniendo SHA256",
-                                {
-                                    message: error.message,
-                                    stdout,
-                                    stderr
+                            "/usr/bin/sha256sum",
+                            [targetPath],
+                            {
+                                timeout: 10000
+                            },
+                            (error, stdout, stderr) => {
+                                if (error) {
+                                    Logger.warn(
+                                        "X40ControlOTA: error obteniendo SHA256",
+                                        {
+                                            message: error.message,
+                                            stdout: stdout,
+                                            stderr: stderr
+                                        }
+                                    );
+
+                                    return res.status(500).json({
+                                        error: "No se pudo obtener el SHA256 del binario"
+                                    });
                                 }
-                            );
 
-                            return res.status(500).json({
-                                error: "No se pudo obtener el SHA256 del binario"
-                            });
-                        }
+                                const installedSha256 = stdout.trim().split(/\s+/)[0];
+                                const installed =
+                                    installedSha256 === manifest.sha256;
 
-                        const installedSha256 = stdout.trim().split(/\s+/)[0];
-                        const installed =
-                            installedSha256 === manifest.sha256;
+                                const installedVersionPath =
+                                    "/data/ota/installed-version";
+                                let installedVersion = null;
 
-                        res.json({
-                            product: manifest.product,
-                            installed,
-                            installedVersion: installed
-                                ? manifest.version
-                                : null,
-                            availableVersion: manifest.version,
-                            installedSha256,
-                            expectedSha256: manifest.sha256,
-                            requiresReboot: manifest.requires_reboot === true,
-                            changelog: Array.isArray(manifest.changelog)
-                                ? manifest.changelog
-                                : []
-                        });
-                    }
+                                try {
+                                    if (fs.existsSync(installedVersionPath)) {
+                                        installedVersion =
+                                            fs.readFileSync(
+                                                installedVersionPath,
+                                                "utf8"
+                                            ).trim() || null;
+                                    }
+                                } catch (err) {
+                                    Logger.warn(
+                                        "X40ControlOTA: no se pudo leer la versión instalada",
+                                        {
+                                            message: err.message
+                                        }
+                                    );
+                                }
+
+                                res.json({
+                                    product: manifest.product,
+                                    installed: installed,
+                                    installedVersion: installedVersion,
+                                    availableVersion: manifest.version,
+                                    installedSha256: installedSha256,
+                                    expectedSha256: manifest.sha256,
+                                    requiresReboot: manifest.requires_reboot === true,
+                                    changelog: Array.isArray(manifest.changelog) ?
+                                        manifest.changelog :
+                                        []
+                                });
+                            }
                         );
                     }
                 );
@@ -437,8 +456,8 @@ class ValetudoRouter {
                             "X40ControlOTA: error durante la actualización",
                             {
                                 message: error.message,
-                                stdout,
-                                stderr
+                                stdout: stdout,
+                                stderr: stderr
                             }
                         );
 

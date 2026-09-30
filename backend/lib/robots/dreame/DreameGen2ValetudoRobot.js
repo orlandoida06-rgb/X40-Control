@@ -29,7 +29,6 @@ const MIOT_SERVICES = DreameMiotServices["GEN2"];
 
 
 class DreameGen2ValetudoRobot extends DreameValetudoRobot {
-    _lastX40VoiceErrorCode = null;
 
     /**
      *
@@ -53,6 +52,8 @@ class DreameGen2ValetudoRobot extends DreameValetudoRobot {
                 options,
             )
         );
+
+        this._lastX40VoiceErrorCode = null;
 
         this.highResolutionWaterGrades = !!options.highResolutionWaterGrades;
         this.waterGrades = this.highResolutionWaterGrades ? DreameGen2ValetudoRobot.HIGH_RESOLUTION_WATER_GRADES : DreameValetudoRobot.WATER_GRADES;

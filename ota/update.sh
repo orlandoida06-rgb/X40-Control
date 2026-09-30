@@ -262,6 +262,10 @@ rm -f "$TMP"
 rm -f "$VOICE_TMP"
 rm -rf "$VOICE_EXTRACT"
 
+# Guardar la versión únicamente después de completar
+# correctamente todas las verificaciones de la OTA.
+printf '%s\\n' "$VERSION" > "$BASE/installed-version"
+
 echo
 echo "===== OTA CORRECTO ====="
 echo "Versión: $VERSION"

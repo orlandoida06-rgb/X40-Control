@@ -63,6 +63,6 @@ function getVoiceIdForError(errorCode) {
 }
 
 module.exports = {
-    X40ErrorVoiceMap,
-    getVoiceIdForError
+    X40ErrorVoiceMap: X40ErrorVoiceMap,
+    getVoiceIdForError: getVoiceIdForError
 };
