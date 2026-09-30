@@ -1,16 +1,16 @@
 {
   "product": "X40Control",
-  "version": "2026.09.30.48",
+  "version": "2026.09.30.49",
   "channel": "stable",
   "asset": "valetudo",
-  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.30.48/valetudo",
-  "sha256": "581539e8c64965b7ff7ccfd8009e84490c57495be8d5277b90f91352d373b146",
-  "size": 36954717,
-  "voices_url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.30.48/X40-Control-voices.tar.gz",
-  "voices_sha256": "8fb94d11172dd64cf7a6de090f28243c89bb2592ef09e46011a1761e0089c8f4",
-  "voices_size": 535506,
+  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.30.49/valetudo",
+  "sha256": "dcb069aa57737a74a6c4c2d2c779745da0e07381af50df720eec74c1b61fe504",
+  "size": 36954892,
+  "voices_url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.30.49/X40-Control-voices.tar.gz",
+  "voices_sha256": "5179a178df6603abe6e543e669fe5bbfe646d35495b1efeeeeac538088a500cd",
+  "voices_size": 535518,
   "requires_reboot": true,
   "changelog": [
-    "Merge remote-tracking branch 'origin/main'"
+    "fix: mostrar version instalada en OTA"
   ]
 }
