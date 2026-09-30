@@ -1,16 +1,16 @@
 {
   "product": "X40Control",
-  "version": "2026.09.30.51",
+  "version": "2026.09.30.52",
   "channel": "stable",
   "asset": "valetudo",
-  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.30.51/valetudo",
-  "sha256": "a9d6787f7eddb5362fd6c59b6e440187d0812168bc00f8a1e57e5294877c974f",
-  "size": 36955061,
-  "voices_url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.30.51/X40-Control-voices.tar.gz",
-  "voices_sha256": "4b693f308b0d9538b43a9f6a5fc0b325450354d0b8958626ca7343b561169640",
-  "voices_size": 535521,
+  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.30.52/valetudo",
+  "sha256": "0eda452f53505d4104ad89944025d0966b1dfeb8a698daad5babb7153d989057",
+  "size": 36955215,
+  "voices_url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.30.52/X40-Control-voices.tar.gz",
+  "voices_sha256": "7ebe27b2532d03492e0c9cddf3907757cc077141e6b9211417672c9ca9c7aaca",
+  "voices_size": 535520,
   "requires_reboot": true,
   "changelog": [
-    "fix: sincronizar versión OTA con binario instalado"
+    "feat: añadir acceso MQTT al menú lateral"
   ]
 }
