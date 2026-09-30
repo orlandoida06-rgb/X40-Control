@@ -207,9 +207,29 @@ class LiveMap extends BaseMap<LiveMapProps, LiveMapState> {
                     {/* ===== X40-CONTROL TESLA UI ===== */}
 
                     <MapControlsPanel>
+                        <ActionButton
+                            aria-label="Girar mapa a la izquierda"
+                            title="Girar mapa 90° a la izquierda"
+                            onClick={() => this.rotateMap(-90)}
+                        >
+                            ↶
+                        </ActionButton>
 
+                        <ActionButton
+                            aria-label="Restablecer orientación del mapa"
+                            title="Restablecer orientación del mapa"
+                            onClick={() => this.resetMapRotation()}
+                        >
+                            0°
+                        </ActionButton>
 
-
+                        <ActionButton
+                            aria-label="Girar mapa a la derecha"
+                            title="Girar mapa 90° a la derecha"
+                            onClick={() => this.rotateMap(90)}
+                        >
+                            ↷
+                        </ActionButton>
                     </MapControlsPanel>
 
 
