@@ -354,6 +354,18 @@ class ValetudoRouter {
                                                 "utf8"
                                             ).trim() || null;
                                     }
+
+                                    // El binario puede haberse instalado con un instalador OTA antiguo
+                                    // que no escribía installed-version. Si el SHA coincide con el manifest,
+                                    // el binario es inequívocamente la versión publicada y podemos reparar
+                                    // automáticamente el registro de versión.
+                                    if (installed && installedVersion !== manifest.version) {
+                                        fs.writeFileSync(
+                                            installedVersionPath,
+                                            `${manifest.version}\n`
+                                        );
+                                        installedVersion = manifest.version;
+                                    }
                                 } catch (err) {
                                     Logger.warn(
                                         "X40ControlOTA: no se pudo leer la versión instalada",
