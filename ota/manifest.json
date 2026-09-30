@@ -1,16 +1,16 @@
 {
   "product": "X40Control",
-  "version": "2026.09.29.47",
+  "version": "2026.09.30.48",
   "channel": "stable",
   "asset": "valetudo",
-  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.29.47/valetudo",
-  "sha256": "b5acc94962423cac8bd41cc6405c38cf2f7992c984672a4a4debaea4cdeef05c",
-  "size": 36954501,
-  "voices_url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.29.47/X40-Control-voices.tar.gz",
-  "voices_sha256": "2fbd28d2f24c18bdb661cb8275c41aa47b0c197fd32d81c48748babeaa44ac45",
-  "voices_size": 535518,
+  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.30.48/valetudo",
+  "sha256": "581539e8c64965b7ff7ccfd8009e84490c57495be8d5277b90f91352d373b146",
+  "size": 36954717,
+  "voices_url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.30.48/X40-Control-voices.tar.gz",
+  "voices_sha256": "8fb94d11172dd64cf7a6de090f28243c89bb2592ef09e46011a1761e0089c8f4",
+  "voices_size": 535506,
   "requires_reboot": true,
   "changelog": [
-    "fix: usar binario valetudo en instalador"
+    "Merge remote-tracking branch 'origin/main'"
   ]
 }
