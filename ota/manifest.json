@@ -1,16 +1,16 @@
 {
   "product": "X40Control",
-  "version": "2026.09.30.50",
+  "version": "2026.09.30.51",
   "channel": "stable",
   "asset": "valetudo",
-  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.30.50/valetudo",
-  "sha256": "92259c69a6fc57fdad7bad21429d9f9c9b9d1550c15e0b8d23e672e4bebce7d4",
-  "size": 36954902,
-  "voices_url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.30.50/X40-Control-voices.tar.gz",
-  "voices_sha256": "38fcddf0dc5212adce32e4549cea7d8c3fc18c3bc0bbf62152185d59f74e1d0d",
-  "voices_size": 535522,
+  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.30.51/valetudo",
+  "sha256": "a9d6787f7eddb5362fd6c59b6e440187d0812168bc00f8a1e57e5294877c974f",
+  "size": 36955061,
+  "voices_url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.30.51/X40-Control-voices.tar.gz",
+  "voices_sha256": "4b693f308b0d9538b43a9f6a5fc0b325450354d0b8958626ca7343b561169640",
+  "voices_size": 535521,
   "requires_reboot": true,
   "changelog": [
-    "fix: preparar nueva OTA X40-Control"
+    "fix: sincronizar versión OTA con binario instalado"
   ]
 }
