@@ -449,6 +449,9 @@ abstract class BaseMap<P, S> extends React.Component<P & MapProps, S & MapState 
             return;
         }
 
+        // mapPointToCurrentTransform converts the viewport center from
+        // screen space to map space. Rotating around that point keeps the
+        // map visually centered regardless of zoom/pan/previous rotations.
         const center = this.ctxWrapper.mapPointToCurrentTransform(
             this.canvas.width / 2,
             this.canvas.height / 2
