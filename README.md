@@ -1,6 +1,6 @@
 # X40-Control 🇪🇸
 
-**Interfaz personalizada de Valetudo para Dreame X40 Ultra.**
+**Interfaz personalizada para Dreame X40 Ultra.**
 
 X40-Control es una interfaz personalizada basada en Valetudo y orientada al **Dreame X40 Ultra**, con una experiencia moderna, traducida al español y con funciones adicionales para el control y diagnóstico del robot.
 
