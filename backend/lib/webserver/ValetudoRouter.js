@@ -6,7 +6,7 @@ const {execFile} = require("child_process");
 
 const Logger = require("../Logger");
 const Tools = require("../utils/Tools");
-const {getVoicePath, isX40ControlVoice} = require("../voice/X40ControlVoicePack");
+const {getVoicePath, isX40ControlVoice, getRoomVoicePath, getRoomVoicePathById} = require("../voice/X40ControlVoicePack");
 const {SSEHub, SSEMiddleware} = require("./middlewares/sse");
 
 class ValetudoRouter {
@@ -80,6 +80,149 @@ class ValetudoRouter {
 
                 res.status(500).json(err.message);
             }
+        });
+
+        // ============================================================
+        // X40-Control: voces por habitación
+        // ============================================================
+
+        this.router.get("/x40-control/room-voices", (req, res) => {
+            try {
+                const x40Control = this.config.get("x40Control") ?? {};
+                const roomVoices = x40Control.roomVoices ?? {};
+
+                res.json(roomVoices);
+            } catch (err) {
+                Logger.warn(
+                    `${this.constructor.name}: Error while reading room voices`,
+                    {message: err.message}
+                );
+
+                res.status(500).json(err.message);
+            }
+        });
+
+        this.router.put("/x40-control/room-voices", (req, res) => {
+            try {
+                const segmentId = String(req.body?.segmentId ?? "").trim();
+                const voiceId = req.body?.voiceId;
+
+                if (!segmentId) {
+                    return res.status(400).json("segmentId is required");
+                }
+
+                const currentConfig = this.config.get("x40Control") ?? {};
+                const roomVoices = {
+                    ...(currentConfig.roomVoices ?? {})
+                };
+
+                // null elimina la asignación de voz
+                if (voiceId === null || voiceId === undefined) {
+                    delete roomVoices[segmentId];
+                } else {
+                    const voiceSegmentId = String(voiceId).trim();
+                    const voiceSegmentNumber = Number(voiceSegmentId);
+
+                    if (
+                        !Number.isInteger(voiceSegmentNumber) ||
+                        voiceSegmentNumber < 1 ||
+                        voiceSegmentNumber > 20
+                    ) {
+                        return res.status(400).json(
+                            "voiceId must be a valid room voice ID (1-20)"
+                        );
+                    }
+
+                    roomVoices[segmentId] = voiceSegmentId;
+                }
+
+                this.config.set("x40Control", {
+                    ...currentConfig,
+                    roomVoices
+                });
+
+                res.json(roomVoices);
+            } catch (err) {
+                Logger.warn(
+                    `${this.constructor.name}: Error while updating room voices`,
+                    {message: err.message}
+                );
+
+                res.status(500).json(err.message);
+            }
+        });
+
+        // ============================================================
+        // X40-Control: voz automática por habitación
+        // ============================================================
+
+        this.router.post("/x40-control/room-voice", (req, res) => {
+            const segmentId = String(req.body?.segmentId ?? "").trim();
+            const roomName = String(req.body?.roomName ?? "").trim();
+
+            if (!segmentId || !roomName) {
+                return res.status(400).json({
+                    error: "segmentId y roomName son obligatorios"
+                });
+            }
+
+            const voicePath = getRoomVoicePath(roomName);
+
+            if (!voicePath) {
+                return res.status(400).json({
+                    error: "No existe una voz para esta habitación o no hay idioma activo",
+                    segmentId,
+                    roomName
+                });
+            }
+
+            if (!fs.existsSync(voicePath)) {
+                Logger.warn(
+                    `${this.constructor.name}: No existe voz para habitación ${segmentId}`,
+                    {roomName, voicePath}
+                );
+
+                return res.status(404).json({
+                    error: "No existe voz para esta habitación",
+                    segmentId,
+                    roomName,
+                    voicePath
+                });
+            }
+
+            execFile(
+                "/usr/bin/dmr_client",
+                ["-f", voicePath],
+                {timeout: 10000},
+                (error, stdout, stderr) => {
+                    if (error) {
+                        Logger.warn(
+                            `${this.constructor.name}: Error reproduciendo voz de habitación`,
+                            {
+                                segmentId,
+                                roomName,
+                                voicePath,
+                                message: error.message,
+                                stdout,
+                                stderr
+                            }
+                        );
+
+                        return res.status(500).json({
+                            error: "No se pudo reproducir la voz de habitación",
+                            segmentId,
+                            roomName
+                        });
+                    }
+
+                    res.json({
+                        ok: true,
+                        segmentId,
+                        roomName,
+                        voicePath
+                    });
+                }
+            );
         });
 
         this.router.get("/version", (req, res) => {

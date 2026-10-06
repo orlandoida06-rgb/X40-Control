@@ -107,7 +107,7 @@ export const MapTopPanel = styled(MapGlassPanel)(({theme}) => {
 
         padding: theme.spacing(1.25, 2),
 
-        zIndex: 30,
+        zIndex: 20,
     };
 });
 

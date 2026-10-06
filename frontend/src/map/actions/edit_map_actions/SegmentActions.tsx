@@ -7,7 +7,9 @@ import {
     useMapSegmentMaterialControlPropertiesQuery,
     useRenameSegmentMutation,
     useSetSegmentMaterialMutation,
-    useSplitSegmentMutation
+    useSplitSegmentMutation,
+    useX40ControlRoomVoicesQuery,
+    useSetX40ControlRoomVoiceMutation
 } from "../../../api";
 import React from "react";
 import {
@@ -212,6 +214,7 @@ const SegmentActions = (
 
     const [renameDialogOpen, setRenameDialogOpen] = React.useState(false);
     const [materialDialogOpen, setMaterialDialogOpen] = React.useState(false);
+    const [selectedRoomVoice, setSelectedRoomVoice] = React.useState<string>("");
 
     const {
         mutate: joinSegments,
@@ -239,6 +242,71 @@ const SegmentActions = (
     });
 
     const canEdit = props.robotStatus.value === "docked";
+
+    const {
+        data: roomVoices = {}
+    } = useX40ControlRoomVoicesQuery();
+
+    const {
+        mutate: setRoomVoice,
+        isPending: setRoomVoiceExecuting
+    } = useSetX40ControlRoomVoiceMutation();
+
+    React.useEffect(() => {
+        if (selectedSegmentIds.length !== 1) {
+            setSelectedRoomVoice("");
+            return;
+        }
+
+        const voiceId = roomVoices[selectedSegmentIds[0]];
+
+        if (voiceId !== undefined) {
+            setSelectedRoomVoice(voiceId);
+        }
+    }, [
+        selectedSegmentIds.length,
+        selectedSegmentIds[0],
+        roomVoices,
+    ]);
+
+    const handleRoomVoiceChange = React.useCallback((
+        event: React.ChangeEvent<HTMLInputElement>
+    ) => {
+        const value = event.target.value;
+        const segmentId = selectedSegmentIds[0];
+
+        if (!segmentId) {
+            return;
+        }
+        const voiceId = value === "" ? null : value;
+
+        setSelectedRoomVoice(value);
+
+        setRoomVoice(
+            {
+                segmentId: segmentId,
+                voiceId: voiceId
+            },
+            {
+                onSuccess: (data) => {
+                    const savedVoiceId = data[segmentId];
+                    setSelectedRoomVoice(
+                        savedVoiceId !== undefined ? savedVoiceId : ""
+                    );
+                },
+                onError: (error) => {
+                    window.alert(
+                        "Error guardando voz: " +
+                        (error instanceof Error ? error.message : String(error))
+                    );
+                }
+            }
+        );
+    }, [
+        canEdit,
+        selectedSegmentIds,
+        setRoomVoice
+    ]);
 
     const handleSplitClick = React.useCallback(() => {
         if (!canEdit || !cuttingLine || selectedSegmentIds.length !== 1) {
@@ -293,7 +361,25 @@ const SegmentActions = (
 
 
     return (
-        <Grid2 container spacing={2} justifyContent="center" alignItems="center" sx={{width: "100%", padding: "10px", gap: "45px", display: "flex", flexWrap: "wrap", justifyContent: "center", alignItems: "center"}} direction="row-reverse" flexWrap="wrap-reverse">
+        <Grid2
+            container
+            spacing={2}
+            justifyContent="center"
+            alignItems="center"
+            sx={{
+                width: "100%",
+                padding: "10px",
+                display: "flex",
+                flexWrap: "wrap",
+                justifyContent: "center",
+                alignItems: "center",
+                rowGap: 1,
+                columnGap: "45px",
+                position: "relative",
+            }}
+            direction="row-reverse"
+            flexWrap="wrap"
+        >
             {
                 supportedCapabilities[Capability.MapSegmentEdit] &&
                 (selectedSegmentIds.length === 1 || selectedSegmentIds.length === 2) &&
@@ -369,6 +455,74 @@ const SegmentActions = (
                             />
                         )}
                     </ActionButton>
+                </Grid2>
+            }
+            {
+                selectedSegmentIds.length === 1 &&
+                cuttingLine === undefined &&
+
+                <Grid2
+                    sx={{
+                        position: "absolute",
+                        left: "50%",
+                        bottom: "58px",
+                        transform: "translateX(-50%)",
+                        width: 220,
+                        zIndex: 40,
+                        pointerEvents: "auto",
+                    }}
+                >
+                    <select
+                        value={selectedRoomVoice}
+                        disabled={setRoomVoiceExecuting}
+                        onChange={(event) => handleRoomVoiceChange(
+                            event as unknown as React.ChangeEvent<HTMLInputElement>
+                        )}
+                        style={{
+                            width: 240,
+                            height: 40,
+                            padding: "0 12px",
+                            borderRadius: 4,
+                            background: "transparent",
+                            color: "inherit",
+                            fontSize: 14,
+                        }}
+                    >
+                        <option value="">Sin voz</option>
+                        {[
+                            ["1", "Cocina"],
+                            ["2", "Salón"],
+                            ["3", "Dormitorio"],
+                            ["4", "Baño"],
+                            ["5", "Entrada"],
+                            ["6", "Pasillo"],
+                            ["7", "Comedor"],
+                            ["8", "Despacho"],
+                            ["9", "Habitación"],
+                            ["10", "Habitación infantil"],
+                            ["11", "Lavadero"],
+                            ["12", "Terraza"],
+                            ["13", "Balcón"],
+                            ["14", "Garaje"],
+                            ["15", "Vestidor"],
+                            ["16", "Sala de juegos"],
+                            ["17", "Biblioteca"],
+                            ["18", "Gimnasio"],
+                            ["19", "Estudio"],
+                            ["20", "Sala"],
+                        ].map(([voiceId, roomName]) => (
+                            <option
+                                key={voiceId}
+                                value={voiceId}
+                                style={{
+                                    color: "#000",
+                                    backgroundColor: "#fff",
+                                }}
+                            >
+                                {roomName}
+                            </option>
+                        ))}
+                    </select>
                 </Grid2>
             }
             {

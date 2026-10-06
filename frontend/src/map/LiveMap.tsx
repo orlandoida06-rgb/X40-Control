@@ -283,6 +283,14 @@ class LiveMap extends BaseMap<LiveMapProps, LiveMapState> {
 
                         <SegmentActions
                             segments={this.state.selectedSegmentIds}
+                            segmentNames={Object.fromEntries(
+                                this.structureManager.getMapStructures()
+                                    .filter(s => s.type === SegmentLabelMapStructure.TYPE)
+                                    .map(s => {
+                                        const label = s as SegmentLabelMapStructure;
+                                        return [label.id, label.name ?? label.id];
+                                    })
+                            )}
                             onClear={() => {
                                 this.structureManager.getMapStructures().forEach(s => {
                                     if (s.type === SegmentLabelMapStructure.TYPE) {

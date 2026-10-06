@@ -32,6 +32,8 @@ import {
     useKeyLockStateMutation,
     useKeyLockStateQuery,
     useLocateMutation,
+    useRestoreDefaultConfigurationMutation,
+    useX40ControlRebootMutation,
     useMopDockMopAutoDryingControlMutation,
     useMopDockMopAutoDryingControlQuery,
     useMopDockMopDryingTimeControlPropertiesQuery,
@@ -73,6 +75,7 @@ import {
     Photo as ObstacleImagesIcon,
     RoundaboutRight as CollisionAvoidantNavigationControlIcon,
     Route as CleanRouteControlIcon,
+    RestartAlt as RobotRebootIcon,
     SatelliteAlt as PerceptionIcon,
     Schema as BehaviourIcon,
     Settings as GeneralIcon,
@@ -94,6 +97,55 @@ import {
     MopTwistControlCapability as MopTwistControlCapabilityIcon,
     MopTwistControlCapabilityExtended as MopTwistControlCapabilityExtendedIcon,
 } from "../components/CustomIcons";
+
+const RobotRebootButtonListMenuItem = (): React.ReactElement => {
+    const {
+        mutate: rebootRobot,
+        isPending: rebootRobotIsExecuting
+    } = useX40ControlRebootMutation();
+
+    return (
+        <ButtonListMenuItem
+            primaryLabel="Reiniciar robot"
+            secondaryLabel="Reinicia el sistema del robot"
+            icon={<RobotRebootIcon/>}
+            buttonLabel="Reiniciar"
+            confirmationDialog={{
+                title: "¿Reiniciar robot?",
+                body: "El robot se reiniciará. ¿Quieres continuar?"
+            }}
+            action={() => {
+                rebootRobot();
+            }}
+            actionLoading={rebootRobotIsExecuting}
+        />
+    );
+};
+
+const RobotResetButtonListMenuItem = (): React.ReactElement => {
+    const {
+        mutate: restoreDefaultConfiguration,
+        isPending: restoreDefaultConfigurationIsExecuting
+    } = useRestoreDefaultConfigurationMutation();
+
+    return (
+        <ButtonListMenuItem
+            primaryLabel="Resetear robot"
+            secondaryLabel="Restaura la configuración predeterminada del robot"
+            icon={<RobotRebootIcon/>}
+            buttonLabel="Resetear"
+            buttonColor={"error"}
+            confirmationDialog={{
+                title: "¿Resetear robot?",
+                body: "Se restaurará la configuración predeterminada. ¿Quieres continuar?"
+            }}
+            action={() => {
+                restoreDefaultConfiguration();
+            }}
+            actionLoading={restoreDefaultConfigurationIsExecuting}
+        />
+    );
+};
 
 const LocateButtonListMenuItem = (): React.ReactElement => {
     const {
@@ -1057,6 +1109,11 @@ const RobotOptions = (): React.ReactElement => {
 
     const generalListItems = React.useMemo(() => {
         const items = [];
+
+        items.push(
+            <RobotRebootButtonListMenuItem key={"robotRebootAction"}/>,
+            <RobotResetButtonListMenuItem key={"robotResetAction"}/>
+        );
 
         if (locateCapabilitySupported) {
             items.push(<LocateButtonListMenuItem key={"locateAction"}/>);

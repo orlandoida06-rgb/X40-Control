@@ -1,3 +1,4 @@
+const {playVoiceFile} = require("../../x40-control/X40ErrorVoicePlayer");
 const fs = require("fs");
 const Logger = require("../../Logger");
 
@@ -141,10 +142,96 @@ class DreameValetudoRobot extends MiioValetudoRobot {
 
             this.state.map = parsedMap;
 
+            this._updateX40ActiveRoom(parsedMap);
+
             this.emitMapUpdated();
         }
 
         return this.state.map;
+    }
+
+    _updateX40ActiveRoom(parsedMap) {
+        const activeSegment = parsedMap.layers?.find(layer => {
+            return layer.type === "segment" &&
+                layer.metaData?.active === true &&
+                layer.metaData?.segmentId !== undefined;
+        });
+
+        const segmentId = activeSegment?.metaData?.segmentId?.toString() ?? null;
+
+        if (segmentId === this.x40LastActiveRoomSegment) {
+            return;
+        }
+
+        this.x40LastActiveRoomSegment = segmentId;
+
+        if (!segmentId) {
+            return;
+        }
+
+        const roomName = String(activeSegment.metaData?.name ?? "").trim();
+
+        Logger.info(
+            `${this.constructor.name}: X40-Control habitación activa`,
+            {
+                segmentId,
+                roomName: roomName || null
+            }
+        );
+
+        if (!roomName) {
+            return;
+        }
+
+        const {getActiveVoiceLanguage, getRoomVoicePath} = require("../../voice/X40ControlVoicePack");
+        const language = getActiveVoiceLanguage();
+
+        if (!language) {
+            Logger.warn(
+                `${this.constructor.name}: X40-Control idioma de voz no disponible`,
+                {segmentId, roomName}
+            );
+            return;
+        }
+
+        const voicePath = getRoomVoicePath(roomName);
+
+        if (!voicePath) {
+            Logger.warn(
+                `${this.constructor.name}: X40-Control no hay voz para la habitación`,
+                {
+                    segmentId,
+                    roomName,
+                    language
+                }
+            );
+            return;
+        }
+
+        const fs = require("fs");
+
+        if (!fs.existsSync(voicePath)) {
+            Logger.warn(
+                `${this.constructor.name}: X40-Control archivo de voz no existe`,
+                {
+                    segmentId,
+                    roomName,
+                    voicePath
+                }
+            );
+            return;
+        }
+
+        Logger.info(
+            `${this.constructor.name}: X40-Control reproduciendo voz de habitación`,
+            {
+                segmentId,
+                roomName,
+                voicePath
+            }
+        );
+
+        playVoiceFile(voicePath);
     }
 
     /**

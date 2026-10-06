@@ -86,5 +86,8 @@
             "friendlyName": ""
         }
     },
-    "_version": ""
+    "_version": "",
+    "x40Control": {
+        "roomVoices": {}
+    }
 }

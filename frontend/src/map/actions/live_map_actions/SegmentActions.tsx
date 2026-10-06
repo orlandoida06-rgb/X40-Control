@@ -1,4 +1,4 @@
-import {Capability, useCleanSegmentsMutation, useMapSegmentationPropertiesQuery, useRobotStatusQuery} from "../../../api";
+import {Capability, useCleanSegmentsMutation, useMapSegmentationPropertiesQuery, usePlayX40ControlRoomVoiceMutation, useRobotStatusQuery, useSpeakerVolumeMutation, useSpeakerVolumeStateQuery} from "../../../api";
 import React from "react";
 import {Box, Button, CircularProgress, Container, Grid2, Typography} from "@mui/material";
 import {ActionButton} from "../../Styled";
@@ -12,6 +12,7 @@ import {
 
 interface SegmentActionsProperties {
     segments: string[];
+    segmentNames: Record<string, string>;
 
     onClear(): void;
 }
@@ -19,7 +20,20 @@ interface SegmentActionsProperties {
 const SegmentActions = (
     props: SegmentActionsProperties
 ): React.ReactElement => {
-    const {segments, onClear} = props;
+    const {segments, segmentNames, onClear} = props;
+
+    const {
+        mutateAsync: playRoomVoice
+    } = usePlayX40ControlRoomVoiceMutation();
+
+    const {
+        data: speakerVolume
+    } = useSpeakerVolumeStateQuery();
+
+    const {
+        mutateAsync: setSpeakerVolume
+    } = useSpeakerVolumeMutation();
+
     const [iterationCount, setIterationCount] = React.useState(1);
     const [integrationHelpDialogOpen, setIntegrationHelpDialogOpen] = React.useState(false);
     const [integrationHelpDialogPayload, setIntegrationHelpDialogPayload] = React.useState("");
@@ -35,7 +49,7 @@ const SegmentActions = (
         return state.value;
     });
     const {
-        mutate: executeSegmentAction,
+        mutateAsync: executeSegmentAction,
         isPending: segmentActionExecuting
     } = useCleanSegmentsMutation({
         onSuccess: onClear,
@@ -44,17 +58,56 @@ const SegmentActions = (
     const canClean = status === "idle" || status === "docked" || status === "paused" || status === "returning" || status === "error";
     const didSelectSegments = segments.length > 0;
 
-    const handleClick = React.useCallback(() => {
+    const handleClick = React.useCallback(async () => {
         if (!didSelectSegments || !canClean) {
             return;
         }
 
-        executeSegmentAction({
+        const originalVolume = speakerVolume?.volume;
+
+        if (typeof originalVolume === "number") {
+            await setSpeakerVolume(0);
+        }
+
+        await executeSegmentAction({
             segment_ids: segments,
             iterations: iterationCount,
             customOrder: mapSegmentationProperties?.customOrderSupport
         });
-    }, [canClean, didSelectSegments, executeSegmentAction, segments, iterationCount, mapSegmentationProperties]);
+
+        if (typeof originalVolume === "number") {
+            await new Promise((resolve) => setTimeout(resolve, 5000));
+            await setSpeakerVolume(originalVolume);
+        }
+
+        for (const segmentId of segments) {
+            const roomName = String(segmentNames[segmentId] ?? "").trim();
+
+            if (!roomName) {
+                continue;
+            }
+
+            try {
+                await playRoomVoice({
+                    segmentId: String(segmentId),
+                    roomName: roomName
+                });
+            } catch {
+                // La limpieza no debe fallar aunque la voz no pueda reproducirse.
+            }
+        }
+    }, [
+        canClean,
+        didSelectSegments,
+        executeSegmentAction,
+        segments,
+        segmentNames,
+        iterationCount,
+        mapSegmentationProperties,
+        speakerVolume,
+        setSpeakerVolume,
+        playRoomVoice
+    ]);
 
     const handleLongClick = React.useCallback(() => {
         setIntegrationHelpDialogPayload(JSON.stringify({

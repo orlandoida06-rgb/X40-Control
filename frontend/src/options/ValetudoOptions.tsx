@@ -9,6 +9,7 @@ import PaperContainer from "../components/PaperContainer";
 import {
     UpdaterConfiguration,
     useRestoreDefaultConfigurationMutation,
+    useX40ControlRebootMutation,
     useUpdaterConfigurationMutation,
     useUpdaterConfigurationQuery,
     useValetudoCustomizationsMutation,
@@ -21,6 +22,31 @@ import { TextEditModalListMenuItem } from "../components/list_menu/TextEditModal
 import { ActivationListMenuItem } from "./ValetudoActivation";
 import {isAprilFools} from "../utils";
 
+
+const RobotRebootButtonListMenuItem = (): React.ReactElement => {
+    const {
+        mutate: rebootRobot,
+        isPending: rebootRobotIsExecuting
+    } = useX40ControlRebootMutation();
+
+    return (
+        <ButtonListMenuItem
+            primaryLabel="Resetear robot"
+            secondaryLabel="Reinicia el robot"
+            icon={<ConfigRestoreIcon/>}
+            buttonLabel="Reiniciar"
+            buttonColor={"error"}
+            confirmationDialog={{
+                title: "¿Resetear robot?",
+                body: "El robot se reiniciará. ¿Quieres continuar?"
+            }}
+            action={() => {
+                rebootRobot();
+            }}
+            actionLoading={rebootRobotIsExecuting}
+        />
+    );
+};
 
 const ConfigRestoreButtonListMenuItem = (): React.ReactElement => {
     const {
@@ -136,6 +162,7 @@ const UpdateProviderSelectListMenuItem = (): React.ReactElement => {
 const ValetudoOptions = (): React.ReactElement => {
     const listItems = React.useMemo(() => {
         const items = [
+            <RobotRebootButtonListMenuItem key={"robotRebootAction"}/>,
             <ConfigRestoreButtonListMenuItem key={"configRestoreAction"}/>,
             <SpacerListMenuItem key={"spacer0"}/>,
             <FriendlyNameEditModalListMenuItem key={"friendlyName"}/>,

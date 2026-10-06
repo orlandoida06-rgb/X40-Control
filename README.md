@@ -1,5 +1,4 @@
-dreame x40 ultra
-# X40-Control 🇪🇸 frontend para valetudo
+# X40-Control 🇪🇸
 
 **Interfaz personalizada de Valetudo para Dreame X40 Ultra.**
 
@@ -7,7 +6,7 @@ X40-Control es una interfaz personalizada basada en Valetudo y orientada al **Dr
 
 > Proyecto independiente para usuarios del Dreame X40 Ultra y Valetudo.
 
-![X40-Control](screenshot.png)
+![X40-Control](docs/screenshots/inicio.png)
 
 ## ✨ Características
 
@@ -24,6 +23,69 @@ X40-Control es una interfaz personalizada basada en Valetudo y orientada al **Dr
 - 📋 Diagnóstico
 - 💾 Copias de seguridad
 - 📦 Instalador automático
+
+
+---
+
+## 🔊 Voces personalizadas
+
+X40-Control incorpora soporte para paquetes de voces personalizadas para el Dreame X40 Ultra.
+
+El paquete **NICO** está disponible en español.
+
+También se muestran otros idiomas disponibles desde la interfaz. Estos paquetes se encuentran actualmente en **fase beta**.
+
+![Voces personalizadas](docs/screenshots/voces.png)
+
+---
+
+## 🏠 Habitaciones
+
+X40-Control permite gestionar las habitaciones directamente desde el mapa.
+
+Las habitaciones disponen de nombres personalizados y pueden asociarse a las voces correspondientes.
+
+![Gestión de habitaciones](docs/screenshots/habitaciones.png)
+
+---
+
+## 🔊 Voces en estados del robot
+
+Las voces personalizadas también están disponibles en los diferentes modos y estados del robot.
+
+![Voces personalizadas en los estados](docs/screenshots/estado-voces.png)
+
+---
+
+## 📦 Actualizaciones OTA
+
+X40-Control incorpora un sistema de actualización OTA para gestionar las actualizaciones de la capa personalizada.
+
+Desde la interfaz se puede consultar:
+
+- Versión instalada.
+- Última versión disponible.
+- Estado de la actualización.
+- Información sobre la necesidad de reiniciar después de actualizar.
+
+![Actualizaciones OTA](docs/screenshots/ota.png)
+
+---
+
+## ⚙️ Opciones del robot
+
+X40-Control proporciona acceso a diferentes opciones y controles del Dreame X40 Ultra.
+
+Entre ellas se encuentran:
+
+- Reiniciar el robot.
+- Resetear el robot.
+- Localizar el robot.
+- Bloquear los botones.
+- Opciones de navegación.
+- Configuración de la ruta de limpieza.
+
+![Opciones del robot](docs/screenshots/opciones-robot.png)
 
 ## 🤖 Compatibilidad
 
@@ -43,38 +105,39 @@ Necesitas acceso SSH como **root** al robot mediante una clave SSH válida. La c
 
 Clona el repositorio:
 
-```bash
-git clone https://github.com/orlandoida06-rgb/X40-Control.git
-cd X40-Control
+    git clone https://github.com/orlandoida06-rgb/X40-Control.git
+    cd X40-Control
 
-Da permisos de ejecución:
-chmod +x install-x40control.sh
+### 2. Dar permisos de ejecución
 
-Instalar X40-Control
+    chmod +x install-x40control.sh
+
+### 3. Instalar X40-Control
 
 Ejecuta el instalador indicando:
 
-IP_DEL_ROBOT
-RUTA_DE_LA_CLAVE_SSH
+    IP_DEL_ROBOT
+    RUTA_DE_LA_CLAVE_SSH
 
 Comando:
 
-./install-x40control.sh IP_DEL_ROBOT RUTA_DE_LA_CLAVE_SSH
+    ./install-x40control.sh IP_DEL_ROBOT RUTA_DE_LA_CLAVE_SSH
 
 Ejemplo:
 
-./install-x40control.sh 192.168.1.50 ~/.ssh/id_rsa
+    ./install-x40control.sh 192.168.1.50 ~/.ssh/id_rsa
 
 La IP y la ruta utilizadas en el ejemplo son únicamente orientativas.
 
 Cada usuario debe utilizar la IP de su propio robot y la ruta de su propia clave SSH.
 
-El instalador utiliza el usuario root.
+El instalador utiliza el usuario `root`.
 
-Cuando no encuentra una copia local del ejecutable, el instalador descarga automáticamente el binario de X40-Control desde la Release v1.0.0.
+---
 
-📦 Instalación rápida
-git clone https://github.com/orlandoida06-rgb/X40-Control.git
-cd X40-Control
-chmod +x install-x40control.sh
-./install-x40control.sh IP_DEL_ROBOT RUTA_DE_LA_CLAVE_SSH
+## 📦 Instalación rápida
+
+    git clone https://github.com/orlandoida06-rgb/X40-Control.git
+    cd X40-Control
+    chmod +x install-x40control.sh
+    ./install-x40control.sh IP_DEL_ROBOT RUTA_DE_LA_CLAVE_SSH

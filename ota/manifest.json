@@ -1,16 +1,15 @@
 {
   "product": "X40Control",
-  "version": "2026.09.30.52",
+  "version": "2026.10.06.53",
   "channel": "stable",
   "asset": "valetudo",
-  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.30.52/valetudo",
-  "sha256": "0eda452f53505d4104ad89944025d0966b1dfeb8a698daad5babb7153d989057",
-  "size": 36955215,
-  "voices_url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.09.30.52/X40-Control-voices.tar.gz",
-  "voices_sha256": "7ebe27b2532d03492e0c9cddf3907757cc077141e6b9211417672c9ca9c7aaca",
-  "voices_size": 535520,
+  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.10.06.53/valetudo",
+  "sha256": "20ae69cda77808eca9dd9e6d54b4dab8d463dfbb35e2759e0746bf6485fb73fe",
+  "size": 41698401,
   "requires_reboot": true,
   "changelog": [
-    "feat: añadir acceso MQTT al menú lateral"
+    "fix: reproducir la voz de la habitación según el nombre actual del mapa",
+    "fix: corregir inversión de voces entre habitaciones",
+    "feat: mejorar reproducción automática de voz tras limpiar una habitación"
   ]
 }
