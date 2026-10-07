@@ -1,9 +1,9 @@
 {
   "product": "X40Control",
-  "version": "2026.10.07.55",
+  "version": "2026.10.07.56",
   "channel": "stable",
   "asset": "valetudo",
-  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.10.07.55/valetudo",
+  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.10.07.56/valetudo",
   "sha256": "20ae69cda77808eca9dd9e6d54b4dab8d463dfbb35e2759e0746bf6485fb73fe",
   "size": 41698401,
   "voices_url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.10.06.54/X40-Control-voices.tar.gz",
