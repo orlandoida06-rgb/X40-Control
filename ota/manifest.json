@@ -1,11 +1,11 @@
 {
   "product": "X40Control",
-  "version": "2026.10.07.56",
+  "version": "2026.10.07.57",
   "channel": "stable",
   "asset": "valetudo",
-  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.10.07.56/valetudo",
-  "sha256": "20ae69cda77808eca9dd9e6d54b4dab8d463dfbb35e2759e0746bf6485fb73fe",
-  "size": 41698401,
+  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.10.07.57/valetudo",
+  "sha256": "82f5cf9c40e88d8c66bda2caad07065c9198e43fe4a8fc1bff1914909eaf8fe0",
+  "size": 41695687,
   "voices_url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.10.06.54/X40-Control-voices.tar.gz",
   "voices_sha256": "bb71d527b4dcd87b686649b8434e39651c29d373c0d836b825d78d8e5124e7ec",
   "voices_size": 535519,
@@ -13,6 +13,7 @@
   "changelog": [
     "Nuevo dashboard X40-Control",
     "Rediseño visual de la pantalla principal",
-    "Limpieza de la barra lateral"
+    "Limpieza de la barra lateral",
+    "Compilación completa X40-Control"
   ]
 }
