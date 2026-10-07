@@ -10,81 +10,173 @@ import {
 import {
     Home as HomeIcon,
     Map as MapIcon,
-    AccessTime as ScheduleIcon,
-    History as HistoryIcon,
-    Inventory2 as ConsumablesIcon,
-    Settings as SettingsIcon,
-    SystemUpdateAlt as OTAIcon,
-    Wifi as WifiIcon,
-    WaterDrop as WaterDropIcon,
     GridView as RoomsIcon,
     CropFree as ZonesIcon,
-    MoreHoriz as MoreIcon,
+    AccessTime as ScheduleIcon,
+    History as HistoryIcon,
+    Settings as SettingsIcon,
+    Sensors as DockIcon,
+    Wifi as WifiIcon,
+    NotificationsNone as NotificationsIcon,
+    DarkMode as DarkModeIcon,
+    Layers as LayersIcon,
+    CenterFocusStrong as CenterIcon,
+    PlayArrow as PlayIcon,
+    Pause as PauseIcon,
+    Stop as StopIcon,
+    CleaningServices as CleaningIcon,
 } from "@mui/icons-material";
 
 import LiveMapPage from "./map/LiveMapPage";
 import BasicControls from "./controls/BasicControls";
-// UNUSED_REMOVED PresetSelectionControl from "./controls/PresetSelection";
-// UNUSED_REMOVED RobotStatus from "./controls/RobotStatus";
 import Dock from "./controls/Dock";
 import CompactPresetControl from "./components/CompactPresetControl";
-// UNUSED_REMOVED Attachments from "./controls/Attachments";
 import {useIsMobileView} from "./hooks";
-import {RobotAttributeClass, useCurrentStatisticsQuery, useRobotAttributeQuery, useRobotStatusQuery} from "./api";
-import {getFriendlyStatName, getHumanReadableStatValue} from "./utils";
+import {
+    Capability,
+    RobotAttributeClass,
+    useCurrentStatisticsQuery,
+    useRobotAttributeQuery,
+    useRobotStatusQuery,
+} from "./api";
+import {getHumanReadableStatValue} from "./utils";
 import {useCapabilitiesSupported} from "./CapabilitiesProvider";
-import {Capability} from "./api";
-import LanguageSelector from "./i18n/LanguageSelector";
-import BatteryIndicator from "./components/BatteryIndicator";
-import {MQTTIcon} from "./components/CustomIcons";
-import ValetudoEvents from "./components/ValetudoEvents";
-import {useLanguage} from "./i18n";
 
 const glass = {
-    background: "linear-gradient(145deg, rgba(20,29,43,.96), rgba(10,17,27,.96))",
-    border: "1px solid rgba(120,160,210,.16)",
-    borderRadius: "20px",
-    boxShadow: "0 12px 35px rgba(0,0,0,.28)",
+    background:
+        "linear-gradient(145deg, rgba(13,25,42,.96), rgba(8,17,29,.94))",
+    border: "1px solid rgba(110,155,215,.18)",
+    boxShadow: "0 14px 45px rgba(0,0,0,.30)",
 };
 
-const DashboardButton = ({
+const navItems = [
+    {icon: <HomeIcon />, label: "Inicio", route: "/"},
+    {icon: <MapIcon />, label: "Mapa", route: "/options/map_management"},
+    {
+        icon: <RoomsIcon />,
+        label: "Habitaciones",
+        route: "/options/map_management/segments",
+    },
+    {
+        icon: <ZonesIcon />,
+        label: "Zonas",
+        route: "/options/map_management/virtual_restrictions",
+    },
+    {
+        icon: <ScheduleIcon />,
+        label: "Programación",
+        route: "/valetudo/timers",
+    },
+    {
+        icon: <HistoryIcon />,
+        label: "Historial",
+        route: "/robot/total_statistics",
+    },
+    {
+        icon: <DockIcon />,
+        label: "Estación",
+        route: "/robot/consumables",
+    },
+    {
+        icon: <SettingsIcon />,
+        label: "Ajustes",
+        route: "/options/robot",
+    },
+];
+
+const NavItem = ({
     icon,
     label,
     route,
+    active = false,
 }: {
     icon: React.ReactNode;
     label: string;
     route: string;
-}) => (
+    active?: boolean;
+}): React.ReactElement => (
     <Button
         component={Link}
         to={route}
         sx={{
+            width: "100%",
+            minHeight: 52,
             justifyContent: "flex-start",
-            gap: 1.5,
-            minHeight: 54,
+            gap: 1.8,
             px: 2,
             borderRadius: "14px",
-            color: "#9eb1ca",
+            color: active ? "#fff" : "#c9d5e6",
             textTransform: "none",
-            fontSize: "15px",
+            fontSize: 16,
+            fontWeight: active ? 750 : 500,
+            background: active ?
+                "linear-gradient(90deg, #287fff, #1c5fc8)" :
+                "transparent",
+            boxShadow: active ?
+                "0 8px 25px rgba(35,125,255,.25)" :
+                "none",
             "&:hover": {
-                color: "#fff",
-                background: "rgba(45,126,255,.16)",
+                background: active ?
+                    "linear-gradient(90deg, #287fff, #1c5fc8)" :
+                    "rgba(50,100,160,.14)",
+            },
+            "& .MuiSvgIcon-root": {
+                fontSize: 27,
             },
         }}
     >
         {icon}
-        {label}
+        <span>{label}</span>
     </Button>
 );
 
+const StatBox = ({
+    label,
+    value,
+    icon,
+}: {
+    label: string;
+    value: React.ReactNode;
+    icon?: React.ReactNode;
+}): React.ReactElement => (
+    <Box
+        sx={{
+            minWidth: 112,
+            px: 2.1,
+            borderLeft: "1px solid rgba(160,190,225,.16)",
+        }}
+    >
+        {icon}
+        <Typography
+            sx={{
+                color: "#aab9cd",
+                fontSize: 12,
+                mt: .5,
+            }}
+        >
+            {label}
+        </Typography>
+        <Typography
+            sx={{
+                color: "#f3f7fc",
+                fontSize: 20,
+                fontWeight: 800,
+                lineHeight: 1.1,
+            }}
+        >
+            {value}
+        </Typography>
+    </Box>
+);
+
 const HomePage = (): React.ReactElement => {
-    const {t} = useLanguage();
     const mobile = useIsMobileView();
+
     const {data: status} = useRobotStatusQuery();
     const {data: currentStatistics} = useCurrentStatisticsQuery();
-    const {data: batteries} = useRobotAttributeQuery(RobotAttributeClass.BatteryState);
+    const {data: batteries} = useRobotAttributeQuery(
+        RobotAttributeClass.BatteryState
+    );
 
     const [
         dockEmpty,
@@ -102,173 +194,386 @@ const HomePage = (): React.ReactElement => {
         Capability.WaterUsageControl,
     );
 
+    const [clock, setClock] = React.useState(new Date());
+
+    React.useEffect(() => {
+        const timer = window.setInterval(
+            () => setClock(new Date()),
+            1000,
+        );
+
+        return () => window.clearInterval(timer);
+    }, []);
+
     const statusText: Record<string, string> = {
-        idle: "Listo",
+        idle: "Preparado",
         docked: "En la base",
-        cleaning: "Limpiando",
+        cleaning: "En limpieza",
         paused: "Pausado",
         returning: "Volviendo a la base",
         moving: "Moviéndose",
         error: "Error",
     };
 
+    const statusValue = status?.value ?? "idle";
     const currentStatus =
-        status?.value ? statusText[status.value] || status.value : "Conectando...";
+        statusText[statusValue] || statusValue;
+
+    const isCleaning = statusValue === "cleaning";
+    const isError = statusValue === "error";
+
+    const statusColor = isError ?
+        "#ff5361" :
+        isCleaning ?
+            "#26e58b" :
+            "#58adff";
 
     const batteryLevel =
         batteries && batteries.length > 0 ?
             Math.round(batteries[0].level) :
             null;
 
-    const timeStat =
-        currentStatistics?.find(stat => stat.type === "time");
+    const timeStat = currentStatistics?.find(
+        stat => stat.type === "time",
+    );
 
-    const currentTime =
-        timeStat ?
-            getHumanReadableStatValue(timeStat) :
-            "—";
+    const areaStat = currentStatistics?.find(
+        stat => stat.type === "area",
+    );
+
+    const cleaningTime = timeStat ?
+        getHumanReadableStatValue(timeStat) :
+        "—";
+
+    const cleanedArea = areaStat ?
+        getHumanReadableStatValue(areaStat) :
+        "—";
+
+    const dateText = clock.toLocaleDateString(
+        "es-ES",
+        {
+            weekday: "short",
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+        },
+    );
+
+    const timeText = clock.toLocaleTimeString(
+        "es-ES",
+        {
+            hour: "2-digit",
+            minute: "2-digit",
+        },
+    );
+
+    const dockAvailable =
+        dockEmpty || dockClean || dockDry;
+
+    if (mobile) {
+        return (
+            <Box
+                sx={{
+                    minHeight: "100vh",
+                    background: "#07101b",
+                    color: "#fff",
+                    overflow: "auto",
+                    p: 1,
+                }}
+            >
+                <Paper
+                    elevation={0}
+                    sx={{
+                        ...glass,
+                        borderRadius: "18px",
+                        p: 1.3,
+                        mb: 1,
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                    }}
+                >
+                    <Box>
+                        <Typography
+                            sx={{
+                                fontSize: 20,
+                                fontWeight: 800,
+                            }}
+                        >
+                            X40-Control
+                        </Typography>
+                        <Typography
+                            sx={{
+                                color: "#8ea1ba",
+                                fontSize: 11,
+                            }}
+                        >
+                            Dreame X40 Ultra
+                        </Typography>
+                    </Box>
+
+                    <Typography
+                        sx={{
+                            color: statusColor,
+                            fontWeight: 800,
+                        }}
+                    >
+                        {batteryLevel !== null ?
+                            `${batteryLevel}%` :
+                            "—"}
+                    </Typography>
+                </Paper>
+
+                <Paper
+                    elevation={0}
+                    sx={{
+                        ...glass,
+                        height: "58vh",
+                        minHeight: 390,
+                        borderRadius: "18px",
+                        overflow: "hidden",
+                        position: "relative",
+                        mb: 1,
+                    }}
+                >
+                    <Box
+                        sx={{
+                            position: "absolute",
+                            inset: 0,
+                            "& > *": {
+                                width: "100% !important",
+                                height: "100% !important",
+                            },
+                        }}
+                    >
+                        <LiveMapPage />
+                    </Box>
+
+                    <Box
+                        sx={{
+                            position: "absolute",
+                            right: 10,
+                            top: 10,
+                            zIndex: 5,
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: .6,
+                        }}
+                    >
+                        <Button
+                            sx={{
+                                minWidth: 42,
+                                width: 42,
+                                height: 42,
+                                color: "#fff",
+                                borderRadius: "13px",
+                                background: "rgba(7,15,26,.8)",
+                            }}
+                        >
+                            <LayersIcon />
+                        </Button>
+
+                        <Button
+                            sx={{
+                                minWidth: 42,
+                                width: 42,
+                                height: 42,
+                                color: "#fff",
+                                borderRadius: "13px",
+                                background: "rgba(7,15,26,.8)",
+                            }}
+                        >
+                            <CenterIcon />
+                        </Button>
+                    </Box>
+                </Paper>
+
+                <BasicControls />
+            </Box>
+        );
+    }
 
     return (
         <Box
             sx={{
-                minHeight: "100vh",
+                position: "relative",
                 width: "100%",
-                bgcolor: "#070d15",
+                height: "100vh",
+                    maxHeight: "100vh",
+                    overflow: "hidden",
+                background:
+                    "radial-gradient(circle at 58% 40%, #142438 0%, #09121e 48%, #050b13 100%)",
                 color: "#fff",
-                overflowY: {xs: "auto", md: "visible"},
-                overflowX: "hidden",
             }}
         >
-            {/* HEADER */}
+            {/* ======================================================
+                SIDEBAR
+            ======================================================= */}
+
             <Box
                 sx={{
-                    height: 82,
-                    px: {xs: 2, md: 3},
+                    position: "absolute",
+                    left: 0,
+                    top: 0,
+                    bottom: 0,
+                    width: 260,
+                    zIndex: 30,
+                    px: 1.7,
+                    py: 2.5,
+                    background:
+                        "linear-gradient(180deg, rgba(9,18,30,.98), rgba(6,13,22,.98))",
+                    borderRight:
+                        "1px solid rgba(110,150,200,.13)",
                     display: "flex",
-                    alignItems: "center",
-                    gap: 3,
-                    borderBottom: "1px solid rgba(130,160,200,.12)",
-                    background: "linear-gradient(180deg,#0c1521,#09111b)",
+                    flexDirection: "column",
                 }}
             >
-                <Box sx={{flex: 1}}>
+                <Box
+                    sx={{
+                        px: 2.5,
+                        pb: 2.7,
+                        borderBottom:
+                            "1px solid rgba(130,160,200,.10)",
+                        mb: 1.8,
+                    }}
+                >
                     <Typography
                         sx={{
-                            fontSize: {xs: 23, md: 29},
-                            fontWeight: 700,
-                            letterSpacing: "-.8px",
+                            fontSize: 31,
+                            fontWeight: 850,
+                            letterSpacing: "-.04em",
                         }}
                     >
-                        X40<span style={{color: "#3287ff"}}>-Control</span>
+                        X40-Control
                     </Typography>
 
                     <Typography
                         sx={{
-                            color: "#71849e",
-                            fontSize: 13,
+                            mt: .4,
+                            color: "#a0b1c7",
+                            fontSize: 15,
                         }}
                     >
-                        Control total de tu Dreame
+                        Dreame X40 Ultra
                     </Typography>
                 </Box>
 
-                {!mobile && (
-                    <>
-                        <Box sx={{textAlign: "center"}}>
-                            <Typography sx={{fontSize: 20, fontWeight: 600}}>
-                                Dreame X40 Ultra
-                            </Typography>
+                <Box
+                    sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: .45,
+                    }}
+                >
+                    {navItems.map((item, index) => (
+                        <NavItem
+                            key={item.label}
+                            {...item}
+                            active={index === 0}
+                        />
+                    ))}
+                </Box>
 
-                            <Box
-                                sx={{
-                                    display: "flex",
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                    gap: .8,
-                                    color: "#19df8a",
-                                    fontSize: 13,
-                                }}
-                            >
-                                <Box
-                                    sx={{
-                                        width: 8,
-                                        height: 8,
-                                        borderRadius: "50%",
-                                        bgcolor: "#19df8a",
-                                        boxShadow: "0 0 10px #19df8a",
-                                    }}
-                                />
-                                Conectado
-                            </Box>
-                        </Box>
+        </Box>
 
-                        <WifiIcon sx={{color: "#24d99a"}} />
-                        <ValetudoEvents />
-                        <LanguageSelector />
-                        <BatteryIndicator />
-
-                    </>
-                )}
-            </Box>
+            {/* ======================================================
+                CONTENIDO PRINCIPAL
+            ======================================================= */}
 
             <Box
                 sx={{
+                    position: "absolute",
+                    left: 276,
+                    right: 0,
+                    top: 0,
+                    bottom: 0,
+                    p: "24px 28px 22px",
                     display: "grid",
-                    gridTemplateColumns: {xs: "1fr", md: "230px minmax(0,1fr) 390px"},
-                    gap: 1.5,
-                    height: {xs: "auto", md: "calc(100vh - 82px)"},
-                    minHeight: 0,
-                    p: 1.5,
+                    gridTemplateColumns:
+                        "minmax(600px, 1fr) 318px",
+                    gridTemplateRows:
+                        "minmax(0, 1fr) 198px",
+                    gap: "16px",
                 }}
             >
-                {/* SIDEBAR */}
-                {!mobile && (
-                    <Box
+                {/* CABECERA DERECHA */}
+
+                <Box
+                    sx={{
+                        position: "absolute",
+                        top: 18,
+                        right: 28,
+                        zIndex: 30,
+                        display: "flex",
+                        justifyContent: "flex-end",
+                        alignItems: "center",
+                        gap: 1.5,
+                    }}
+                >
+                    <Button
                         sx={{
-                            ...glass,
-                            p: 1.2,
-                            display: "flex",
-                            flexDirection: "column",
-                            gap: .4,
+                            minWidth: 52,
+                            width: 52,
+                            height: 52,
+                            borderRadius: "50%",
+                            color: "#dce7f5",
+                            background:
+                                "rgba(18,31,47,.85)",
                         }}
                     >
-                        <DashboardButton icon={<HomeIcon/>} label={t("home")} route="/" />
-                        <DashboardButton icon={<MapIcon/>} label={t("map")} route="/options/map_management" />
-                        <DashboardButton icon={<RoomsIcon/>} label={t("rooms")} route="/options/map_management/segments" />
-                        <DashboardButton icon={<ZonesIcon/>} label={t("zones")} route="/options/map_management/virtual_restrictions" />
-                        <DashboardButton icon={<ScheduleIcon/>} label={t("schedules")} route="/valetudo/timers" />
-                        <DashboardButton icon={<HistoryIcon/>} label={t("history")} route="/robot/total_statistics" />
-                        <DashboardButton icon={<ConsumablesIcon/>} label={t("consumables")} route="/robot/consumables" />
-                        <DashboardButton icon={<SettingsIcon/>} label={t("settings")} route="/options/robot" />
-                        <DashboardButton icon={<MQTTIcon/>} label="MQTT" route="/options/connectivity/mqtt" />
-                        <DashboardButton icon={<OTAIcon/>} label="OTA" route="/options/robot/ota" />
+                        <NotificationsIcon />
+                    </Button>
 
-                        <Box sx={{flex: 1}} />
+                    <Button
+                        sx={{
+                            minWidth: 52,
+                            width: 52,
+                            height: 52,
+                            borderRadius: "50%",
+                            color: "#dce7f5",
+                            background:
+                                "rgba(18,31,47,.85)",
+                        }}
+                    >
+                        <DarkModeIcon />
+                    </Button>
 
-                        <Box
+                    <Box
+                        sx={{
+                            ml: 1,
+                            textAlign: "right",
+                        }}
+                    >
+                        <Typography
                             sx={{
-                                p: 2,
-                                textAlign: "center",
-                                color: "#667a94",
+                                fontSize: 23,
+                                fontWeight: 800,
+                            }}
+                        >
+                            {timeText}
+                        </Typography>
+
+                        <Typography
+                            sx={{
+                                color: "#9badc3",
                                 fontSize: 12,
                             }}
                         >
-                            X40 Ultra
-                            <br />
-                            <span style={{color: "#43546b"}}>
-                                {t("poweredBy")}
-                            </span>
-                        </Box>
+                            {dateText}
+                        </Typography>
                     </Box>
-                )}
+                </Box>
 
                 {/* MAPA */}
-                <Box
+
+                <Paper
+                    elevation={0}
                     sx={{
                         ...glass,
-                        minHeight: mobile ? 520 : 0,
-                        height: {xs: "520px", md: "100%"},
-                        minWidth: 0,
+                        gridColumn: "1 / 2",
+                        gridRow: "1 / 2",
+                        minHeight: 0,
+                        borderRadius: "17px",
                         overflow: "hidden",
                         position: "relative",
                     }}
@@ -276,366 +581,403 @@ const HomePage = (): React.ReactElement => {
                     <Box
                         sx={{
                             position: "absolute",
-                            zIndex: 5,
-                            top: 18,
-                            left: 20,
-                            pointerEvents: "none",
+                            inset: 0,
+                            background:
+                                "radial-gradient(circle at 50% 50%, rgba(40,100,160,.13), transparent 70%)",
                         }}
-                    >
-                        <Typography sx={{fontSize: 22, fontWeight: 700}}>
-                            Mapa de la casa
-                        </Typography>
-
-                        <Typography sx={{color: "#8093ad", fontSize: 14}}>
-                            Planta principal
-                        </Typography>
-                    </Box>
+                    />
 
                     <Box
                         sx={{
                             position: "absolute",
-                            zIndex: 5,
-                            top: 15,
-                            right: 15,
-                            display: "flex",
-                            gap: 1.5,
-                        }}
-                    >
-                        <Paper sx={{...glass, p: 1}}>
-                            <Typography>⌕</Typography>
-                        </Paper>
-                        <Paper sx={{...glass, p: 1}}>
-                            <Typography>⛶</Typography>
-                        </Paper>
-                    </Box>
-
-                    <Box
-                        sx={{
-                            height: "100%",
-                            width: "100%",
+                            inset: 8,
+                            zIndex: 2,
                             "& > *": {
+                                width: "100% !important",
                                 height: "100% !important",
                             },
                         }}
                     >
                         <LiveMapPage />
                     </Box>
-                </Box>
 
-                {/* PANEL DERECHO */}
+                    <Box
+                        sx={{
+                            position: "absolute",
+                            zIndex: 10,
+                            right: 16,
+                            top: 18,
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: .7,
+                        }}
+                    >
+
+                    </Box>
+
+                    <Box
+                        sx={{
+                            position: "absolute",
+                            zIndex: 10,
+                            left: 15,
+                            bottom: 14,
+                            px: 1.8,
+                            py: 1.2,
+                            borderRadius: "14px",
+                            background:
+                                "rgba(10,20,33,.91)",
+                            border:
+                                "1px solid rgba(110,155,215,.18)",
+                        }}
+                    >
+                        <Typography
+                            sx={{
+                                fontWeight: 750,
+                                fontSize: 13,
+                            }}
+                        >
+                            Mapa actual
+                        </Typography>
+
+                        <Typography
+                            sx={{
+                                color: "#91a5bd",
+                                fontSize: 11,
+                            }}
+                        >
+                            Principal
+                        </Typography>
+                    </Box>
+                </Paper>
+
+                {/* ESTACIÓN + ROBOT */}
+
                 <Box
                     sx={{
+                        gridColumn: "2 / 3",
+                        gridRow: "1 / 3",
+                        minHeight: 0,
                         display: "flex",
                         flexDirection: "column",
-                        gap: 1.5,
-                        minWidth: 0,
-                        minHeight: 0,
-                        overflowY: {xs: "visible", md: "auto"},
-                        overflowX: "hidden",
-                        pr: 0.5,
-                        scrollbarWidth: "thin",
-                        "&::-webkit-scrollbar": {
-                            width: 7,
-                        },
-                        "&::-webkit-scrollbar-thumb": {
-                            background: "rgba(100,140,190,.45)",
-                            borderRadius: 10,
-                        },
+                        alignItems: "stretch",
+                        justifyContent: "flex-end",
+                        gap: 1.6,
+                        overflow: "visible",
                     }}
                 >
-
-
-                    {/* ESTADO */}
                     <Paper
+                        elevation={0}
                         sx={{
                             ...glass,
-                            p: 1.5,
-                            overflow: "hidden",
-                            position: "relative",
-                            flexShrink: 0,
+                            borderRadius: "17px",
+                            p: 1.7,
+                            flex: "0 0 auto",
                             minHeight: 0,
-                            background:
-                                "linear-gradient(145deg, rgba(8,18,30,.96), rgba(14,27,43,.92))",
-                            border: "1px solid rgba(70,150,255,.16)",
-                            boxShadow: "0 12px 40px rgba(0,0,0,.28)",
+                            height: "fit-content",
+                            overflow: "hidden",
                         }}
                     >
                         <Box
                             sx={{
                                 display: "flex",
-                                alignItems: "center",
-                                gap: 1.5,
-                                px: 0.5,
-                                mb: 1.2,
+                                alignItems: "flex-start",
                             }}
                         >
-                            <Typography
+                            <Box>
+                                <Typography
+                                    sx={{
+                                        fontSize: 20,
+                                        fontWeight: 800,
+                                    }}
+                                >
+                                    Estación de carga
+                                </Typography>
+
+                                <Box
+                                    sx={{
+                                        mt: 1.5,
+                                        display: "flex",
+                                        flexDirection: "column",
+                                        gap: .7,
+                                    }}
+                                >
+                                    <Box
+                                        sx={{
+                                            display: "flex",
+                                            alignItems: "center",
+                                            gap: 1,
+                                        }}
+                                    >
+                                        <Box
+                                            sx={{
+                                                width: 11,
+                                                height: 11,
+                                                borderRadius: "50%",
+                                                background: "#35e291",
+                                            }}
+                                        />
+                                        <Typography
+                                            sx={{
+                                                color: "#39e49a",
+                                                fontSize: 13,
+                                            }}
+                                        >
+                                            Conectada
+                                        </Typography>
+                                    </Box>
+
+                                    <Box
+                                        sx={{
+                                            display: "flex",
+                                            alignItems: "center",
+                                            gap: 1,
+                                        }}
+                                    >
+                                        <Box
+                                            sx={{
+                                                width: 11,
+                                                height: 11,
+                                                borderRadius: "50%",
+                                                border: "1px solid #8294ab",
+                                            }}
+                                        />
+                                        <Typography
+                                            sx={{
+                                                color: "#a5b4c7",
+                                                fontSize: 13,
+                                            }}
+                                        >
+                                            Lista
+                                        </Typography>
+                                    </Box>
+                                </Box>
+                            </Box>
+                        </Box>
+
+                        {dockAvailable && (
+                            <Box
                                 sx={{
-                                    fontSize: 17,
-                                    fontWeight: 800,
-                                    letterSpacing: ".03em",
+                                    mt: 1,
+                                    "& .MuiPaper-root": {
+                                        background:
+                                            "transparent !important",
+                                        boxShadow: "none !important",
+                                        border: "0 !important",
+                                    },
                                 }}
                             >
-                                ESTADO ACTUAL
-                            </Typography>
+                                <Dock />
+                            </Box>
+                        )}
+
+                        {!dockAvailable && (
+                            <Box
+                                sx={{
+                                    mt: 2,
+                                    p: 1.5,
+                                    borderRadius: "14px",
+                                    background:
+                                        "rgba(50,90,130,.12)",
+                                    color: "#9fb1c6",
+                                }}
+                            >
+                                Estación preparada
+                            </Box>
+                        )}
+                    </Paper>
+
+                    
+                </Box>
+
+                {/* CONTROLES INFERIORES */}
+
+                <Paper
+                    elevation={0}
+                    sx={{
+                        ...glass,
+                        gridColumn: "1 / 2",
+                        gridRow: "2 / 3",
+                        borderRadius: "17px",
+                        p: 1.4,
+                        display: "grid",
+                        gridTemplateColumns:
+                            "minmax(420px, 1fr) 150px",
+                        gap: 1.2,
+                        overflow: "visible",
+                    }}
+                >
+                    <Box
+                        sx={{
+                            minWidth: 0,
+                            display: "grid",
+                            gridTemplateRows: "40px 68px 1fr",
+                            gap: .7,
+                        }}
+                    >
+                        <Box
+                            sx={{
+                                display: "flex",
+                                gap: .4,
+                                p: .4,
+                                borderRadius: "13px",
+                                background:
+                                    "rgba(3,10,18,.48)",
+                            }}
+                        >
+                            {[
+                                "Limpieza rápida",
+                                "Habitaciones",
+                                "Zona",
+                                "Personalizada",
+                            ].map((item, index) => (
+                                <Button
+                                    key={item}
+                                    sx={{
+                                        flex: 1,
+                                        minHeight: 39,
+                                        borderRadius: "10px",
+                                        color:
+                                            index === 0 ?
+                                                "#fff" :
+                                                "#c5d2e2",
+                                        textTransform: "none",
+                                        fontWeight:
+                                            index === 0 ?
+                                                750 :
+                                                500,
+                                        background:
+                                            index === 0 ?
+                                                "linear-gradient(90deg,#287fff,#1964cf)" :
+                                                "transparent",
+                                        boxShadow:
+                                            index === 0 ?
+                                                "0 5px 18px rgba(35,125,255,.22)" :
+                                                "none",
+                                    }}
+                                >
+                                    {item}
+                                </Button>
+                            ))}
+                        </Box>
+
+                        <Box
+                            sx={{
+                                display: "grid",
+                                gridTemplateColumns:
+                                    "repeat(4, 1fr)",
+                                gap: .6,
+                            }}
+                        >
+                            {[
+                                {
+                                    label: "Aspirar",
+                                    icon: <CleaningIcon />,
+                                },
+                                {
+                                    label: "Fregar",
+                                    icon: <Box
+                                        component="span"
+                                        sx={{fontSize: 25}}
+                                    >
+                                        ◇
+                                    </Box>,
+                                },
+                                {
+                                    label: "Aspirar + fregar",
+                                    icon: <CleaningIcon />,
+                                },
+                                {
+                                    label: "Solo habitaciones",
+                                    icon: <RoomsIcon />,
+                                },
+                            ].map((item, index) => (
+                                <Button
+                                    key={item.label}
+                                    sx={{
+                                        minHeight: 72,
+                                        borderRadius: "14px",
+                                        flexDirection: "column",
+                                        gap: .35,
+                                        color:
+                                            index === 2 ?
+                                                "#fff" :
+                                                "#d2ddec",
+                                        textTransform: "none",
+                                        fontSize: 12,
+                                        fontWeight: 650,
+                                        border:
+                                            "1px solid rgba(100,145,200,.20)",
+                                        background:
+                                            index === 2 ?
+                                                "linear-gradient(145deg,#247fff,#1557b8)" :
+                                                "rgba(15,29,46,.64)",
+                                        boxShadow:
+                                            index === 2 ?
+                                                "0 6px 24px rgba(25,120,255,.25)" :
+                                                "none",
+                                    }}
+                                >
+                                    {item.icon}
+                                    {item.label}
+                                </Button>
+                            ))}
                         </Box>
 
                         <Box
                             sx={{
                                 display: "flex",
-                                alignItems: "center",
-                                gap: 1.5,
-                                px: 0.5,
-                                mb: 1,
+                                gap: .6,
+                                "& > *": {
+                                    flex: 1,
+                                },
+                                "& .MuiPaper-root": {
+                                    background:
+                                        "rgba(8,18,30,.35) !important",
+                                    boxShadow: "none !important",
+                                },
                             }}
                         >
-                            <Box
-                                sx={{
-                                    width: 9,
-                                    height: 9,
-                                    borderRadius: "50%",
-                                    bgcolor:
-                                        status?.value === "error" ?
-                                            "#ff5c5c" :
-                                            "#19df8a",
-                                    boxShadow:
-                                        status?.value === "error" ?
-                                            "0 0 12px #ff5c5c" :
-                                            "0 0 12px #19df8a",
-                                }}
-                            />
+                            {fanSpeedControl && (
+                                <CompactPresetControl
+                                    capability={
+                                        Capability.FanSpeedControl
+                                    }
+                                    label="Succión"
+                                />
+                            )}
 
-                            <Typography
-                                sx={{
-                                    color:
-                                        status?.value === "error" ?
-                                            "#ff6b6b" :
-                                            "#19df8a",
-                                    fontSize: 15,
-                                    fontWeight: 700,
-                                }}
-                            >
-                                {currentStatus}
-                            </Typography>
+                            {operationModeControl && (
+                                <CompactPresetControl
+                                    capability={
+                                        Capability.OperationModeControl
+                                    }
+                                    label="Modo"
+                                />
+                            )}
+
+                            {waterUsageControl && (
+                                <CompactPresetControl
+                                    capability={
+                                        Capability.WaterUsageControl
+                                    }
+                                    label="Agua"
+                                />
+                            )}
                         </Box>
-
-                        <Box
-                            sx={{
-                                height: 245,
-                                borderRadius: 2.5,
-                                overflow: "hidden",
-                                background: "#07111d",
-                                border: "1px solid rgba(120,160,210,.12)",
-                            }}
-                        >
-                            <Box
-                                component="img"
-                                src="/x40-card.png"
-                                alt="Dreame X40 Ultra"
-                                sx={{
-                                    width: "100%",
-                                    height: "100%",
-                                    display: "block",
-                                    objectFit: "cover",
-                                    objectPosition: "center",
-                                }}
-                            />
-                        </Box>
-
-                        <Box sx={{textAlign: "center", mt: 1}}>
-                            <Typography
-                                sx={{
-                                    fontSize: 17,
-                                    fontWeight: 800,
-                                }}
-                            >
-                                Dreame X40 Ultra
-                            </Typography>
-
-                            <Typography
-                                sx={{
-                                    color: "#8196b2",
-                                    fontSize: 12,
-                                }}
-                            >
-                                {currentStatus === "Limpiando" ?
-                                    "Limpiando la casa" :
-                                    currentStatus}
-                            </Typography>
-                        </Box>
-
-                        <Divider
-                            sx={{
-                                borderColor: "rgba(130,160,200,.12)",
-                                my: 1.2,
-                            }}
-                        />
-
-                        <Box
-                            sx={{
-                                display: "grid",
-                                gridTemplateColumns: "repeat(4, 1fr)",
-                                gap: 1.5,
-                            }}
-                        >
-                            <Box
-                                sx={{
-                                    minWidth: 0,
-                                    display: "flex",
-                                    justifyContent: "center",
-                                    "& > div": {
-                                        width: "100%",
-                                    },
-                                }}
-                            >
-                                {fanSpeedControl ? (
-                                    <CompactPresetControl
-                                        capability={Capability.FanSpeedControl}
-                                        label="Succión"
-                                    />
-                                ) : (
-                                    <Box sx={{textAlign: "center"}}>
-                                        <Typography sx={{fontSize: 14, fontWeight: 800}}>
-                                            —
-                                        </Typography>
-                                        <Typography sx={{color: "#8196b2", fontSize: 10}}>
-                                            Succión
-                                        </Typography>
-                                    </Box>
-                                )}
-                            </Box>
-
-                            <Box
-                                sx={{
-                                    minWidth: 0,
-                                    display: "flex",
-                                    justifyContent: "center",
-                                    "& > div": {
-                                        width: "100%",
-                                    },
-                                }}
-                            >
-                                {operationModeControl ? (
-                                    <CompactPresetControl
-                                        capability={Capability.OperationModeControl}
-                                        label="Modo de fregado"
-                                    />
-                                ) : (
-                                    <Box sx={{textAlign: "center"}}>
-                                        <Typography sx={{fontSize: 14, fontWeight: 800}}>
-                                            —
-                                        </Typography>
-                                        <Typography sx={{color: "#8196b2", fontSize: 10}}>
-                                            Modo de fregado
-                                        </Typography>
-                                    </Box>
-                                )}
-                            </Box>
-
-                            <Box
-                                sx={{
-                                    minWidth: 0,
-                                    display: "flex",
-                                    justifyContent: "center",
-                                    "& > div": {
-                                        width: "100%",
-                                    },
-                                }}
-                            >
-                                {waterUsageControl ? (
-                                    <CompactPresetControl
-                                        capability={Capability.WaterUsageControl}
-                                        label="Agua"
-                                    />
-                                ) : (
-                                    <Box sx={{textAlign: "center"}}>
-                                        <Typography sx={{fontSize: 14, fontWeight: 800}}>
-                                            —
-                                        </Typography>
-                                        <Typography sx={{color: "#8196b2", fontSize: 10}}>
-                                            Agua
-                                        </Typography>
-                                    </Box>
-                                )}
-                            </Box>
-
-                            <Box sx={{textAlign: "center", minWidth: 0}}>
-                                <Typography
-                                    sx={{
-                                        fontSize: 14,
-                                        fontWeight: 800,
-                                        color: "#dce7f5",
-                                    }}
-                                >
-                                    {currentTime}
-                                </Typography>
-
-                                <Typography
-                                    sx={{
-                                        color: "#8196b2",
-                                        fontSize: 10,
-                                        mt: .25,
-                                    }}
-                                >
-                                    Tiempo
-                                </Typography>
-                            </Box>
-                        </Box>
-                    <Box sx={{mt: 1.5}}>
-                        <BasicControls />
                     </Box>
 
-                    </Paper>
-
-                    {/* BASE */}
-                    {(dockEmpty || dockClean || dockDry) && (
-                        <Paper
-                            sx={{
-                                ...glass,
-                                p: 1.5,
-                                flexShrink: 0,
-                            }}
-                        >
-                            <Typography
-                                sx={{
-                                    fontSize: 16,
-                                    fontWeight: 800,
-                                    mb: 1,
-                                }}
-                            >
-                                ESTACIÓN
-                            </Typography>
-
-                            <Box
-                                sx={{
-                                    width: "100%",
-                                    height: 300,
-                                    display: "flex",
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                    mb: 1,
-                                    borderRadius: "14px",
-                                    overflow: "hidden",
-                                }}
-                            >
-                                <Box
-                                    component="img"
-                                    src="/estaccion.png"
-                                    alt="Estación"
-                                    sx={{
-                                        width: "100%",
-                                        height: "100%",
-                                        objectFit: "contain",
-                                    }}
-                                />
-                            </Box>
-
-                            <Dock />
-                        </Paper>
-                    )}
-
-
-                </Box>
+                    <Box
+                        sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            borderLeft:
+                                "1px solid rgba(130,165,210,.12)",
+                        }}
+                    >
+                        <BasicControls />
+                    </Box>
+                </Paper>
             </Box>
         </Box>
     );
