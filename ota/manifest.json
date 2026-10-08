@@ -1,16 +1,16 @@
 {
   "product": "X40Control",
-  "version": "2026.10.08.59",
+  "version": "2026.10.08.60",
   "channel": "stable",
   "asset": "valetudo",
-  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.10.08.59/valetudo",
-  "sha256": "671c78c17c51eda5923cf346fb6ba41f90f594f3a43568c1980372986f77c24a",
-  "size": 36958994,
-  "voices_url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.10.08.59/X40-Control-voices.tar.gz",
-  "voices_sha256": "c34be632735f5fe7574de8b0bb090874927372a92921b6a4ca7016f49b5a5f51",
-  "voices_size": 535517,
+  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.10.08.60/valetudo",
+  "sha256": "2c13d2ed40dc141989cb7c9f5a0cd8848c46ab377bd5c512062b00165365d301",
+  "size": 41702533,
+  "voices_url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.10.08.60/X40-Control-voices.tar.gz",
+  "voices_sha256": "39ce657a22a5f51dc762148f39668f8b22345b72e0aefb499db098d872aea09a",
+  "voices_size": 535520,
   "requires_reboot": true,
   "changelog": [
-    "fix: usar binario aarch64 en OTA del X40"
+    "fix: calcular SHA de OTA desde binario aarch64"
   ]
 }
