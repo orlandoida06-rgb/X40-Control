@@ -1,16 +1,16 @@
 {
   "product": "X40Control",
-  "version": "2026.10.08.57",
+  "version": "2026.10.08.58",
   "channel": "stable",
   "asset": "valetudo",
-  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.10.08.57/valetudo",
-  "sha256": "dff01aed6758ba4486e296065d622cfa885297bd119d7959fa511c3adf69cb22",
-  "size": 36958362,
-  "voices_url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.10.08.57/X40-Control-voices.tar.gz",
-  "voices_sha256": "d242dd791ca39aa6711a4ece0bfdb13bf52b6093174af92c3edf8320833947fc",
-  "voices_size": 535518,
+  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.10.08.58/valetudo",
+  "sha256": "1c9194bf9ef67b84e586bee974ccc6c0df52aacbe3fd106cbc3d3ae74c1d8de7",
+  "size": 36958987,
+  "voices_url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.10.08.58/X40-Control-voices.tar.gz",
+  "voices_sha256": "4867f5fb0541eaffd613488cb35e03af93fc1be3ce412adf5aba611c8e2985c0",
+  "voices_size": 535520,
   "requires_reboot": true,
   "changelog": [
-    "feat: polish X40-Control dashboard and OTA persistence"
+    "feat: mejorar interfaz X40-Control en móvil y splash"
   ]
 }
