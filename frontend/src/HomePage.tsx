@@ -1,6 +1,6 @@
 import React from "react";
 import {playX40ControlVoice} from "./voice/X40ControlVoice";
-import {Link} from "react-router-dom";
+import {Link, useLocation} from "react-router-dom";
 import {
     Box,
     Button,
@@ -22,6 +22,8 @@ import {
     DarkMode as DarkModeIcon,
     Layers as LayersIcon,
     CenterFocusStrong as CenterIcon,
+    Menu as MenuIcon,
+    Close as CloseIcon,
     PlayArrow as PlayIcon,
     Pause as PauseIcon,
     Stop as StopIcon,
@@ -179,6 +181,8 @@ const HomePage: React.FunctionComponent<{
     setPaletteMode
 }): React.ReactElement => {
     const [notificationsOpen, setNotificationsOpen] = React.useState(false);
+    const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
+    const location = useLocation();
 
     React.useEffect(() => {
         const handler = () => setNotificationsOpen((open) => !open);
@@ -318,7 +322,10 @@ const HomePage: React.FunctionComponent<{
                     background: "#07101b",
                     color: "#fff",
                     overflow: "auto",
-                    p: 1,
+                    px: 1,
+                    pt: 1,
+                    pb: 2,
+                    position: "relative",
                 }}
             >
                 <Paper
@@ -326,26 +333,55 @@ const HomePage: React.FunctionComponent<{
                     sx={{
                         ...glass,
                         borderRadius: "18px",
-                        p: 1.3,
+                        px: 1.2,
+                        py: 1.05,
                         mb: 1,
                         display: "flex",
-                        justifyContent: "space-between",
+                        gap: 1,
                         alignItems: "center",
                     }}
                 >
+                    <Button
+                        aria-label="Abrir menú"
+                        onClick={() => setMobileMenuOpen(true)}
+                        sx={{
+                            minWidth: 42,
+                            width: 42,
+                            height: 42,
+                            p: 0,
+                            flexShrink: 0,
+                            borderRadius: "13px",
+                            color: "#fff",
+                            background: "rgba(35,105,180,.20)",
+                            border: "1px solid rgba(80,150,230,.20)",
+                        }}
+                    >
+                        <MenuIcon />
+                    </Button>
+
                     <Box>
                         <Typography
                             sx={{
-                                fontSize: 20,
+                                fontSize: 19,
                                 fontWeight: 800,
+                                lineHeight: 1.05,
                             }}
                         >
-                            X40-Control
+                            X40-
+                            <Box
+                                component="span"
+                                sx={{
+                                    color: "#ef4444",
+                                }}
+                            >
+                                Control
+                            </Box>
                         </Typography>
                         <Typography
                             sx={{
                                 color: "#8ea1ba",
-                                fontSize: 11,
+                                fontSize: 10.5,
+                                mt: .25,
                             }}
                         >
                             Dreame X40 Ultra
@@ -356,6 +392,8 @@ const HomePage: React.FunctionComponent<{
                         sx={{
                             color: statusColor,
                             fontWeight: 800,
+                            fontSize: 20,
+                            ml: "auto",
                         }}
                     >
                         {batteryLevel !== null ?
@@ -368,8 +406,8 @@ const HomePage: React.FunctionComponent<{
                     elevation={0}
                     sx={{
                         ...glass,
-                        height: "58vh",
-                        minHeight: 390,
+                        height: "min(58vh, 620px)",
+                        minHeight: 360,
                         borderRadius: "18px",
                         overflow: "hidden",
                         position: "relative",
@@ -429,6 +467,159 @@ const HomePage: React.FunctionComponent<{
                 </Paper>
 
                 <BasicControls />
+
+                <Box
+                    sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: .5,
+                        width: "100%",
+                        mt: .7,
+                        px: .2,
+                    }}
+                >
+                    {fanSpeedControl && (
+                        <CompactPresetControl
+                            capability={Capability.FanSpeedControl}
+                            label="Succión"
+                        />
+                    )}
+
+                    {waterUsageControl && (
+                        <CompactPresetControl
+                            capability={Capability.WaterUsageControl}
+                            label="Agua"
+                        />
+                    )}
+                </Box>
+
+                {mobileMenuOpen && (
+                    <>
+                        <Box
+                            onClick={() => setMobileMenuOpen(false)}
+                            sx={{
+                                position: "fixed",
+                                inset: 0,
+                                zIndex: 1200,
+                                background: "rgba(0,0,0,.58)",
+                                animation: "x40MobileOverlayIn .18s ease-out",
+                                "@keyframes x40MobileOverlayIn": {
+                                    from: {opacity: 0},
+                                    to: {opacity: 1},
+                                },
+                                backdropFilter: "blur(2px)",
+                            }}
+                        />
+
+                        <Paper
+                            elevation={0}
+                            sx={{
+                                position: "fixed",
+                                left: 0,
+                                top: 0,
+                                bottom: 0,
+                                width: "min(86vw, 330px)",
+                                zIndex: 1201,
+                                borderRadius: "0 22px 22px 0",
+                                p: 1.5,
+                                overflowY: "auto",
+                                background:
+                                    "linear-gradient(180deg, rgba(9,18,30,.99), rgba(5,12,21,.99))",
+                                borderRight:
+                                    "1px solid rgba(110,150,200,.18)",
+                                boxShadow: "20px 0 55px rgba(0,0,0,.45)",
+                                animation: "x40MobileMenuIn .22s ease-out",
+                                "@keyframes x40MobileMenuIn": {
+                                    from: {transform: "translateX(-100%)"},
+                                    to: {transform: "translateX(0)"},
+                                },
+                            }}
+                        >
+                            <Box
+                                sx={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "space-between",
+                                    px: .5,
+                                    pb: 1.5,
+                                    mb: 1,
+                                    borderBottom:
+                                        "1px solid rgba(130,160,200,.10)",
+                                }}
+                            >
+                                <Box>
+                                    <Typography
+                                        sx={{
+                                            fontSize: 25,
+                                            fontWeight: 850,
+                                            letterSpacing: "-.04em",
+                                        }}
+                                    >
+                                        X40-
+                                        <Box
+                                            component="span"
+                                            sx={{
+                                                color: "#ef4444",
+                                            }}
+                                        >
+                                            Control
+                                        </Box>
+                                    </Typography>
+
+                                    <Typography
+                                        sx={{
+                                            color: "#8ea1ba",
+                                            fontSize: 12,
+                                        }}
+                                    >
+                                        Dreame X40 Ultra
+                                    </Typography>
+                                </Box>
+
+                                <Button
+                                    aria-label="Cerrar menú"
+                                    onClick={() => setMobileMenuOpen(false)}
+                                    sx={{
+                                        minWidth: 42,
+                                        width: 42,
+                                        height: 42,
+                                        p: 0,
+                                        borderRadius: "13px",
+                                        color: "#dce7f5",
+                                        background: "rgba(255,255,255,.05)",
+                                    }}
+                                >
+                                    <CloseIcon />
+                                </Button>
+                            </Box>
+
+                            <Box
+                                sx={{
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    gap: .45,
+                                }}
+                            >
+                                {navItems.map((item) => (
+                                    <Box
+                                        key={item.label}
+                                        onClick={() => setMobileMenuOpen(false)}
+                                    >
+                                        <NavItem
+                                            {...item}
+                                            active={
+                                                item.route === "/" ?
+                                                    location.pathname === "/" :
+                                                    location.pathname === item.route ||
+                                                    location.pathname.startsWith(`${item.route}/`)
+                                            }
+                                        />
+                                    </Box>
+                                ))}
+                            </Box>
+                        </Paper>
+                    </>
+                )}
             </Box>
         );
     }
@@ -484,7 +675,15 @@ const HomePage: React.FunctionComponent<{
                             letterSpacing: "-.04em",
                         }}
                     >
-                        X40-Control
+                        X40-
+                        <Box
+                            component="span"
+                            sx={{
+                                color: "#ef4444",
+                            }}
+                        >
+                            Control
+                        </Box>
                     </Typography>
 
                     <Typography
@@ -947,6 +1146,13 @@ const HomePage: React.FunctionComponent<{
                             "minmax(420px, 1fr) 150px",
                         gap: 1.2,
                         overflow: "visible",
+
+                        "@media (max-width: 768px)": {
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: .7,
+                            p: .9,
+                        },
                     }}
                 >
                     <Box
@@ -955,6 +1161,14 @@ const HomePage: React.FunctionComponent<{
                             display: "grid",
                             gridTemplateRows: "82px 68px",
                             gap: .7,
+
+                            "@media (max-width: 768px)": {
+                                display: "flex",
+                                flexDirection: "column",
+                                gap: .6,
+                                width: "100%",
+                                order: 2,
+                            },
                         }}
                     >
                         <Box

@@ -1,9 +1,7 @@
-import SplashLogo from "../assets/icons/valetudo_splash.svg?react";
-import {CircularProgress, Grid2} from "@mui/material";
+import {Box, CircularProgress, Grid2, Typography} from "@mui/material";
 import React from "react";
 
 const ValetudoSplash = (): React.ReactElement => {
-
     return (
         <Grid2
             container
@@ -12,30 +10,57 @@ const ValetudoSplash = (): React.ReactElement => {
                 margin: "0 auto",
                 maxWidth: "600px",
                 height: "100vh",
+                color: "#ffffff",
             }}
             direction="column"
             alignItems="center"
             justifyContent="flex-start"
             paddingTop="20vh"
         >
-            <Grid2
+            <Typography
+                component="div"
                 sx={{
-                    width: "90%",
-                    maxWidth: "270px"
+                    fontSize: {
+                        xs: 38,
+                        sm: 48,
+                    },
+                    fontWeight: 850,
+                    letterSpacing: "-.045em",
+                    lineHeight: 1,
                 }}
             >
-                <SplashLogo
-                    style={{
-                        width: "100%",
-                        height: "auto",
-                        display: "block"
+                X40-
+                <Box
+                    component="span"
+                    sx={{
+                        color: "#ef4444",
                     }}
-                />
-            </Grid2>
-            <Grid2
-                sx={{marginTop: "3em"}}
+                >
+                    Control
+                </Box>
+            </Typography>
+
+            <Typography
+                sx={{
+                    mt: 1,
+                    color: "#0076ff",
+                    fontSize: {
+                        xs: 17,
+                        sm: 19,
+                    },
+                    fontWeight: 600,
+                    letterSpacing: "-.015em",
+                }}
             >
-                <CircularProgress/>
+                for Valetudo
+            </Typography>
+
+            <Grid2
+                sx={{
+                    marginTop: "3em",
+                }}
+            >
+                <CircularProgress />
             </Grid2>
         </Grid2>
     );

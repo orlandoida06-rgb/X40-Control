@@ -38,6 +38,13 @@ export const ActionButton = styled(Fab)(({theme}) => {
         "&:active": {
             transform: "scale(0.94)",
         },
+
+        "@media (max-width: 768px)": {
+            width: 44,
+            height: 44,
+            minHeight: 44,
+            fontSize: "1.1rem",
+        },
     };
 });
 
@@ -50,6 +57,12 @@ export const ActionsContainer = styled(Box)(({theme}) => {
         left: theme.spacing(2),
         right: theme.spacing(2),
         zIndex: 20,
+
+        "@media (max-width: 768px)": {
+            bottom: theme.spacing(1),
+            left: theme.spacing(1),
+            right: theme.spacing(1),
+        },
     };
 });
 
@@ -146,6 +159,14 @@ export const MapControlsPanel = styled(MapGlassPanel)(({theme}) => {
         zIndex: 25,
 
         borderRadius: 18,
+
+        "@media (max-width: 768px)": {
+            right: theme.spacing(1),
+            bottom: "68px",
+            gap: theme.spacing(0.45),
+            padding: theme.spacing(0.55),
+            borderRadius: 16,
+        },
     };
 });
 
