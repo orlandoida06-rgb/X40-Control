@@ -36,7 +36,7 @@ const AppRouter: React.FunctionComponent<{
                 <Root>
                     <Content>
                         <Routes>
-                            <Route path="" element={<HomePage />} />
+                            <Route path="" element={<HomePage paletteMode={paletteMode} setPaletteMode={setPaletteMode} />} />
                             <Route path="robot/*" element={<RobotRouter />} />
                             <Route path="options/*" element={<OptionsRouter />} />
                             <Route path="valetudo/*" element={<ValetudoRouter />} />

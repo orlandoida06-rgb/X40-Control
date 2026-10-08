@@ -1,4 +1,5 @@
 import React from "react";
+import {playX40ControlVoice} from "./voice/X40ControlVoice";
 import {Link} from "react-router-dom";
 import {
     Box,
@@ -36,6 +37,7 @@ import {
     Capability,
     RobotAttributeClass,
     useCurrentStatisticsQuery,
+    usePresetSelectionMutation,
     useRobotAttributeQuery,
     useRobotStatusQuery,
 } from "./api";
@@ -169,7 +171,24 @@ const StatBox = ({
     </Box>
 );
 
-const HomePage = (): React.ReactElement => {
+const HomePage: React.FunctionComponent<{
+    paletteMode: "light" | "dark",
+    setPaletteMode: (newMode: "light" | "dark") => void
+}> = ({
+    paletteMode,
+    setPaletteMode
+}): React.ReactElement => {
+    const [notificationsOpen, setNotificationsOpen] = React.useState(false);
+
+    React.useEffect(() => {
+        const handler = () => setNotificationsOpen((open) => !open);
+
+        window.addEventListener("x40control-notifications", handler);
+
+        return () => {
+            window.removeEventListener("x40control-notifications", handler);
+        };
+    }, []);
     const mobile = useIsMobileView();
 
     const {data: status} = useRobotStatusQuery();
@@ -194,7 +213,28 @@ const HomePage = (): React.ReactElement => {
         Capability.WaterUsageControl,
     );
 
+    const {
+        mutate: selectOperationMode,
+        isPending: operationModePending,
+    } = usePresetSelectionMutation(
+        Capability.OperationModeControl
+    );
+
+    const {
+        data: robotAttributes,
+    } = useRobotAttributeQuery(
+        RobotAttributeClass.PresetSelectionState
+    );
+
+    const currentOperationMode =
+        robotAttributes?.find(
+            attribute =>
+                attribute.__class === RobotAttributeClass.PresetSelectionState &&
+                attribute.type === "operation_mode"
+        )?.value;
+
     const [clock, setClock] = React.useState(new Date());
+
 
     React.useEffect(() => {
         const timer = window.setInterval(
@@ -511,6 +551,9 @@ const HomePage = (): React.ReactElement => {
                     }}
                 >
                     <Button
+                        onClick={() => {
+                            window.dispatchEvent(new CustomEvent("x40control-notifications"));
+                        }}
                         sx={{
                             minWidth: 52,
                             width: 52,
@@ -525,6 +568,11 @@ const HomePage = (): React.ReactElement => {
                     </Button>
 
                     <Button
+                        onClick={() =>
+                            setPaletteMode(
+                                paletteMode === "dark" ? "light" : "dark"
+                            )
+                        }
                         sx={{
                             minWidth: 52,
                             width: 52,
@@ -563,6 +611,100 @@ const HomePage = (): React.ReactElement => {
                         </Typography>
                     </Box>
                 </Box>
+
+                {notificationsOpen && (
+                    <Paper
+                        elevation={0}
+                        sx={{
+                            position: "absolute",
+                            top: 82,
+                            right: 28,
+                            width: 360,
+                            zIndex: 50,
+                            borderRadius: 3,
+                            p: 2,
+                            background:
+                                "linear-gradient(145deg, rgba(13,25,42,.98), rgba(8,17,29,.98))",
+                            border: "1px solid rgba(110,155,215,.22)",
+                            boxShadow: "0 20px 55px rgba(0,0,0,.45)",
+                        }}
+                    >
+                        <Box
+                            sx={{
+                                display: "flex",
+                                justifyContent: "space-between",
+                                alignItems: "center",
+                                mb: 1.5,
+                            }}
+                        >
+                            <Typography
+                                sx={{
+                                    fontSize: 17,
+                                    fontWeight: 800,
+                                    color: "#f4f8ff",
+                                }}
+                            >
+                                Avisos
+                            </Typography>
+
+                            <Typography
+                                sx={{
+                                    fontSize: 11,
+                                    color: "#71839a",
+                                }}
+                            >
+                                X40-Control
+                            </Typography>
+                        </Box>
+
+                        <Box
+                            sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 1.5,
+                                p: 1.5,
+                                borderRadius: 2,
+                                background: "rgba(255,255,255,.035)",
+                                border:
+                                    "1px solid rgba(110,155,215,.10)",
+                            }}
+                        >
+                            <Box
+                                sx={{
+                                    width: 10,
+                                    height: 10,
+                                    borderRadius: "50%",
+                                    background: "#35a7ff",
+                                    boxShadow:
+                                        "0 0 12px rgba(53,167,255,.65)",
+                                    flexShrink: 0,
+                                }}
+                            />
+
+                            <Box>
+                                  <Typography
+                                      sx={{
+                                          fontSize: 13,
+                                          fontWeight: 700,
+                                          color: "#e7eef8",
+                                      }}
+                                  >
+                                      Sin avisos nuevos
+                                  </Typography>
+
+                                <Typography
+                                    sx={{
+                                        fontSize: 11,
+                                        color: "#8294aa",
+                                        mt: .25,
+                                    }}
+                                >
+                                    El X40 funciona con normalidad
+                                </Typography>
+                            </Box>
+                        </Box>
+                    </Paper>
+                )}
 
                 {/* MAPA */}
 
@@ -686,8 +828,9 @@ const HomePage = (): React.ReactElement => {
                             <Box>
                                 <Typography
                                     sx={{
-                                        fontSize: 20,
-                                        fontWeight: 800,
+                                        fontSize: 13,
+                                        fontWeight: 700,
+                                        color: "#e7eef8",
                                     }}
                                 >
                                     Estación de carga
@@ -810,56 +953,10 @@ const HomePage = (): React.ReactElement => {
                         sx={{
                             minWidth: 0,
                             display: "grid",
-                            gridTemplateRows: "40px 68px 1fr",
+                            gridTemplateRows: "82px 68px",
                             gap: .7,
                         }}
                     >
-                        <Box
-                            sx={{
-                                display: "flex",
-                                gap: .4,
-                                p: .4,
-                                borderRadius: "13px",
-                                background:
-                                    "rgba(3,10,18,.48)",
-                            }}
-                        >
-                            {[
-                                "Limpieza rápida",
-                                "Habitaciones",
-                                "Zona",
-                                "Personalizada",
-                            ].map((item, index) => (
-                                <Button
-                                    key={item}
-                                    sx={{
-                                        flex: 1,
-                                        minHeight: 39,
-                                        borderRadius: "10px",
-                                        color:
-                                            index === 0 ?
-                                                "#fff" :
-                                                "#c5d2e2",
-                                        textTransform: "none",
-                                        fontWeight:
-                                            index === 0 ?
-                                                750 :
-                                                500,
-                                        background:
-                                            index === 0 ?
-                                                "linear-gradient(90deg,#287fff,#1964cf)" :
-                                                "transparent",
-                                        boxShadow:
-                                            index === 0 ?
-                                                "0 5px 18px rgba(35,125,255,.22)" :
-                                                "none",
-                                    }}
-                                >
-                                    {item}
-                                </Button>
-                            ))}
-                        </Box>
-
                         <Box
                             sx={{
                                 display: "grid",
@@ -871,50 +968,296 @@ const HomePage = (): React.ReactElement => {
                             {[
                                 {
                                     label: "Aspirar",
-                                    icon: <CleaningIcon />,
+                                    mode: "vacuum" as const,
+                                    icon: (
+                                        <Box
+                                            sx={{
+                                                width: 32,
+                                                height: 32,
+                                                display: "flex",
+                                                alignItems: "center",
+                                                justifyContent: "center",
+                                                color: "#dce8f7",
+                                            }}
+                                        >
+                                            <svg
+                                                width="30"
+                                                height="30"
+                                                viewBox="0 0 30 30"
+                                                fill="none"
+                                            >
+                                                <circle
+                                                    cx="15"
+                                                    cy="15"
+                                                    r="3"
+                                                    fill="currentColor"
+                                                />
+                                                <path
+                                                    d="M15 3C18 7 18 10 15 13C12 10 12 7 15 3Z"
+                                                    fill="currentColor"
+                                                />
+                                                <path
+                                                    d="M27 15C23 18 20 18 17 15C20 12 23 12 27 15Z"
+                                                    fill="currentColor"
+                                                />
+                                                <path
+                                                    d="M15 27C12 23 12 20 15 17C18 20 18 23 15 27Z"
+                                                    fill="currentColor"
+                                                />
+                                                <path
+                                                    d="M3 15C7 12 10 12 13 15C10 18 7 18 3 15Z"
+                                                    fill="currentColor"
+                                                />
+                                                <circle
+                                                    cx="8"
+                                                    cy="8"
+                                                    r="1.5"
+                                                    fill="currentColor"
+                                                />
+                                                <circle
+                                                    cx="22"
+                                                    cy="8"
+                                                    r="1.5"
+                                                    fill="currentColor"
+                                                />
+                                                <circle
+                                                    cx="8"
+                                                    cy="22"
+                                                    r="1.5"
+                                                    fill="currentColor"
+                                                />
+                                                <circle
+                                                    cx="22"
+                                                    cy="22"
+                                                    r="1.5"
+                                                    fill="currentColor"
+                                                />
+                                            </svg>
+                                        </Box>
+                                    ),
                                 },
                                 {
                                     label: "Fregar",
-                                    icon: <Box
-                                        component="span"
-                                        sx={{fontSize: 25}}
-                                    >
-                                        ◇
-                                    </Box>,
+                                    mode: "mop" as const,
+                                    icon: (
+                                        <Box
+                                            sx={{
+                                                width: 32,
+                                                height: 32,
+                                                display: "flex",
+                                                alignItems: "center",
+                                                justifyContent: "center",
+                                            }}
+                                        >
+                                            <svg
+                                                width="32"
+                                                height="32"
+                                                viewBox="0 0 32 32"
+                                                fill="none"
+                                            >
+                                                <path
+                                                    d="M16 3C16 3 8 12 8 18C8 23 11.5 27 16 27C20.5 27 24 23 24 18C24 12 16 3 16 3Z"
+                                                    fill="#38bdf8"
+                                                />
+                                                <path
+                                                    d="M10 20H22"
+                                                    stroke="#e5f4ff"
+                                                    strokeWidth="2.2"
+                                                    strokeLinecap="round"
+                                                />
+                                                <path
+                                                    d="M8 23H24"
+                                                    stroke="#e5f4ff"
+                                                    strokeWidth="2.2"
+                                                    strokeLinecap="round"
+                                                />
+                                                <circle
+                                                    cx="12"
+                                                    cy="27.5"
+                                                    r="1"
+                                                    fill="#38bdf8"
+                                                />
+                                                <circle
+                                                    cx="20"
+                                                    cy="27.5"
+                                                    r="1"
+                                                    fill="#38bdf8"
+                                                />
+                                            </svg>
+                                        </Box>
+                                    ),
                                 },
                                 {
                                     label: "Aspirar + fregar",
-                                    icon: <CleaningIcon />,
+                                    mode: "vacuum_and_mop" as const,
+                                    icon: (
+                                        <Box
+                                            sx={{
+                                                width: 42,
+                                                height: 32,
+                                                display: "flex",
+                                                alignItems: "center",
+                                                justifyContent: "center",
+                                            }}
+                                        >
+                                            <svg
+                                                width="42"
+                                                height="32"
+                                                viewBox="0 0 42 32"
+                                                fill="none"
+                                            >
+                                                <circle
+                                                    cx="10"
+                                                    cy="16"
+                                                    r="3"
+                                                    fill="#e5edf7"
+                                                />
+                                                <path
+                                                    d="M10 4C13 8 13 11 10 13C7 11 7 8 10 4Z"
+                                                    fill="#e5edf7"
+                                                />
+                                                <path
+                                                    d="M10 28C7 24 7 21 10 19C13 21 13 24 10 28Z"
+                                                    fill="#e5edf7"
+                                                />
+                                                <path
+                                                    d="M2 16C6 13 9 13 11 16C9 19 6 19 2 16Z"
+                                                    fill="#e5edf7"
+                                                />
+                                                <path
+                                                    d="M18 16H25"
+                                                    stroke="#7dd3fc"
+                                                    strokeWidth="2"
+                                                    strokeLinecap="round"
+                                                />
+                                                <path
+                                                    d="M29 4C29 4 22 12 22 18C22 22 25 25 29 25C33 25 36 22 36 18C36 12 29 4 29 4Z"
+                                                    fill="#38bdf8"
+                                                />
+                                                <path
+                                                    d="M24 21H34"
+                                                    stroke="#e5f4ff"
+                                                    strokeWidth="1.8"
+                                                    strokeLinecap="round"
+                                                />
+                                            </svg>
+                                        </Box>
+                                    ),
                                 },
                                 {
-                                    label: "Solo habitaciones",
-                                    icon: <RoomsIcon />,
+                                    label: "Aspirar y después fregar",
+                                    mode: "vacuum_then_mop" as const,
+                                    icon: (
+                                        <Box
+                                            sx={{
+                                                width: 52,
+                                                height: 32,
+                                                display: "flex",
+                                                alignItems: "center",
+                                                justifyContent: "center",
+                                            }}
+                                        >
+                                            <svg
+                                                width="52"
+                                                height="32"
+                                                viewBox="0 0 52 32"
+                                                fill="none"
+                                            >
+                                                <circle
+                                                    cx="8"
+                                                    cy="16"
+                                                    r="2.7"
+                                                    fill="#e5edf7"
+                                                />
+                                                <path
+                                                    d="M8 5C11 9 11 11 8 13C5 11 5 9 8 5Z"
+                                                    fill="#e5edf7"
+                                                />
+                                                <path
+                                                    d="M8 27C5 23 5 21 8 19C11 21 11 23 8 27Z"
+                                                    fill="#e5edf7"
+                                                />
+                                                <path
+                                                    d="M1 16C4 13 6 13 10 16C6 19 4 19 1 16Z"
+                                                    fill="#e5edf7"
+                                                />
+                                                <path
+                                                    d="M16 16H27"
+                                                    stroke="#7dd3fc"
+                                                    strokeWidth="2"
+                                                    strokeLinecap="round"
+                                                />
+                                                <path
+                                                    d="M24 12L28 16L24 20"
+                                                    stroke="#7dd3fc"
+                                                    strokeWidth="2"
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                />
+                                                <path
+                                                    d="M38 5C38 5 32 12 32 17C32 21 34.5 24 38 24C41.5 24 44 21 44 17C44 12 38 5 38 5Z"
+                                                    fill="#38bdf8"
+                                                />
+                                                <path
+                                                    d="M34 20H42"
+                                                    stroke="#e5f4ff"
+                                                    strokeWidth="1.7"
+                                                    strokeLinecap="round"
+                                                />
+                                            </svg>
+                                        </Box>
+                                    ),
                                 },
-                            ].map((item, index) => (
+                            ].map((item) => (
                                 <Button
                                     key={item.label}
+                                    disabled={
+                                        !operationModeControl ||
+                                        operationModePending
+                                    }
+                                    onClick={() => {
+                                        selectOperationMode(item.mode);
+                                        playX40ControlVoice(
+                                            item.mode,
+                                            Capability.OperationModeControl
+                                        );
+                                    }}
                                     sx={{
                                         minHeight: 72,
                                         borderRadius: "14px",
                                         flexDirection: "column",
                                         gap: .35,
-                                        color:
-                                            index === 2 ?
-                                                "#fff" :
-                                                "#d2ddec",
                                         textTransform: "none",
                                         fontSize: 12,
                                         fontWeight: 650,
-                                        border:
+                                        border: currentOperationMode === item.mode ?
+                                            "1px solid rgba(55,150,255,.85)" :
                                             "1px solid rgba(100,145,200,.20)",
-                                        background:
-                                            index === 2 ?
-                                                "linear-gradient(145deg,#247fff,#1557b8)" :
-                                                "rgba(15,29,46,.64)",
-                                        boxShadow:
-                                            index === 2 ?
-                                                "0 6px 24px rgba(25,120,255,.25)" :
-                                                "none",
+                                        background: currentOperationMode === item.mode ?
+                                            "linear-gradient(145deg, rgba(36,127,255,.42), rgba(21,87,184,.34))" :
+                                            "rgba(15,29,46,.64)",
+                                        color: currentOperationMode === item.mode ?
+                                            "#ffffff" :
+                                            "#d2ddec",
+                                        boxShadow: currentOperationMode === item.mode ?
+                                            "0 0 18px rgba(36,127,255,.18), inset 0 0 18px rgba(36,127,255,.08)" :
+                                            "none",
+                                        transition: "all .18s ease",
+                                        "&:hover": {
+                                            background:
+                                                "linear-gradient(145deg, rgba(36,127,255,.32), rgba(21,87,184,.28))",
+                                            borderColor:
+                                                "rgba(80,150,255,.40)",
+                                            color: "#fff",
+                                        },
+                                        "&:active": {
+                                            transform: "scale(.97)",
+                                        },
+                                        "&.Mui-disabled": {
+                                            opacity: operationModePending ?
+                                                .55 :
+                                                .35,
+                                        },
                                     }}
                                 >
                                     {item.icon}
@@ -926,15 +1269,10 @@ const HomePage = (): React.ReactElement => {
                         <Box
                             sx={{
                                 display: "flex",
-                                gap: .6,
-                                "& > *": {
-                                    flex: 1,
-                                },
-                                "& .MuiPaper-root": {
-                                    background:
-                                        "rgba(8,18,30,.35) !important",
-                                    boxShadow: "none !important",
-                                },
+                                flexDirection: "column",
+                                gap: .15,
+                                px: .8,
+                                alignItems: "stretch",
                             }}
                         >
                             {fanSpeedControl && (
@@ -943,15 +1281,6 @@ const HomePage = (): React.ReactElement => {
                                         Capability.FanSpeedControl
                                     }
                                     label="Succión"
-                                />
-                            )}
-
-                            {operationModeControl && (
-                                <CompactPresetControl
-                                    capability={
-                                        Capability.OperationModeControl
-                                    }
-                                    label="Modo"
                                 />
                             )}
 

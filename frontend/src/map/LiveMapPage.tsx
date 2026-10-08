@@ -15,7 +15,7 @@ const Container = styled(Box)({
     alignItems: "center",
 });
 
-const LiveMapPage = (props: Record<string, never> ): React.ReactElement => {
+const LiveMapPage = (): React.ReactElement => {
     const queryClient = useQueryClient();
     const {
         data: mapData,

@@ -27,8 +27,8 @@ interface LiveMapProps extends MapProps {
         [Capability.MapSegmentation]: boolean,
         [Capability.ZoneCleaning]: boolean,
         [Capability.GoToLocation]: boolean
-    }
-}
+    },
+ }
 
 interface LiveMapState extends MapState {
     mode: LiveMapMode,
@@ -79,6 +79,44 @@ class LiveMap extends BaseMap<LiveMapProps, LiveMapState> {
             zones: [],
             goToTarget: undefined
         };
+    }
+
+    public setMapMode(newMode: LiveMapMode): void {
+        this.structureManager.getMapStructures().forEach(s => {
+            if (s.type === SegmentLabelMapStructure.TYPE) {
+                const label = s as SegmentLabelMapStructure;
+                label.selected = false;
+            }
+        });
+
+        this.structureManager.getClientStructures().forEach(s => {
+            if (s.type === GoToTargetClientStructure.TYPE) {
+                this.structureManager.removeClientStructure(s);
+            }
+
+            if (s.type === ZoneClientStructure.TYPE) {
+                this.structureManager.removeClientStructure(s);
+            }
+        });
+
+        try {
+            window.localStorage.setItem(
+                LIVE_MAP_MODE_LOCAL_STORAGE_KEY,
+                newMode
+            );
+        } catch (e) {
+            // Ignore localStorage failures
+        }
+
+        this.setState({
+            mode: newMode,
+            selectedSegmentIds: [],
+            zones: [],
+            goToTarget: undefined
+        }, () => {
+            this.redrawLayers();
+            this.draw();
+        });
     }
 
     protected updateState() : void {
@@ -159,7 +197,10 @@ class LiveMap extends BaseMap<LiveMapProps, LiveMapState> {
         super.componentDidMount();
     }
 
-    componentDidUpdate(prevProps: Readonly<MapProps>, prevState: Readonly<MapState>): void {
+    componentDidUpdate(
+        prevProps: Readonly<LiveMapProps>,
+        prevState: Readonly<LiveMapState>
+    ): void {
         super.componentDidUpdate(prevProps, prevState);
 
         if (
@@ -241,37 +282,7 @@ class LiveMap extends BaseMap<LiveMapProps, LiveMapState> {
                         supportedModes={this.supportedModes}
                         currentMode={this.state.mode}
                         setMode={(newMode) => {
-                            this.structureManager.getMapStructures().forEach(s => {
-                                if (s.type === SegmentLabelMapStructure.TYPE) {
-                                    const label = s as SegmentLabelMapStructure;
-
-                                    label.selected = false;
-                                }
-                            });
-
-                            this.structureManager.getClientStructures().forEach(s => {
-                                if (s.type === GoToTargetClientStructure.TYPE) {
-                                    this.structureManager.removeClientStructure(s);
-                                }
-
-                                if (s.type === ZoneClientStructure.TYPE) {
-                                    this.structureManager.removeClientStructure(s);
-                                }
-                            });
-
-                            this.updateState();
-
-                            this.redrawLayers();
-
-                            this.setState({
-                                mode: newMode
-                            });
-
-                            try {
-                                window.localStorage.setItem(LIVE_MAP_MODE_LOCAL_STORAGE_KEY, newMode);
-                            } catch (e) {
-                                /* intentional */
-                            }
+                            this.setMapMode(newMode);
                         }}
                     />
                     }

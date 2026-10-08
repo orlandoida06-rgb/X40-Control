@@ -5,6 +5,7 @@ ROBOT="${1:-192.168.1.33}"
 KEY="${2:-$HOME/Documents/j69495894cbde7.id_rsa}"
 
 BIN="$(pwd)/build/aarch64/valetudo"
+OTA_SCRIPT="$(pwd)/ota/update.sh"
 REMOTE="/data/valetudo"
 NEW="/data/valetudo.new"
 
@@ -143,6 +144,19 @@ cat "$BIN" | $SSH root@"$ROBOT" "cat > '$NEW'"
 $SSH root@"$ROBOT" "chmod 755 '$NEW'"
 
 echo "[OK] Binario copiado"
+echo
+
+echo "[4b/6] Instalando instalador OTA..."
+
+if [ ! -f "$OTA_SCRIPT" ]; then
+    echo "[ERROR] No existe $OTA_SCRIPT"
+    exit 1
+fi
+
+cat "$OTA_SCRIPT" | $SSH root@"$ROBOT" "cat > /data/ota/update.sh"
+$SSH root@"$ROBOT" "chmod 755 /data/ota/update.sh"
+
+echo "[OK] /data/ota/update.sh instalado"
 echo
 
 echo "[5/6] Instalando y lanzando..."

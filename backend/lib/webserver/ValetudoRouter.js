@@ -1,5 +1,6 @@
 const express = require("express");
 const fs = require("fs");
+const path = require("path");
 const nestedProperty = require("nested-property");
 const RateLimit = require("express-rate-limit");
 const {execFile} = require("child_process");
@@ -25,6 +26,15 @@ class ValetudoRouter {
         this.validator = options.validator;
         this.x40ControlOTAUpdateRunning = false;
 
+        // ============================================================
+        // X40-Control OTA bootstrap
+        //
+        // update.sh se empaqueta dentro del binario mediante pkg.
+        // Si /data/ota/update.sh desaparece tras un reset/reinicio,
+        // se restaura automáticamente antes de utilizar la OTA.
+        // ============================================================
+        this.ensureX40ControlOTAInstaller();
+
         this.limiter = RateLimit.rateLimit({
             windowMs: 30*1000,
             max: 30,
@@ -35,6 +45,45 @@ class ValetudoRouter {
         this.initSSE();
     }
 
+
+    ensureX40ControlOTAInstaller() {
+        const otaDir = "/data/ota";
+        const target = path.join(otaDir, "update.sh");
+        const packagedInstaller = path.resolve(
+            __dirname,
+            "../../../ota/update.sh"
+        );
+
+        try {
+            fs.mkdirSync(otaDir, {recursive: true});
+
+            if (fs.existsSync(target)) {
+                fs.chmodSync(target, 0o755);
+                return;
+            }
+
+            if (!fs.existsSync(packagedInstaller)) {
+                Logger.warn(
+                    "X40ControlOTA: no se encontró el update.sh empaquetado",
+                    {packagedInstaller}
+                );
+                return;
+            }
+
+            fs.copyFileSync(packagedInstaller, target);
+            fs.chmodSync(target, 0o755);
+
+            Logger.info(
+                "X40ControlOTA: update.sh restaurado automáticamente",
+                {target}
+            );
+        } catch (err) {
+            Logger.warn(
+                "X40ControlOTA: no se pudo restaurar update.sh",
+                {message: err.message}
+            );
+        }
+    }
 
     initRoutes() {
         this.router.get("/", (req, res) => {
@@ -585,12 +634,14 @@ class ValetudoRouter {
                 });
             }
 
+            this.ensureX40ControlOTAInstaller();
+
             const updateScript = "/data/ota/update.sh";
 
             if (!fs.existsSync(updateScript)) {
-                return res.status(404).json({
+                return res.status(500).json({
                     success: false,
-                    error: "No se encontró /data/ota/update.sh"
+                    error: "No se pudo preparar /data/ota/update.sh"
                 });
             }
 

@@ -239,7 +239,6 @@ const DockComponents = ({
     }, [components, palette]);
 
     const isOk = statusColor === palette.green;
-    const [expanded, setExpanded] = React.useState<boolean>(!isOk);
 
     return (
         <Paper
@@ -247,77 +246,155 @@ const DockComponents = ({
             sx={{
                 mt: 1,
                 mb: 1,
-                p: 1,
+                p: 1.25,
                 borderRadius: "14px",
-                backgroundColor: "transparent",
-                borderColor: "divider",
+                backgroundColor: "rgba(255,255,255,.015)",
+                borderColor: "rgba(110,155,215,.16)",
             }}
         >
-            <Grid2
-                container
-                alignItems="center"
-                onClick={() => setExpanded(!expanded)}
+            <Box
                 sx={{
-                    cursor: "pointer",
-                    minHeight: "34px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    mb: 1.2,
                 }}
             >
-                <Grid2 sx={{flexGrow: 1}}>
-                    <Typography
-                        variant="subtitle2"
-                        sx={{
-                            fontWeight: 600,
-                            ml: 0.5,
-                        }}
-                    >
-                        Componentes
-                    </Typography>
-                </Grid2>
+                <Typography
+                    variant="subtitle2"
+                    sx={{
+                        fontWeight: 800,
+                        ml: 0.5,
+                        color: "text.primary",
+                    }}
+                >
+                    Componentes
+                </Typography>
 
-                <Grid2
+                <Box
                     sx={{
                         display: "flex",
                         alignItems: "center",
+                        gap: 0.6,
+                        mr: 0.5,
                     }}
                 >
+                    <Box
+                        sx={{
+                            width: 7,
+                            height: 7,
+                            borderRadius: "50%",
+                            backgroundColor: statusColor,
+                            boxShadow: `0 0 8px ${statusColor}`,
+                        }}
+                    />
+
                     <Typography
                         variant="caption"
                         sx={{
                             color: statusColor,
-                            fontWeight: 700,
-                            mr: 1,
+                            fontWeight: 800,
+                            letterSpacing: ".04em",
                         }}
                     >
-                        {isOk ? "OK" : "COMPROBAR"}
+                        {isOk ? "TODO OK" : "COMPROBAR"}
                     </Typography>
-
-                    <Icon
-                        component={
-                            expanded ?
-                                CloseIcon :
-                                OpenIcon
-                        }
-                    />
-                </Grid2>
-            </Grid2>
+                </Box>
+            </Box>
 
             <Box
                 sx={{
-                    display: expanded ? "block" : "none",
-                    pt: 1.5,
+                    display: "grid",
+                    gridTemplateColumns: {
+                        xs: "repeat(2, minmax(0, 1fr))",
+                        sm: "repeat(4, minmax(0, 1fr))",
+                    },
+                    gap: 0.8,
                 }}
             >
-                <Grid2 container spacing={1}>
-                    {components.map(component => (
-                        <DockComponentTile
-                            key={component.type}
-                            label={component.label}
-                            icon={component.icon}
-                            statusText={component.statusText}
-                            statusColor={component.statusColor}
-                        />
-                    ))}
-                </Grid2>
+                {components.map(component => (
+                    <Box
+                        key={component.type}
+                        sx={{
+                            minWidth: 0,
+                            minHeight: 78,
+                            p: 1,
+                            borderRadius: "11px",
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            background:
+                                "linear-gradient(145deg, rgba(19,34,53,.72), rgba(10,21,35,.72))",
+                            border:
+                                "1px solid rgba(110,155,215,.13)",
+                        }}
+                    >
+                        <Box
+                            sx={{
+                                width: 34,
+                                height: 34,
+                                borderRadius: "10px",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                mb: 0.7,
+                                background:
+                                    "rgba(255,255,255,.045)",
+                            }}
+                        >
+                            <component.icon
+                                sx={{
+                                    fontSize: 22,
+                                }}
+                            />
+                        </Box>
+
+                        <Typography
+                            sx={{
+                                fontSize: 10.5,
+                                lineHeight: 1.15,
+                                fontWeight: 700,
+                                textAlign: "center",
+                                color: "text.primary",
+                                minHeight: 24,
+                                display: "flex",
+                                alignItems: "center",
+                            }}
+                        >
+                            {component.label}
+                        </Typography>
+
+                        <Box
+                            sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 0.45,
+                                mt: 0.45,
+                            }}
+                        >
+                            <Box
+                                sx={{
+                                    width: 6,
+                                    height: 6,
+                                    borderRadius: "50%",
+                                    backgroundColor:
+                                        component.statusColor,
+                                }}
+                            />
+
+                            <Typography
+                                sx={{
+                                    fontSize: 10,
+                                    fontWeight: 800,
+                                    color: component.statusColor,
+                                }}
+                            >
+                                {component.statusText}
+                            </Typography>
+                        </Box>
+                    </Box>
+                ))}
             </Box>
         </Paper>
     );
