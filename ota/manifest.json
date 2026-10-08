@@ -1,19 +1,16 @@
 {
   "product": "X40Control",
-  "version": "2026.10.07.57",
+  "version": "2026.10.08.57",
   "channel": "stable",
   "asset": "valetudo",
-  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.10.07.57/valetudo",
-  "sha256": "82f5cf9c40e88d8c66bda2caad07065c9198e43fe4a8fc1bff1914909eaf8fe0",
-  "size": 41695687,
-  "voices_url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.10.06.54/X40-Control-voices.tar.gz",
-  "voices_sha256": "bb71d527b4dcd87b686649b8434e39651c29d373c0d836b825d78d8e5124e7ec",
-  "voices_size": 535519,
+  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.10.08.57/valetudo",
+  "sha256": "dff01aed6758ba4486e296065d622cfa885297bd119d7959fa511c3adf69cb22",
+  "size": 36958362,
+  "voices_url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.10.08.57/X40-Control-voices.tar.gz",
+  "voices_sha256": "d242dd791ca39aa6711a4ece0bfdb13bf52b6093174af92c3edf8320833947fc",
+  "voices_size": 535518,
   "requires_reboot": true,
   "changelog": [
-    "Nuevo dashboard X40-Control",
-    "Rediseño visual de la pantalla principal",
-    "Limpieza de la barra lateral",
-    "Compilación completa X40-Control"
+    "feat: polish X40-Control dashboard and OTA persistence"
   ]
 }
