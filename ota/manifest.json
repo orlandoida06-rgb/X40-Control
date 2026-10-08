@@ -1,16 +1,16 @@
 {
   "product": "X40Control",
-  "version": "2026.10.08.58",
+  "version": "2026.10.08.59",
   "channel": "stable",
   "asset": "valetudo",
-  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.10.08.58/valetudo",
-  "sha256": "1c9194bf9ef67b84e586bee974ccc6c0df52aacbe3fd106cbc3d3ae74c1d8de7",
-  "size": 36958987,
-  "voices_url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.10.08.58/X40-Control-voices.tar.gz",
-  "voices_sha256": "4867f5fb0541eaffd613488cb35e03af93fc1be3ce412adf5aba611c8e2985c0",
-  "voices_size": 535520,
+  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.10.08.59/valetudo",
+  "sha256": "671c78c17c51eda5923cf346fb6ba41f90f594f3a43568c1980372986f77c24a",
+  "size": 36958994,
+  "voices_url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.10.08.59/X40-Control-voices.tar.gz",
+  "voices_sha256": "c34be632735f5fe7574de8b0bb090874927372a92921b6a4ca7016f49b5a5f51",
+  "voices_size": 535517,
   "requires_reboot": true,
   "changelog": [
-    "feat: mejorar interfaz X40-Control en móvil y splash"
+    "fix: usar binario aarch64 en OTA del X40"
   ]
 }
