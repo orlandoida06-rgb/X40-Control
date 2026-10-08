@@ -65,8 +65,8 @@ jobs:
         run: |
           set -e
 
-          SHA256="$(sha256sum ./build/armv7/valetudo | awk '{print $1}')"
-          SIZE="$(stat -c%s ./build/armv7/valetudo)"
+          SHA256="$(sha256sum ./build/aarch64/valetudo | awk '{print $1}')"
+          SIZE="$(stat -c%s ./build/aarch64/valetudo)"
 
           echo "sha256=${SHA256}" >> "$GITHUB_OUTPUT"
           echo "size=${SIZE}" >> "$GITHUB_OUTPUT"
