@@ -94,7 +94,7 @@ jobs:
             --title "X40-Control ${VERSION}" \
             --notes-file /tmp/release-notes.md
 
-          cp ./build/armv7/valetudo /tmp/valetudo
+          cp ./build/aarch64/valetudo /tmp/valetudo
           cp ./build/armv7/valetudo-lowmem /tmp/valetudo-armv7-lowmem
           cp ./build/aarch64/valetudo /tmp/valetudo-aarch64
           cp ./build/armv7/valetudo.upx /tmp/valetudo-armv7.upx
