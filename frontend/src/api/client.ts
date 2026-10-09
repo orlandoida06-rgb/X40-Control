@@ -465,7 +465,7 @@ export const sendDismissWelcomeDialogAction = async (): Promise<void> => {
 
 export const sendX40ControlRebootAction = async (): Promise<void> => {
     await valetudoAPI
-        .post("/x40-control/reboot")
+        .post("/valetudo/x40-control/reboot")
         .then(({status}) => {
             if (status !== 200) {
                 throw new Error("Could not reboot robot.");
