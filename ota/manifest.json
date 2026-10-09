@@ -1,16 +1,16 @@
 {
   "product": "X40Control",
-  "version": "2026.10.08.60",
+  "version": "2026.10.09.61",
   "channel": "stable",
   "asset": "valetudo",
-  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.10.08.60/valetudo",
-  "sha256": "2c13d2ed40dc141989cb7c9f5a0cd8848c46ab377bd5c512062b00165365d301",
-  "size": 41702533,
-  "voices_url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.10.08.60/X40-Control-voices.tar.gz",
-  "voices_sha256": "39ce657a22a5f51dc762148f39668f8b22345b72e0aefb499db098d872aea09a",
-  "voices_size": 535520,
+  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.10.09.61/valetudo",
+  "sha256": "2dddcfcc8fb08d46e8a1c2646e50897a53dbc50bede720a89f4b1d3c7031694e",
+  "size": 41702339,
+  "voices_url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.10.09.61/X40-Control-voices.tar.gz",
+  "voices_sha256": "bbfdf0fa2723c11455e66bc396799e90618ac8f3ba0bc5e390e5f91b377f32ab",
+  "voices_size": 535516,
   "requires_reboot": true,
   "changelog": [
-    "fix: calcular SHA de OTA desde binario aarch64"
+    "fix: corregir endpoint de reinicio X40-Control"
   ]
 }
