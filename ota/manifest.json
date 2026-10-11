@@ -1,16 +1,16 @@
 {
   "product": "X40Control",
-  "version": "2026.10.09.61",
+  "version": "2026.10.11.62",
   "channel": "stable",
   "asset": "valetudo",
-  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.10.09.61/valetudo",
-  "sha256": "2dddcfcc8fb08d46e8a1c2646e50897a53dbc50bede720a89f4b1d3c7031694e",
-  "size": 41702339,
-  "voices_url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.10.09.61/X40-Control-voices.tar.gz",
-  "voices_sha256": "bbfdf0fa2723c11455e66bc396799e90618ac8f3ba0bc5e390e5f91b377f32ab",
+  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.10.11.62/valetudo",
+  "sha256": "81092b577f472771291d86c031aafbc2e6ee9ebf2b206d47e1ef1a5e051fa47a",
+  "size": 41706901,
+  "voices_url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.10.11.62/X40-Control-voices.tar.gz",
+  "voices_sha256": "160f238e37cd1e90d434475656499bfa7ababe2a3ed3599547e67abf0402155d",
   "voices_size": 535516,
   "requires_reboot": true,
   "changelog": [
-    "fix: corregir endpoint de reinicio X40-Control"
+    "feat: improve connectivity and clean Tailscale warnings"
   ]
 }
