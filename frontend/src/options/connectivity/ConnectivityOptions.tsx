@@ -6,6 +6,7 @@ import {MQTTIcon} from "../../components/CustomIcons";
 import {
     AccessTime as NTPIcon,
     VpnKey as AuthIcon,
+    VpnLock as TailscaleIcon,
     Wifi as WifiIcon,
     AutoFixHigh as NetworkAdvertisementIcon
 } from "@mui/icons-material";
@@ -44,6 +45,16 @@ const ConnectivityOptions = (): React.ReactElement => {
                 primaryLabel="Conectividad MQTT"
                 secondaryLabel="Conectar Valetudo a tu servidor MQTT"
                 icon={<MQTTIcon/>}
+            />
+        );
+
+        items.push(
+            <LinkListMenuItem
+                key="tailscaleConnectivity"
+                url="/options/connectivity/tailscale"
+                primaryLabel="Conectividad Tailscale"
+                secondaryLabel="Instalar y gestionar la conexión VPN privada"
+                icon={<TailscaleIcon/>}
             />
         );
 

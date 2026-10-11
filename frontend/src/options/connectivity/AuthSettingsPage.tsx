@@ -99,7 +99,7 @@ const AuthSettings = (): React.ReactElement => {
                             endAdornment={
                                 <InputAdornment position="end">
                                     <IconButton
-                                        aria-label="toggle password visibility"
+                                        aria-label="Mostrar u ocultar contraseña"
                                         onClick={() => {
                                             setShowContraseñaAsPlain(!showContraseñaAsPlain);
                                         }}
@@ -128,16 +128,16 @@ const AuthSettings = (): React.ReactElement => {
                 }}
             >
                 <Typography color="info">
-                    Valetudo will by default try to block access from public-routable IP añadirresses
-                    for your safety and convenience.
+                    De forma predeterminada, Valetudo intenta bloquear el acceso desde direcciones IP públicas
+                    para proteger tu red.
                     <br/>
-                    If you want to allow external access to your Valetudo instance, consider using a VPN such as
-                    WireGuard or OpenVPN to ensure the safety of your network.
+                    Si quieres acceder a Valetudo desde fuera de tu red, considera utilizar una VPN como
+                    WireGuard u OpenVPN para mantener tu red protegida.
                     <br/><br/>
-                    If you don&apos;t want to use a VPN, usage of a reverse proxy in front of Valetudo and all of your
-                    other IoT and network services (e.g. Home Assistant, Jellyfin) is strongly recommended.
-                    A proper Webserver (e.g. nginx, Apache) is engineered and hardened to be public-facing.
-                    Additionally, a setup like that provides you with central access logs and the ability to implement a central auth.
+                    Si no quieres utilizar una VPN, se recomienda encarecidamente colocar un proxy inverso delante de Valetudo
+                    y del resto de tus servicios de red e IoT (por ejemplo, Home Assistant o Jellyfin).
+                    Un servidor web adecuado, como nginx o Apache, está diseñado y reforzado para ofrecer acceso público.
+                    Además, esta configuración centraliza los registros de acceso y permite implementar una autenticación común.
                 </Typography>
             </InfoBox>
 
@@ -158,7 +158,7 @@ const AuthSettings = (): React.ReactElement => {
                             setConfigurationModified(false);
                         }}
                     >
-                        Guardar configuration
+                        Guardar configuración
                     </Button>
                 </Grid2>
             </Grid2>

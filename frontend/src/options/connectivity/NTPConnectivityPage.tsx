@@ -66,7 +66,7 @@ const NTPClientStatusComponent: React.FunctionComponent<{
             case "ValetudoNTPClientErrorState":
                 return (
                     <>
-                        <Typography variant="h5" color="red">Error: {status.state.type}</Typography>
+                        <Typography variant="h5" color="red">Tipo de error: {status.state.type}</Typography>
                         <Typography color="red">{status.state.message}</Typography>
                     </>
                 );
@@ -82,7 +82,7 @@ const NTPClientStatusComponent: React.FunctionComponent<{
                 return (
                     <>
                         <Typography variant="h5">Sincronización horaria correcta</Typography>
-                        <Typography>Offset: {status.state.offset} ms</Typography>
+                        <Typography>Desfase horario: {status.state.offset} ms</Typography>
                     </>
                 );
         }
@@ -200,7 +200,7 @@ const NTPConnectivity = (): React.ReactElement => {
                 <Grid2 style={{flexGrow: 1}}>
                     <TextField
                         style={{width: "100%"}}
-                        label="Port"
+                        label="Puerto"
                         value={port}
                         disabled={!enabled}
                         type="number"
@@ -254,8 +254,8 @@ const NTPConnectivity = (): React.ReactElement => {
                 }}
             >
                 <Typography color="info">
-                    Valetudo needs a synchronized clock for timers to work and the log timestamps to make sense.
-                    Additionally, anything using TLS (e.g. the inbuilt Updater) also requires the correct current time to work.
+                    Valetudo necesita que el reloj esté sincronizado para que funcionen las programaciones y las marcas de tiempo de los registros sean correctas.
+                    Además, las funciones que utilizan TLS (por ejemplo, el actualizador integrado) necesitan que la hora del sistema sea correcta.
                 </Typography>
             </InfoBox>
 
@@ -278,7 +278,7 @@ const NTPConnectivity = (): React.ReactElement => {
                             setConfigurationModified(false);
                         }}
                     >
-                        Guardar configuration
+                        Guardar configuración
                     </Button>
                 </Grid2>
             </Grid2>

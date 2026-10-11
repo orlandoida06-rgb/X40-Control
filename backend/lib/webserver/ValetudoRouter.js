@@ -1,13 +1,13 @@
 const express = require("express");
 const fs = require("fs");
-const path = require("path");
 const nestedProperty = require("nested-property");
+const path = require("path");
 const RateLimit = require("express-rate-limit");
 const {execFile} = require("child_process");
 
 const Logger = require("../Logger");
 const Tools = require("../utils/Tools");
-const {getVoicePath, isX40ControlVoice, getRoomVoicePath, getRoomVoicePathById} = require("../voice/X40ControlVoicePack");
+const {getVoicePath, isX40ControlVoice, getRoomVoicePath} = require("../voice/X40ControlVoicePack");
 const {SSEHub, SSEMiddleware} = require("./middlewares/sse");
 
 class ValetudoRouter {
@@ -65,7 +65,7 @@ class ValetudoRouter {
             if (!fs.existsSync(packagedInstaller)) {
                 Logger.warn(
                     "X40ControlOTA: no se encontró el update.sh empaquetado",
-                    {packagedInstaller}
+                    {packagedInstaller: packagedInstaller}
                 );
                 return;
             }
@@ -75,7 +75,7 @@ class ValetudoRouter {
 
             Logger.info(
                 "X40ControlOTA: update.sh restaurado automáticamente",
-                {target}
+                {target: target}
             );
         } catch (err) {
             Logger.warn(
@@ -132,6 +132,518 @@ class ValetudoRouter {
         });
 
         // ============================================================
+        // ============================================================
+        // X40-Control: estado de Tailscale (solo lectura)
+        // ============================================================
+        this.router.get("/x40-control/tailscale", (req, res) => {
+            execFile(
+                "/bin/sh",
+                ["-c", "for f in /data/tailscale/*/tailscale; do [ -x \"$f\" ] && { printf \"%s\\n\" \"$f\"; exit 0; }; done; command -v tailscale"],
+                {timeout: 3000},
+                (findError, findStdout) => {
+                    const tailscalePath = (findStdout || "").trim();
+
+                    if (findError || !tailscalePath) {
+                        return res.json({
+                            installed: false,
+                            running: false,
+                            authenticated: false,
+                            version: null,
+                            backendState: "No instalado",
+                            ips: [],
+                            hostname: null,
+                            dnsName: null,
+                            serveUrl: null,
+                            authUrl: null,
+                            health: []
+                        });
+                    }
+
+                    execFile(
+                        tailscalePath,
+                        ["--socket=/data/tailscale/tailscaled.sock", "version"],
+                        {timeout: 3000, maxBuffer: 64 * 1024},
+                        (versionError, versionStdout) => {
+                            const version = !versionError && versionStdout ?
+                                versionStdout.trim().split(/\r?\n/)[0] : null;
+
+                            execFile(
+                                tailscalePath,
+                                ["--socket=/data/tailscale/tailscaled.sock", "status", "--json"],
+                                {timeout: 5000, maxBuffer: 512 * 1024},
+                                (statusError, statusStdout, statusStderr) => {
+                                    if (statusError) {
+                                        const detail = (statusStderr || statusError.message || "").trim();
+
+                                        Logger.warn(
+                                            "X40ControlTailscale: el demonio no respondió al consultar el estado",
+                                            {
+                                                message: statusError.message,
+                                                stderr: detail
+                                            }
+                                        );
+
+                                        return res.json({
+                                            installed: true,
+                                            running: false,
+                                            authenticated: false,
+                                            version: version,
+                                            backendState: "No disponible",
+                                            ips: [],
+                                            hostname: null,
+                                            dnsName: null,
+                                            serveUrl: null,
+                                            authUrl: null,
+                                            health: [
+                                                "No se pudo consultar el estado de Tailscale.",
+                                                detail
+                                            ].filter(Boolean)
+                                        });
+                                    }
+
+                                    let status;
+
+                                    try {
+                                        status = JSON.parse(statusStdout || "");
+                                    } catch (err) {
+                                        Logger.warn(
+                                            "X40ControlTailscale: no se pudo leer el estado",
+                                            {
+                                                message: err.message,
+                                                commandError: statusError ? statusError.message : null,
+                                                stderr: statusStderr || ""
+                                            }
+                                        );
+
+                                        return res.json({
+                                            installed: true,
+                                            running: false,
+                                            authenticated: false,
+                                            version: version,
+                                            backendState: "No disponible",
+                                            ips: [],
+                                            hostname: null,
+                                            dnsName: null,
+                                            serveUrl: null,
+                                            authUrl: null,
+                                            health: [
+                                                "No se pudo consultar el estado de Tailscale."
+                                            ]
+                                        });
+                                    }
+
+                                    const self = status.Self || {};
+                                    const backendState =
+                                        status.BackendState || "Desconocido";
+                                    const running = backendState === "Running";
+
+                                    execFile(
+                                        tailscalePath,
+                                        [
+                                            "--socket=/data/tailscale/tailscaled.sock",
+                                            "serve",
+                                            "status"
+                                        ],
+                                        {timeout: 5000, maxBuffer: 64 * 1024},
+                                        (serveError, serveStdout) => {
+                                            const serveOutput = !serveError ?
+                                                (serveStdout || "").trim() : "";
+                                            const serveMatch = serveOutput.match(
+                                                /https:\/\/[^\s(]+/
+                                            );
+                                            const servesValetudo =
+                                                /proxy\s+http:\/\/127\.0\.0\.1:80/i
+                                                    .test(serveOutput);
+                                            const serveUrl =
+                                                serveMatch && servesValetudo ?
+                                                    serveMatch[0].replace(/\/$/, "") :
+                                                    null;
+
+                                            return res.json({
+                                                installed: true,
+                                                running: running,
+                                                authenticated: running && Boolean(self.ID),
+                                                version: version,
+                                                backendState: backendState,
+                                                ips: Array.isArray(status.TailscaleIPs) ?
+                                                    status.TailscaleIPs : [],
+                                                hostname: self.HostName || null,
+                                                dnsName: self.DNSName || null,
+                                                serveUrl: serveUrl,
+                                                authUrl: status.AuthURL || null,
+                                                health: Array.isArray(status.Health) ?
+                                                    status.Health : []
+                                            });
+                                        }
+                                    );
+                                }
+                            );
+                        }
+                    );
+                }
+            );
+        });
+
+        // X40-Control: acciones de Tailscale
+        this.router.post("/x40-control/tailscale/action", (req, res) => {
+            const action = req.body?.action;
+
+            if (!["install", "up", "down"].includes(action)) {
+                return res.status(400).json({
+                    error: "Acción no válida. Usa install, up o down."
+                });
+            }
+
+            const lookupCommand =
+                'if [ -x /data/tailscale/current/tailscale ]; then printf "%s\\n" /data/tailscale/current/tailscale; exit 0; fi; for f in /data/tailscale/*/tailscale; do [ -x "$f" ] && { printf "%s\\n" "$f"; exit 0; }; done; command -v tailscale';
+
+            execFile(
+                "/bin/sh",
+                ["-c", lookupCommand],
+                {timeout: 3000},
+                (findError, findStdout) => {
+                    const tailscalePath = (findStdout || "").trim();
+
+                    if (action === "install") {
+                        if (tailscalePath && !findError) {
+                            const startupScript = [
+                                "set -eu",
+                                "CLI=\"$1\"",
+                                "POSTBOOT=/data/_root_postboot.sh",
+                                "MARKER=\"# X40-Control Tailscale managed startup\"",
+                                "BIN_DIR=\"${CLI%/*}\"",
+                                "if [ \"$BIN_DIR\" != /data/tailscale/current ] && [ \"$BIN_DIR\" != /usr/bin ] && [ \"$BIN_DIR\" != /bin ]; then ln -sfn \"$BIN_DIR\" /data/tailscale/current; fi",
+                                "if [ -f \"$POSTBOOT\" ]; then",
+                                "  if ! grep -Fq \"$MARKER\" \"$POSTBOOT\"; then",
+                                "    BACKUP=\"${POSTBOOT}.before-tailscale-$(date +%Y%m%d-%H%M%S)\"",
+                                "    cp -p \"$POSTBOOT\" \"$BACKUP\"",
+                                "    printf \"\\n\" >> \"$POSTBOOT\"",
+                                "    cat >> \"$POSTBOOT\" <<\u0027TAILSCALE_POSTBOOT\u0027",
+                                "# X40-Control Tailscale managed startup",
+                                "if [ -x /data/tailscale/current/tailscaled ]; then",
+                                "    mkdir -p /data/tailscale/state",
+                                "    if ! pgrep -f 'tailscaled.*--state=/data/tailscale/state/tailscaled.state' >/dev/null 2>&1; then",
+                                "        /data/tailscale/current/tailscaled --state=/data/tailscale/state/tailscaled.state --statedir=/data/tailscale/state --socket=/data/tailscale/tailscaled.sock > /data/tailscale/tailscaled.log 2>&1 &",
+                                "    fi",
+                                "fi",
+                                "TAILSCALE_POSTBOOT",
+                                "  fi",
+                                "else",
+                                "  cat > \"$POSTBOOT\" <<\u0027TAILSCALE_POSTBOOT\u0027",
+                                "# X40-Control Tailscale managed startup",
+                                "if [ -x /data/tailscale/current/tailscaled ]; then",
+                                "    mkdir -p /data/tailscale/state",
+                                "    if ! pgrep -f 'tailscaled.*--state=/data/tailscale/state/tailscaled.state' >/dev/null 2>&1; then",
+                                "        /data/tailscale/current/tailscaled --state=/data/tailscale/state/tailscaled.state --statedir=/data/tailscale/state --socket=/data/tailscale/tailscaled.sock > /data/tailscale/tailscaled.log 2>&1 &",
+                                "    fi",
+                                "fi",
+                                "TAILSCALE_POSTBOOT",
+                                "fi",
+                                "chmod 755 \"$POSTBOOT\"",
+                                "mkdir -p /data/tailscale/state",
+                                "if ! pgrep -f 'tailscaled.*--state=/data/tailscale/state/tailscaled.state' >/dev/null 2>&1; then",
+                                "  /data/tailscale/current/tailscaled --state=/data/tailscale/state/tailscaled.state --statedir=/data/tailscale/state --socket=/data/tailscale/tailscaled.sock > /data/tailscale/tailscaled.log 2>&1 &",
+                                "fi",
+                                "i=0",
+                                "while [ \"$i\" -lt 10 ]; do",
+                                "  [ -S /data/tailscale/tailscaled.sock ] && break",
+                                "  sleep 1",
+                                "  i=$((i + 1))",
+                                "done",
+                                "if [ ! -S /data/tailscale/tailscaled.sock ]; then echo \"Binarios presentes, pero tailscaled no creó el socket.\" >&2; tail -40 /data/tailscale/tailscaled.log >&2 2>/dev/null || true; exit 1; fi",
+                                "/data/tailscale/current/tailscale --socket=/data/tailscale/tailscaled.sock status >/dev/null 2>&1 || { echo \"tailscaled no responde a status.\" >&2; tail -40 /data/tailscale/tailscaled.log >&2 2>/dev/null || true; exit 1; }",
+                                "echo \"Servicio iniciado y verificado. La VPN no se conecta automáticamente.\""
+                            ].join("\n");
+
+                            execFile(
+                                "/bin/sh",
+                                ["-c", startupScript, "tailscale-startup", tailscalePath],
+                                {timeout: 10000, maxBuffer: 64 * 1024},
+                                (startupError, startupStdout, startupStderr) => {
+                                    if (startupError) {
+                                        return res.status(500).json({
+                                            error: (startupStderr || "").trim() || startupError.message
+                                        });
+                                    }
+                                    return res.json({
+                                        message: "Tailscale ya estaba instalado. " + (startupStdout || "").trim(),
+                                        installed: true
+                                    });
+                                }
+                            );
+                            return;
+                        }
+
+                        const installScript = String.raw`
+set -eu
+BASE="https://pkgs.tailscale.com/stable"
+WORK="/data/tailscale/.install.$$"
+ARCHIVE=""
+STAGE="$WORK/extract"
+trap 'rm -rf "$WORK"' 0
+trap 'exit 1' HUP INT TERM
+
+ARCH="$(uname -m)"
+case "$ARCH" in
+    aarch64|arm64) ;;
+    *) echo "Arquitectura no compatible: $ARCH" >&2; exit 1 ;;
+esac
+
+for tool in wget tar sha256sum awk grep sed find head cp chmod ln date pgrep mv cat mkdir rm; do
+    command -v "$tool" >/dev/null 2>&1 || {
+        echo "Falta la herramienta necesaria: $tool" >&2
+        exit 1
+    }
+done
+
+mkdir -p /data/tailscale
+mkdir -p "$STAGE"
+
+wget -q -O "$WORK/index.html" "$BASE/" || {
+    echo "No se pudo consultar el catálogo oficial de Tailscale." >&2
+    exit 1
+}
+
+ARCHIVE="$(grep -Eo 'tailscale_[0-9]+\.[0-9]+\.[0-9]+_arm64\.tgz' "$WORK/index.html" | head -n 1)"
+[ -n "$ARCHIVE" ] || {
+    echo "No se encontró un paquete estable ARM64 en el catálogo oficial." >&2
+    exit 1
+}
+
+VERSION="$(printf '%s' "$ARCHIVE" | sed 's/^tailscale_//; s/_arm64\.tgz$//')"
+TARGET="/data/tailscale/tailscale_"$VERSION"_arm64"
+
+[ ! -e "$TARGET" ] || {
+    echo "Ya existe el directorio de destino $TARGET; no se sobrescribirá." >&2
+    exit 1
+}
+
+wget -q -O "$WORK/$ARCHIVE" "$BASE/$ARCHIVE" || {
+    echo "No se pudo descargar el paquete oficial." >&2
+    exit 1
+}
+wget -q -O "$WORK/checksum" "$BASE/$ARCHIVE.sha256" || {
+    echo "No se pudo descargar la suma SHA-256 oficial." >&2
+    exit 1
+}
+
+EXPECTED="$(awk 'NR==1 {print $1}' "$WORK/checksum")"
+ACTUAL="$(sha256sum "$WORK/$ARCHIVE" | awk '{print $1}')"
+[ -n "$EXPECTED" ] && [ "$EXPECTED" = "$ACTUAL" ] || {
+    echo "La validación SHA-256 ha fallado; se cancela la instalación." >&2
+    exit 1
+}
+
+tar -xzf "$WORK/$ARCHIVE" -C "$STAGE" || {
+    echo "No se pudo extraer el paquete." >&2
+    exit 1
+}
+
+CLI="$(find "$STAGE" -type f -name tailscale | head -n 1)"
+[ -n "$CLI" ] || {
+    echo "El paquete no contiene el ejecutable tailscale." >&2
+    exit 1
+}
+DIR="$(printf '%s\n' "$CLI" | sed 's#/[^/]*$##')"
+DAEMON="$DIR/tailscaled"
+[ -f "$DAEMON" ] || {
+    echo "El paquete no contiene tailscaled junto a tailscale." >&2
+    exit 1
+}
+
+mkdir "$TARGET"
+cp "$CLI" "$TARGET/tailscale"
+cp "$DAEMON" "$TARGET/tailscaled"
+chmod 755 "$TARGET/tailscale" "$TARGET/tailscaled"
+
+"$TARGET/tailscale" version >/dev/null 2>&1 || {
+    rm -rf "$TARGET"
+    echo "El ejecutable instalado no ha superado la comprobación inicial." >&2
+    exit 1
+}
+
+POSTBOOT="/data/_root_postboot.sh"
+MARKER="# X40-Control Tailscale managed startup"
+POSTBOOT_TMP="$WORK/root_postboot.new"
+
+if [ -L "$POSTBOOT" ]; then
+    echo "$POSTBOOT es un enlace simbólico; se cancela por seguridad." >&2
+    exit 1
+fi
+
+if [ -f "$POSTBOOT" ]; then
+    cp -p "$POSTBOOT" "$POSTBOOT_TMP" || {
+        echo "No se pudo preparar una copia de $POSTBOOT." >&2
+        exit 1
+    }
+else
+    : > "$POSTBOOT_TMP"
+fi
+
+if ! grep -Fq "$MARKER" "$POSTBOOT_TMP"; then
+    cat >> "$POSTBOOT_TMP" <<'TAILSCALE_POSTBOOT'
+
+# X40-Control Tailscale managed startup
+if [ -x /data/tailscale/current/tailscaled ]; then
+    mkdir -p /data/tailscale/state
+    if ! pgrep -f 'tailscaled.*--state=/data/tailscale/state/tailscaled.state' >/dev/null 2>&1; then
+        /data/tailscale/current/tailscaled \
+            --state=/data/tailscale/state/tailscaled.state \
+            --statedir=/data/tailscale/state \
+            --socket=/data/tailscale/tailscaled.sock \
+            > /data/tailscale/tailscaled.log 2>&1 &
+    fi
+fi
+TAILSCALE_POSTBOOT
+fi
+
+sh -n "$POSTBOOT_TMP" || {
+    echo "El script de arranque temporal no supera sh -n." >&2
+    exit 1
+}
+
+if [ -f "$POSTBOOT" ] && ! grep -Fq "$MARKER" "$POSTBOOT"; then
+    BACKUP="$POSTBOOT.before-tailscale-$(date +%Y%m%d-%H%M%S)"
+    cp -p "$POSTBOOT" "$BACKUP" || {
+        echo "No se pudo respaldar $POSTBOOT." >&2
+        exit 1
+    }
+    echo "Copia de seguridad: $BACKUP"
+fi
+
+chmod 755 "$POSTBOOT_TMP" || exit 1
+mv "$POSTBOOT_TMP" "$POSTBOOT" || {
+    echo "No se pudo instalar el script de arranque preparado." >&2
+    exit 1
+}
+
+ln -sfn "$TARGET" /data/tailscale/current || {
+    echo "No se pudo crear el enlace current." >&2
+    exit 1
+}
+
+mkdir -p /data/tailscale/state || {
+    echo "No se pudo crear el directorio de estado." >&2
+    exit 1
+}
+
+if ! pgrep -f 'tailscaled.*--state=/data/tailscale/state/tailscaled.state' >/dev/null 2>&1; then
+    /data/tailscale/current/tailscaled \
+        --state=/data/tailscale/state/tailscaled.state \
+        --statedir=/data/tailscale/state \
+        --socket=/data/tailscale/tailscaled.sock \
+        > /data/tailscale/tailscaled.log 2>&1 &
+fi
+
+SOCKET_OK=0
+i=0
+while [ "$i" -lt 10 ]; do
+    if [ -S /data/tailscale/tailscaled.sock ]; then
+        SOCKET_OK=1
+        break
+    fi
+    sleep 1
+    i=$((i + 1))
+done
+
+if [ "$SOCKET_OK" -ne 1 ]; then
+    echo "Los binarios se instalaron, pero tailscaled no creó el socket." >&2
+    tail -40 /data/tailscale/tailscaled.log >&2 2>/dev/null || true
+    exit 1
+fi
+
+if ! /data/tailscale/current/tailscale \
+    --socket=/data/tailscale/tailscaled.sock status >/dev/null 2>&1; then
+    echo "tailscaled creó el socket, pero no respondió a status." >&2
+    tail -40 /data/tailscale/tailscaled.log >&2 2>/dev/null || true
+    exit 1
+fi
+
+echo "Tailscale $VERSION instalado en $TARGET."
+echo "Servicio iniciado y socket verificado."
+echo "La VPN no se conecta automáticamente."
+`;
+
+                        execFile(
+                            "/bin/sh",
+                            ["-c", installScript],
+                            {timeout: 180000, maxBuffer: 128 * 1024},
+                            (installError, installStdout, installStderr) => {
+                                if (installError) {
+                                    Logger.warn(
+                                        "X40ControlTailscale: instalación fallida",
+                                        {
+                                            message: installError.message,
+                                            stderr: (installStderr || "").slice(0, 2000)
+                                        }
+                                    );
+
+                                    return res.status(500).json({
+                                        error: (installStderr || "").trim() ||
+                                            installError.message ||
+                                            "No se pudo instalar Tailscale."
+                                    });
+                                }
+
+                                return res.json({
+                                    message: (installStdout || "").trim() ||
+                                        "Binarios instalados y arranque persistente configurado. La VPN no se conecta automáticamente.",
+                                    installed: true
+                                });
+                            }
+                        );
+                        return;
+                    }
+
+                    if (findError || !tailscalePath) {
+                        return res.status(409).json({
+                            error: "No se encuentra el ejecutable de Tailscale."
+                        });
+                    }
+
+                    execFile(
+                        tailscalePath,
+                        [
+                            "--socket=/data/tailscale/tailscaled.sock",
+                            action
+                        ],
+                        {timeout: 20000, maxBuffer: 64 * 1024},
+                        (commandError, stdout, stderr) => {
+                            if (commandError) {
+                                Logger.warn(
+                                    "X40ControlTailscale: error al ejecutar una acción",
+                                    {
+                                        action: action,
+                                        message: commandError.message,
+                                        stderr: (stderr || "").slice(0, 2000)
+                                    }
+                                );
+
+                                return res.status(500).json({
+                                    error: (stderr || "").trim() ||
+                                        commandError.message ||
+                                        "No se pudo ejecutar la acción de Tailscale."
+                                });
+                            }
+
+                            if (action === "up" || action === "down") {
+                                const webserverConfig = this.config.get("webserver");
+                                webserverConfig.blockExternalAccess = action === "down";
+                                this.config.set("webserver", webserverConfig);
+                            }
+
+                            return res.json({
+                                message: action === "up" ?
+                                    "Comando de conexión ejecutado. El estado puede tardar en actualizarse." :
+                                    "Comando de desconexión ejecutado. El estado puede tardar en actualizarse.",
+                                output: (stdout || "").trim()
+                            });
+                        }
+                    );
+                }
+            );
+        });
+
         // X40-Control: voces por habitación
         // ============================================================
 
@@ -187,7 +699,7 @@ class ValetudoRouter {
 
                 this.config.set("x40Control", {
                     ...currentConfig,
-                    roomVoices
+                    roomVoices: roomVoices
                 });
 
                 res.json(roomVoices);
@@ -220,22 +732,22 @@ class ValetudoRouter {
             if (!voicePath) {
                 return res.status(400).json({
                     error: "No existe una voz para esta habitación o no hay idioma activo",
-                    segmentId,
-                    roomName
+                    segmentId: segmentId,
+                    roomName: roomName
                 });
             }
 
             if (!fs.existsSync(voicePath)) {
                 Logger.warn(
                     `${this.constructor.name}: No existe voz para habitación ${segmentId}`,
-                    {roomName, voicePath}
+                    {roomName: roomName, voicePath: voicePath}
                 );
 
                 return res.status(404).json({
                     error: "No existe voz para esta habitación",
-                    segmentId,
-                    roomName,
-                    voicePath
+                    segmentId: segmentId,
+                    roomName: roomName,
+                    voicePath: voicePath
                 });
             }
 
@@ -248,27 +760,27 @@ class ValetudoRouter {
                         Logger.warn(
                             `${this.constructor.name}: Error reproduciendo voz de habitación`,
                             {
-                                segmentId,
-                                roomName,
-                                voicePath,
+                                segmentId: segmentId,
+                                roomName: roomName,
+                                voicePath: voicePath,
                                 message: error.message,
-                                stdout,
-                                stderr
+                                stdout: stdout,
+                                stderr: stderr
                             }
                         );
 
                         return res.status(500).json({
                             error: "No se pudo reproducir la voz de habitación",
-                            segmentId,
-                            roomName
+                            segmentId: segmentId,
+                            roomName: roomName
                         });
                     }
 
                     res.json({
                         ok: true,
-                        segmentId,
-                        roomName,
-                        voicePath
+                        segmentId: segmentId,
+                        roomName: roomName,
+                        voicePath: voicePath
                     });
                 }
             );

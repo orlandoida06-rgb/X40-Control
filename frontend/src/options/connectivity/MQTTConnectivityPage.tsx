@@ -198,7 +198,7 @@ const MQTTStatusComponent: React.FunctionComponent<{
                     >
                         <CardContent>
                             <Typography variant="h6" gutterBottom>
-                                Conexión Statistics
+                                Estadísticas de conexión
                             </Typography>
                             <Divider/>
                             {getConexiónStats()}
@@ -802,11 +802,11 @@ const MQTTConnectivity = (): React.ReactElement => {
             >
                 <Typography color="info">
                     Valetudo se desarrolla y prueba con el broker MQTT Mosquitto.<br/>
-                    In an ideal world, any broker would work, but in reality, some only implement subsets of the MQTT spec.
-                    Thus, if you&apos;re experiencing any issues, try Mosquitto.
+                    En un mundo ideal, cualquier intermediario MQTT funcionaría. Sin embargo, algunos solo implementan una parte de la especificación MQTT.
+                    Por tanto, si tienes problemas, prueba a utilizar Mosquitto.
                     <br/>
-                    Another common issue are incorrectly configured ACLs. Because the MQTT v3 protocol does not provide
-                    feedback on ACL failures, Valetudo cannot report these, meaning that things fail silently.
+                    Otro problema habitual son las listas de control de acceso (ACL) mal configuradas. Como el protocolo MQTT v3 no proporciona
+                    información sobre los errores de las ACL, Valetudo no puede detectarlos ni mostrarlos, por lo que los fallos pueden producirse sin avisos.
                 </Typography>
             </InfoBox>
 
@@ -826,7 +826,7 @@ const MQTTConnectivity = (): React.ReactElement => {
                             setConfigurationModified(false);
                         }}
                     >
-                        Guardar configuration
+                        Guardar configuración
                     </Button>
                 </Grid2>
             </Grid2>

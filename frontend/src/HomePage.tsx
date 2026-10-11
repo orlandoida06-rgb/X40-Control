@@ -86,6 +86,11 @@ const navItems = [
         label: "Ajustes",
         route: "/options/robot",
     },
+    {
+        icon: <WifiIcon />,
+        label: "Conectividad",
+        route: "/options/connectivity",
+    },
 ];
 
 const NavItem = ({

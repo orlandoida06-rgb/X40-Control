@@ -212,7 +212,7 @@ const WifiConnectivity = (): React.ReactElement => {
             <Divider sx={{mt: 1}} style={{marginBottom: "1rem"}}/>
 
             <Typography variant="h6" style={{marginBottom: "0.5rem"}}>
-                Change Wi-Fi configuration
+                Cambiar la configuración de Wi-Fi
             </Typography>
 
             {
@@ -273,19 +273,19 @@ const WifiConnectivity = (): React.ReactElement => {
                     }}
                 >
                     <Typography color="info">
-                        To connect your robot to a different Wi-Fi network, you need to do a Wi-Fi reset and then configure the new one using Valetudo.
-                        For most Xiaomi-ecosystem-style robots, this means pressing and holding the two outer buttons
-                        (usually &quot;Home&quot; and &quot;Spot Clean&quot; or &quot;Home&quot; and &quot;Power&quot; if there are just two) until the robot talks to you.
+                        Para conectar el robot a otra red Wi-Fi, debes restablecer la conexión Wi-Fi y configurar la nueva red desde Valetudo.
+                        En la mayoría de los robots del ecosistema Xiaomi, debes mantener pulsados los dos botones exteriores
+                        (normalmente «Inicio» y «Limpieza localizada», o «Inicio» y «Encendido» si solo hay dos) hasta que el robot emita un mensaje de voz.
                         <br/><br/>
-                        Some supported robots may have dedicated connectivity buttons you need to press and hold.
-                        If it is anything more special than that, you will find guidance for your model of robot on the
-                        &quot;Robots compatibles&quot; en la documentación de <a style={{color: "inherit"}} href="https://valetudo.cloud" target="_blank" rel="noreferrer">valetudo.cloud</a>.<br/>
+                        Algunos robots compatibles tienen botones específicos de conectividad que debes mantener pulsados.
+                        Si el procedimiento es diferente, encontrarás instrucciones para tu modelo de robot en la sección
+                        &quot;Robots compatibles&quot; de la documentación de <a style={{color: "inherit"}} href="https://valetudo.cloud" target="_blank" rel="noreferrer">valetudo.cloud</a>.<br/>
                         Es posible que el robot incluya un manual del fabricante con instrucciones.
 
                         <br/><br/>
 
                         <strong>Nota:</strong><br/>
-                        Don&apos;t be confused by buttons labelled &quot;Restablecer&quot; close to a Wi-Fi LED.<br/>
+                        No confundas los botones etiquetados como «Restablecer» que están junto a un indicador LED de Wi-Fi.<br/>
                         Que estén cerca no significa que estén relacionados. Normalmente esos botones restablecen el robot de fábrica, que no es lo que quieres.
                     </Typography>
                 </InfoBox>
@@ -306,7 +306,7 @@ const WifiConnectivity = (): React.ReactElement => {
                                 setConfirmationDialogOpen(true);
                             }}
                         >
-                            Guardar configuration
+                            Guardar configuración
                         </Button>
                     </Grid2>
                 </Grid2>

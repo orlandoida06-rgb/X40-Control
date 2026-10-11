@@ -109,6 +109,13 @@ const menuTree: Array<MenuEntry | MenuSubEntry | MenuSubheader> = [
         menuText: "Inicio"
     },
     {
+        kind: "MenuEntry",
+        route: "/options/connectivity",
+        title: "Opciones de conectividad",
+        menuIcon: ConnectivityIcon,
+        menuText: "Conectividad"
+    },
+    {
         kind: "Subheader",
         title: "Robot",
         requiredCapabilities: {
@@ -195,13 +202,6 @@ const menuTree: Array<MenuEntry | MenuSubEntry | MenuSubheader> = [
         route: "/options/map_management/robot_coverage",
         title: "Mapa de cobertura del robot",
         parentRoute: "/options/map_management"
-    },
-    {
-        kind: "MenuEntry",
-        route: "/options/connectivity",
-        title: "Opciones de conectividad",
-        menuIcon: ConnectivityIcon,
-        menuText: "Conectividad"
     },
     {
         kind: "MenuSubEntry",
@@ -572,12 +572,22 @@ const ValetudoAppBar: React.FunctionComponent<{ paletteMode: PaletteMode, setPal
                             edge="start"
                             color="inherit"
                             aria-label="atrás"
-                            sx={{mr: 2}}
-
+                            sx={{mr: 1}}
                             component={Link}
                             to={currentMenuEntry.parentRoute}
                         >
                             <BackIcon/>
+                        </IconButton>
+                        <IconButton
+                            size="large"
+                            edge="start"
+                            color="inherit"
+                            aria-label="menu"
+                            sx={{mr: 2}}
+                            onClick={() => setDrawerOpen(true)}
+                            title="Menú"
+                        >
+                            <MenuIcon/>
                         </IconButton>
                         <Typography variant="h6" component="div" sx={{flexGrow: 1}}>
                             {pageTitle}
@@ -605,18 +615,15 @@ const ValetudoAppBar: React.FunctionComponent<{ paletteMode: PaletteMode, setPal
                 </Toolbar>
             </AppBar>
             <Toolbar/>
-            {
-                currentMenuEntry.kind !== "MenuSubEntry" &&
-                <Drawer
-                    anchor={"left"}
-                    open={drawerOpen}
-                    onClose={() => {
-                        setDrawerOpen(false);
-                    }}
-                >
-                    {drawerContent}
-                </Drawer>
-            }
+            <Drawer
+                anchor={"left"}
+                open={drawerOpen}
+                onClose={() => {
+                    setDrawerOpen(false);
+                }}
+            >
+                {drawerContent}
+            </Drawer>
         </Box>
     );
 };
