@@ -14,7 +14,6 @@ import {
     GridView as RoomsIcon,
     CropFree as ZonesIcon,
     AccessTime as ScheduleIcon,
-    History as HistoryIcon,
     Settings as SettingsIcon,
     Sensors as DockIcon,
     Wifi as WifiIcon,
@@ -70,11 +69,6 @@ const navItems = [
         icon: <ScheduleIcon />,
         label: "Programación",
         route: "/valetudo/timers",
-    },
-    {
-        icon: <HistoryIcon />,
-        label: "Historial",
-        route: "/robot/total_statistics",
     },
     {
         icon: <DockIcon />,
