@@ -339,6 +339,25 @@ class ValetudoRouter {
                                 "fi",
                                 "TAILSCALE_POSTBOOT",
                                 "fi",
+                                "SERVE_MARKER=\"# X40-Control Tailscale Serve HTTPS startup\"",
+                                "if [ -f \"$POSTBOOT\" ] && ! grep -Fq \"$SERVE_MARKER\" \"$POSTBOOT\"; then",
+                                "  SERVE_BACKUP=\"${POSTBOOT}.before-serve-$(date +%Y%m%d-%H%M%S)\"",
+                                "  cp -p \"$POSTBOOT\" \"$SERVE_BACKUP\"",
+                                "  cat >> \"$POSTBOOT\" <<'TAILSCALE_SERVE_POSTBOOT'",
+                                "# X40-Control Tailscale Serve HTTPS startup",
+                                "if [ -x /data/tailscale/current/tailscale ]; then",
+                                "    i=0",
+                                "    while [ \"$i\" -lt 20 ]; do",
+                                "        if /data/tailscale/current/tailscale --socket=/data/tailscale/tailscaled.sock status >/dev/null 2>&1; then break; fi",
+                                "        sleep 1",
+                                "        i=$((i + 1))",
+                                "    done",
+                                "    if /data/tailscale/current/tailscale --socket=/data/tailscale/tailscaled.sock status >/dev/null 2>&1; then",
+                                "        /data/tailscale/current/tailscale --socket=/data/tailscale/tailscaled.sock serve --bg --yes 80 >> /data/tailscale/tailscaled.log 2>&1 || true",
+                                "    fi",
+                                "fi",
+                                "TAILSCALE_SERVE_POSTBOOT",
+                                "fi",
                                 "chmod 755 \"$POSTBOOT\"",
                                 "mkdir -p /data/tailscale/state",
                                 "if ! pgrep -f 'tailscaled.*--state=/data/tailscale/state/tailscaled.state' >/dev/null 2>&1; then",
@@ -352,7 +371,8 @@ class ValetudoRouter {
                                 "done",
                                 "if [ ! -S /data/tailscale/tailscaled.sock ]; then echo \"Binarios presentes, pero tailscaled no creó el socket.\" >&2; tail -40 /data/tailscale/tailscaled.log >&2 2>/dev/null || true; exit 1; fi",
                                 "/data/tailscale/current/tailscale --socket=/data/tailscale/tailscaled.sock status >/dev/null 2>&1 || { echo \"tailscaled no responde a status.\" >&2; tail -40 /data/tailscale/tailscaled.log >&2 2>/dev/null || true; exit 1; }",
-                                "echo \"Servicio iniciado y verificado. La VPN no se conecta automáticamente.\""
+                                "/data/tailscale/current/tailscale --socket=/data/tailscale/tailscaled.sock serve --bg --yes 80 >> /data/tailscale/tailscaled.log 2>&1 || true",
+                                "echo \"Servicio iniciado. HTTPS se intenta activar si el robot ya está autorizado.\""
                             ].join("\n");
 
                             execFile(
@@ -497,12 +517,31 @@ fi
 TAILSCALE_POSTBOOT
 fi
 
+SERVE_MARKER="# X40-Control Tailscale Serve HTTPS startup"
+if ! grep -Fq "$SERVE_MARKER" "$POSTBOOT_TMP"; then
+    cat >> "$POSTBOOT_TMP" <<'TAILSCALE_SERVE_POSTBOOT'
+
+# X40-Control Tailscale Serve HTTPS startup
+if [ -x /data/tailscale/current/tailscale ]; then
+    i=0
+    while [ "$i" -lt 20 ]; do
+        if /data/tailscale/current/tailscale --socket=/data/tailscale/tailscaled.sock status >/dev/null 2>&1; then break; fi
+        sleep 1
+        i=$((i + 1))
+    done
+    if /data/tailscale/current/tailscale --socket=/data/tailscale/tailscaled.sock status >/dev/null 2>&1; then
+        /data/tailscale/current/tailscale --socket=/data/tailscale/tailscaled.sock serve --bg --yes 80 >> /data/tailscale/tailscaled.log 2>&1 || true
+    fi
+fi
+TAILSCALE_SERVE_POSTBOOT
+fi
+
 sh -n "$POSTBOOT_TMP" || {
     echo "El script de arranque temporal no supera sh -n." >&2
     exit 1
 }
 
-if [ -f "$POSTBOOT" ] && ! grep -Fq "$MARKER" "$POSTBOOT"; then
+if [ -f "$POSTBOOT" ] && { ! grep -Fq "$MARKER" "$POSTBOOT" || ! grep -Fq "$SERVE_MARKER" "$POSTBOOT"; }; then
     BACKUP="$POSTBOOT.before-tailscale-$(date +%Y%m%d-%H%M%S)"
     cp -p "$POSTBOOT" "$BACKUP" || {
         echo "No se pudo respaldar $POSTBOOT." >&2
@@ -561,7 +600,8 @@ fi
 
 echo "Tailscale $VERSION instalado en $TARGET."
 echo "Servicio iniciado y socket verificado."
-echo "La VPN no se conecta automáticamente."
+/data/tailscale/current/tailscale --socket=/data/tailscale/tailscaled.sock serve --bg --yes 80 >> /data/tailscale/tailscaled.log 2>&1 || true
+echo "Instalación terminada. HTTPS se activa cuando Tailscale está autorizado."
 `;
 
                         execFile(
@@ -630,6 +670,35 @@ echo "La VPN no se conecta automáticamente."
                                 const webserverConfig = this.config.get("webserver");
                                 webserverConfig.blockExternalAccess = action === "down";
                                 this.config.set("webserver", webserverConfig);
+                            }
+
+                            if (action === "up") {
+                                execFile(
+                                    tailscalePath,
+                                    [
+                                        "--socket=/data/tailscale/tailscaled.sock",
+                                        "serve",
+                                        "--bg",
+                                        "--yes",
+                                        "80"
+                                    ],
+                                    {timeout: 20000, maxBuffer: 64 * 1024},
+                                    (serveError, serveStdout, serveStderr) => {
+                                        const output = [
+                                            (stdout || "").trim(),
+                                            (serveStdout || "").trim(),
+                                            (serveStderr || "").trim()
+                                        ].filter(Boolean).join("\n");
+
+                                        return res.json({
+                                            message: serveError ?
+                                                "Conexión solicitada. Autoriza el dispositivo y vuelve a pulsar «Conectar / autorizar» para activar HTTPS." :
+                                                "Conexión ejecutada y HTTPS Serve configurado.",
+                                            output: output
+                                        });
+                                    }
+                                );
+                                return;
                             }
 
                             return res.json({
