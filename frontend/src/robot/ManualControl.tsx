@@ -190,8 +190,8 @@ const HighResolutionManualControlInternal: React.FunctionComponent = (): React.R
     const { isPending: stateLoading, isError: stateError } = useHighResolutionManualControlStateQuery();
 
     return (
-        <FullHeightGrid container direction="column">
-            <Grid2 flexGrow={1}>
+        <Box sx={{ display: "flex", flexDirection: "column", width: "100%" }}>
+            <Box sx={{ flexGrow: 1, minWidth: 0 }}>
                 <Box>
                     {stateLoading ? (
                         <Skeleton height={"12rem"} />
@@ -205,8 +205,8 @@ const HighResolutionManualControlInternal: React.FunctionComponent = (): React.R
                         </>
                     )}
                 </Box>
-            </Grid2>
-        </FullHeightGrid>
+            </Box>
+        </Box>
 
     );
 };
@@ -219,8 +219,8 @@ const ManualControlInternal: React.FunctionComponent = (): React.ReactElement =>
     const hasError = stateError || propertiesError;
 
     return (
-        <FullHeightGrid container direction="column">
-            <Grid2 flexGrow={1}>
+        <Box sx={{ display: "flex", flexDirection: "column", width: "100%" }}>
+            <Box sx={{ flexGrow: 1, minWidth: 0 }}>
                 <Box>
                     {loading ? (
                         <Skeleton height={"12rem"} />
@@ -234,13 +234,13 @@ const ManualControlInternal: React.FunctionComponent = (): React.ReactElement =>
                         </>
                     )}
                 </Box>
-            </Grid2>
-        </FullHeightGrid>
+            </Box>
+        </Box>
 
     );
 };
 
-const ManualControl = (): React.ReactElement => {
+const ManualControl = ({showCameraPreview = true}: {showCameraPreview?: boolean}): React.ReactElement => {
     const [highResSupported, standardSupported] = useCapabilitiesSupported(
         Capability.HighResolutionManualControl,
         Capability.ManualControl
@@ -279,7 +279,7 @@ const ManualControl = (): React.ReactElement => {
                 overflow: "hidden",
             }}
         >
-            {cameraEnabled && cameraProperties && (
+            {showCameraPreview && cameraEnabled && cameraProperties && (
                 <Box sx={{
                     position: "relative",
                     width: "100%",

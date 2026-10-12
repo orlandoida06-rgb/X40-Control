@@ -3,7 +3,7 @@ import {CRTCompositor, FetchSource, Player} from "jsmpeg";
 import type {JSMpegOptions} from "jsmpeg";
 import React from "react";
 import {valetudoAPIBaseURL, Capability} from "../api";
-import {useDuststreamingPropertiesQuery, useDuststreamingConfigurationQuery} from "../api";
+import {useDuststreamingPropertiesQuery} from "../api";
 import {getScaledConfusedPlaceholderDog} from "../components/res/ValetudogPlaceholder";
 import PaperContainer from "../components/PaperContainer";
 
@@ -128,13 +128,11 @@ export const DuststreamPlaceholder = ({
 
 const Duststream = (): React.ReactElement => {
     const {data: properties} = useDuststreamingPropertiesQuery();
-    const {data: configuration} = useDuststreamingConfigurationQuery();
 
-    const enabled = configuration?.enabled === true;
 
     const [isFullscreen, setIsFullscreen] = React.useState(false);
 
-    const showVideo = !!(properties && enabled && properties.duststreamerInstalled);
+    const showVideo = !!(properties && properties.duststreamerInstalled);
 
     React.useEffect(() => {
         if (!isFullscreen) {

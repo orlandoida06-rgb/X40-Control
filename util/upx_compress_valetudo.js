@@ -1,80 +1,114 @@
-/* eslint-disable */
+"use strict";
+
 const fs = require("fs");
+const path = require("path");
 const UPX = require("upx");
 
-const binaries = {
-    armv7: {
+const binaries = [
+    {
+        name: "armv7",
         base: "./build_dependencies/pkg/v3.5/built-v22.17.1-linuxstatic-armv7",
         built: "./build/armv7/valetudo",
         out: "./build/armv7/valetudo.upx",
-        upx: UPX({
-            //ultraBrute: true // Disabled for now (2022-05-07) due to performance issues with the latest upx devel
-
-            // instead of ultraBrute, this also works okay-ish
-            lzma: true,
-            best: true
-        })
     },
-    armv7_lowmem: {
+    {
+        name: "armv7_lowmem",
         base: "./build_dependencies/pkg/v3.5/built-v22.17.1-linuxstatic-armv7",
         built: "./build/armv7/valetudo-lowmem",
         out: "./build/armv7/valetudo-lowmem.upx",
-        upx: UPX({
-            //ultraBrute: true // Disabled for now (2022-05-07) due to performance issues with the latest upx devel
-
-            // instead of ultraBrute, this also works okay-ish
-            lzma: true,
-            best: true
-        })
     },
-    aarch64: {
+    {
+        name: "aarch64",
         base: "./build_dependencies/pkg/v3.5/built-v22.17.1-linuxstatic-arm64",
         built: "./build/aarch64/valetudo",
         out: "./build/aarch64/valetudo.upx",
-        upx: UPX({
-            //ultraBrute: true // Disabled for now (2022-05-07) due to performance issues with the latest upx devel
+    },
+];
 
-            // instead of ultraBrute, this also works okay-ish
-            lzma: true,
-            best: true
-        })
+const compress = UPX({lzma: true, best: true});
+
+async function main() {
+    if (process.platform !== "linux" || process.arch !== "x64") {
+        throw new Error(
+            "UPX empaquetado requiere Linux x86-64. " +
+            "Ejecuta este paso en GitHub Actions ubuntu-latest."
+        );
     }
-};
 
-/**
- * There is absolutely no error handling in here. Great :)
- *
- * Note that this only works with patched base binaries
- */
-console.log("Starting UPX compression");
+    const upxBinary = path.resolve("node_modules/upx/bin/upx-linux-amd64");
 
-Object.values(binaries).forEach(async (b,i) => {
-    console.log("Compressing " + b.built);
-    const name = Object.keys(binaries)[i];
+    if (!fs.existsSync(upxBinary)) {
+        throw new Error("No se encuentra el ejecutable UPX: " + upxBinary);
+    }
 
-    console.time(name);
+    console.log("Host de compresión: linux x64");
 
-    const baseSize = fs.readFileSync(b.base).length;
-    const built = fs.readFileSync(b.built);
+    for (const binary of binaries) {
+        const runtimeTmp = binary.out + ".runtime.tmp";
+        const outputTmp = binary.out + ".tmp";
 
-    const runtime = built.subarray(0, baseSize);
-    const payload = built.subarray(baseSize);
+        try {
+            console.log("\nComprimiendo " + binary.built);
 
-    // UPX will reject files without the executable bit on linux. Also, default mode is 666
-    fs.writeFileSync(b.out + "_runtime", runtime, {mode: 0o777});
+            const baseStat = fs.statSync(binary.base);
+            const builtStat = fs.statSync(binary.built);
 
-    const upxResult = await b.upx(b.out + "_runtime").start();
+            if (baseStat.size <= 0 || builtStat.size <= baseStat.size) {
+                throw new Error("Tamaños inesperados en " + binary.name);
+            }
 
-    console.log("Compressed " + b.built + " from " + upxResult.fileSize.before + " to " + upxResult.fileSize.after + ". Ratio: " + upxResult.ratio);
+            const built = fs.readFileSync(binary.built);
+            const runtime = built.subarray(0, baseStat.size);
+            const payload = built.subarray(baseStat.size);
 
-    const compressedRuntime = fs.readFileSync(b.out + "_runtime");
-    fs.unlinkSync(b.out + "_runtime");
+            fs.writeFileSync(runtimeTmp, runtime, {mode: 0o755});
 
-    const fullNewBinary = Buffer.concat([compressedRuntime, payload]);
+            const result = await compress(runtimeTmp).start();
+            const compressedRuntime = fs.readFileSync(runtimeTmp);
 
-    fs.writeFileSync(b.out, fullNewBinary, {mode: 0o777});
+            if (
+                compressedRuntime.length === 0 ||
+                compressedRuntime.length >= runtime.length
+            ) {
+                throw new Error(
+                    "UPX no produjo una compresión válida para " + binary.name
+                );
+            }
 
-    console.log("Successfully wrote " + b.out);
-    console.timeEnd(name);
+            const output = Buffer.concat([compressedRuntime, payload]);
+
+            fs.writeFileSync(outputTmp, output, {mode: 0o755});
+
+            if (fs.statSync(outputTmp).size <= 0) {
+                throw new Error("El resultado está vacío: " + binary.name);
+            }
+
+            // Sustituye el resultado anterior solo después de validar el nuevo.
+            fs.renameSync(outputTmp, binary.out);
+
+            console.log(
+                "Correcto: " + binary.out +
+                " (" + runtime.length + " -> " +
+                compressedRuntime.length + " bytes de runtime)"
+            );
+
+            if (result && result.ratio !== undefined) {
+                console.log("Ratio UPX: " + result.ratio);
+            }
+        } finally {
+            // Solo elimina temporales creados por esta ejecución.
+            for (const tmp of [runtimeTmp, outputTmp]) {
+                if (fs.existsSync(tmp)) {
+                    fs.unlinkSync(tmp);
+                }
+            }
+        }
+    }
+
+    console.log("\nLas tres compresiones han terminado correctamente.");
+}
+
+main().catch((error) => {
+    console.error("\nERROR DE COMPRESIÓN:", error.message);
+    process.exitCode = 1;
 });
-

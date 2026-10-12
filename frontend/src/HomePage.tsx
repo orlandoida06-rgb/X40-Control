@@ -11,10 +11,10 @@ import {
 import {
     Home as HomeIcon,
     Map as MapIcon,
+    Videocam as CameraIcon,
     GridView as RoomsIcon,
     CropFree as ZonesIcon,
     AccessTime as ScheduleIcon,
-    History as HistoryIcon,
     Settings as SettingsIcon,
     Sensors as DockIcon,
     Wifi as WifiIcon,
@@ -56,6 +56,7 @@ const glass = {
 const navItems = [
     {icon: <HomeIcon />, label: "Inicio", route: "/"},
     {icon: <MapIcon />, label: "Mapa", route: "/options/map_management"},
+    {icon: <CameraIcon />, label: "Cámara", route: "/robot/camera"},
     {
         icon: <RoomsIcon />,
         label: "Habitaciones",
@@ -70,11 +71,6 @@ const navItems = [
         icon: <ScheduleIcon />,
         label: "Programación",
         route: "/valetudo/timers",
-    },
-    {
-        icon: <HistoryIcon />,
-        label: "Historial",
-        route: "/robot/total_statistics",
     },
     {
         icon: <DockIcon />,

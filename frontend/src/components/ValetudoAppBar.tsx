@@ -42,7 +42,7 @@ import {
 } from "@mui/icons-material";
 import {Link, useLocation} from "react-router-dom";
 import ValetudoEvents from "./ValetudoEvents";
-import {Capability, useDuststreamingConfigurationQuery} from "../api";
+import {Capability} from "../api";
 import {useCapabilitiesSupported} from "../CapabilitiesProvider";
 import {
     RobotMonochromeIcon,
@@ -168,11 +168,7 @@ const menuTree: Array<MenuEntry | MenuSubEntry | MenuSubheader> = [
         route: "/robot/camera",
         title: "Camera",
         menuIcon: CameraIcon,
-        menuText: "Camera",
-        requiredCapabilities: {
-            capabilities: [Capability.Duststreaming],
-            type: "allof"
-        }
+        menuText: "Camera"
     },
     {
         kind: "Subheader",
@@ -360,11 +356,6 @@ const ValetudoAppBar: React.FunctionComponent<{ paletteMode: PaletteMode, setPal
         Object.values(Capability).indexOf(Capability.Duststreaming)
     ];
 
-    const {data: duststreamingConfiguration} = useDuststreamingConfigurationQuery({
-        enabled: duststreamingSupported
-    });
-    const duststreamingEnabled = duststreamingConfiguration?.enabled === true;
-
     //@ts-ignore
     const currentMenuEntry = menuTree.find(element => element.route === currentLocation) ?? menuTree[0];
 
@@ -454,10 +445,6 @@ const ValetudoAppBar: React.FunctionComponent<{ paletteMode: PaletteMode, setPal
 
                             case "MenuEntry": {
                                 // This breaks with the menu generation logic and should likely be refactored if it ever gains siblings
-                                if (value.route === "/robot/camera" && !duststreamingEnabled) {
-                                    return null;
-                                }
-
                                 if (value.requiredCapabilities) {
                                     switch (value.requiredCapabilities.type) {
                                         case "allof": {
@@ -586,7 +573,7 @@ const ValetudoAppBar: React.FunctionComponent<{ paletteMode: PaletteMode, setPal
                 </List>
             </Box>
         );
-    }, [currentLocation, paletteMode, setPaletteMode, robotCapabilities, duststreamingEnabled]);
+    }, [currentLocation, paletteMode, setPaletteMode, robotCapabilities]);
 
     const toolbarContent = React.useMemo(() => {
         switch (currentMenuEntry.kind) {
