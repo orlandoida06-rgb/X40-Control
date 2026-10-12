@@ -30,6 +30,7 @@ import {
     Hub as ConnectivityIcon,
     SystemUpdateAlt as UpdaterIcon,
     SettingsRemote as SettingsRemoteIcon,
+    Videocam as CameraIcon,
     GitHub as GithubIcon,
     Favorite as DonateIcon,
     MenuBook as DocsIcon,
@@ -123,7 +124,8 @@ const menuTree: Array<MenuEntry | MenuSubEntry | MenuSubheader> = [
                 Capability.ConsumableMonitoring,
                 Capability.ManualControl,
                 Capability.HighResolutionManualControl,
-                Capability.TotalStatistics
+                Capability.TotalStatistics,
+                Capability.Duststreaming
             ],
             type: "anyof"
         }
@@ -162,6 +164,13 @@ const menuTree: Array<MenuEntry | MenuSubEntry | MenuSubheader> = [
         }
     },
     {
+        kind: "MenuEntry",
+        route: "/robot/camera",
+        title: "Camera",
+        menuIcon: CameraIcon,
+        menuText: "Camera"
+    },
+    {
         kind: "Subheader",
         title: "Opciones"
     },
@@ -180,7 +189,7 @@ const menuTree: Array<MenuEntry | MenuSubEntry | MenuSubheader> = [
                 Capability.MapSegmentEdit,
                 Capability.MapSegmentRename,
 
-                Capability.CombinedVirtualRestrictions
+                Capability.CombinedVirtualRestrictions,
             ],
             type: "anyof"
         }
@@ -199,9 +208,28 @@ const menuTree: Array<MenuEntry | MenuSubEntry | MenuSubheader> = [
     },
     {
         kind: "MenuSubEntry",
+        route: "/options/map_management/annotations",
+        title: "Map Annotations",
+        parentRoute: "/options/map_management"
+    },
+    {
+        kind: "MenuSubEntry",
         route: "/options/map_management/robot_coverage",
         title: "Mapa de cobertura del robot",
         parentRoute: "/options/map_management"
+    },
+    {
+        kind: "MenuSubEntry",
+        route: "/options/map_management/spectator",
+        title: "Spectator Map",
+        parentRoute: "/options/map_management"
+    },
+    {
+        kind: "MenuEntry",
+        route: "/options/connectivity",
+        title: "Connectivity Options",
+        menuIcon: ConnectivityIcon,
+        menuText: "Connectivity"
     },
     {
         kind: "MenuSubEntry",
@@ -323,6 +351,10 @@ const ValetudoAppBar: React.FunctionComponent<{ paletteMode: PaletteMode, setPal
     const currentLocation = useLocation()?.pathname;
     const robotCapabilities = useCapabilitiesSupported(...Object.values(Capability));
 
+    const duststreamingSupported = robotCapabilities[
+        Object.values(Capability).indexOf(Capability.Duststreaming)
+    ];
+
     //@ts-ignore
     const currentMenuEntry = menuTree.find(element => element.route === currentLocation) ?? menuTree[0];
 
@@ -411,6 +443,7 @@ const ValetudoAppBar: React.FunctionComponent<{ paletteMode: PaletteMode, setPal
                                 );
 
                             case "MenuEntry": {
+                                // This breaks with the menu generation logic and should likely be refactored if it ever gains siblings
                                 if (value.requiredCapabilities) {
                                     switch (value.requiredCapabilities.type) {
                                         case "allof": {

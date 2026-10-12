@@ -49,7 +49,8 @@ export enum Capability {
     WifiScan = "WifiScanCapability",
     ZoneCleaning = "ZoneCleaningCapability",
     Quirks = "QuirksCapability",
-    ObstacleImages = "ObstacleImagesCapability"
+    ObstacleImages = "ObstacleImagesCapability",
+    Duststreaming = "DuststreamingCapability"
 }
 
 export type Point = {
@@ -677,4 +678,15 @@ export interface AutoEmptyDockAutoEmptyDurationPayload {
 
 export interface AutoEmptyDockAutoEmptyDurationControlProperties {
     supportedDurations: Array<AutoEmptyDockAutoEmptyDuration>,
+}
+
+
+export interface DuststreamingConfiguration {
+    enabled: boolean;
+}
+
+export interface DuststreamingProperties {
+    width: number,
+    height: number,
+    duststreamerInstalled: boolean
 }
