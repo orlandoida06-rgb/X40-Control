@@ -1,16 +1,16 @@
 {
   "product": "X40Control",
-  "version": "2026.10.12.63",
+  "version": "2026.10.12.64",
   "channel": "stable",
   "asset": "valetudo",
-  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.10.12.63/valetudo",
-  "sha256": "8ac972d192bc76516d87860ff7ef79f87f5731e960908c1e6e67a0532de12867",
-  "size": 41707326,
-  "voices_url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.10.12.63/X40-Control-voices.tar.gz",
-  "voices_sha256": "56d31943feeac53bdade1b00450dbd8242653e0904c6cf649f88076b7ab343d5",
-  "voices_size": 535522,
+  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.10.12.64/valetudo",
+  "sha256": "eae92f5a800720aa837ec1ae495652a088188a2fb402f6283ab98aa87bc63ae5",
+  "size": 41707099,
+  "voices_url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.10.12.64/X40-Control-voices.tar.gz",
+  "voices_sha256": "d78ad48247d4985d4d51ec837f74c39c96222d40a43cc649f81fba5c2c7349d4",
+  "voices_size": 535518,
   "requires_reboot": true,
   "changelog": [
-    "feat: activar HTTPS Tailscale automáticamente"
+    "fix: quitar Historial del frontend"
   ]
 }
