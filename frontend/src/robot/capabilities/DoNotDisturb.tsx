@@ -67,10 +67,10 @@ const DoNotDisturbControl: FunctionComponent = () => {
                         newConfig.enabled = e.target.checked;
                         setEditConfig(newConfig);
                     }
-                }}/>} label="Enabled"/>
+                }}/>} label="Activado"/>
                 <Stack direction="row" spacing={1} sx={{mt: 1, mb: 1}}>
                     <TextField
-                        label="Start time"
+                        label="Hora de inicio"
                         type="time"
                         value={`${startTimeValue.getHours().toString().padStart(2, "0")}:${startTimeValue.getMinutes().toString().padStart(2, "0")}`}
                         InputLabelProps={{ shrink: true }}
@@ -88,7 +88,7 @@ const DoNotDisturbControl: FunctionComponent = () => {
                         }}
                     />
                     <TextField
-                        label="End time"
+                        label="Hora de finalización"
                         type="time"
                         value={`${endTimeValue.getHours().toString().padStart(2, "0")}:${endTimeValue.getMinutes().toString().padStart(2, "0")}`}
                         InputLabelProps={{ shrink: true }}
@@ -113,7 +113,7 @@ const DoNotDisturbControl: FunctionComponent = () => {
                     if (editConfig) {
                         updateDndConfiguration(editConfig);
                     }
-                }}>Apply</Button>
+                }}>Aplicar</Button>
             </>
         );
     }, [editConfig, startTimeValue, endTimeValue, dndConfigurationError, dndConfigurationUpdating, updateDndConfiguration]);
@@ -122,7 +122,7 @@ const DoNotDisturbControl: FunctionComponent = () => {
     const loading = dndConfigurationUpdating || dndConfigurationFetching || !dndConfiguration;
     return (
         <CapabilityItem
-            title={"Do not disturb"}
+            title={"No molestar"}
             loading={loading}
             helpText={DoNotDisturbHelp}
         >

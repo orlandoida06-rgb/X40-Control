@@ -4,8 +4,8 @@ import HomePage from "./HomePage";
 import OptionsRouter from "./options";
 import {PaletteMode, styled} from "@mui/material";
 import RobotRouter from "./robot";
-import ValetudoAppBar from "./components/ValetudoAppBar";
 import React from "react";
+import {LanguageProvider} from "./i18n";
 import ValetudoRouter from "./valetudo";
 
 const Root = styled(Div100vh)({
@@ -19,28 +19,33 @@ const Content = styled("main")({
     display: "flex",
     flexDirection: "column",
     justifyContent: "flex-start",
-    overflow: "auto",
+    overflowY: "auto",
+    overflowX: "hidden",
 });
 
-const AppRouter: React.FunctionComponent<{ paletteMode: PaletteMode, setPaletteMode: (newMode: PaletteMode) => void }> = ({
+const AppRouter: React.FunctionComponent<{
+    paletteMode: PaletteMode,
+    setPaletteMode: (newMode: PaletteMode) => void
+}> = ({
     paletteMode,
     setPaletteMode
 }): React.ReactElement => {
     return (
-        <HashRouter>
-            <Root>
-                <Content>
-                    <ValetudoAppBar paletteMode={paletteMode} setPaletteMode={setPaletteMode}/>
-                    <Routes>
-                        <Route path="" element={<HomePage />} />
-                        <Route path="robot/*" element={<RobotRouter />} />
-                        <Route path="options/*" element={<OptionsRouter />} />
-                        <Route path="valetudo/*" element={<ValetudoRouter />} />
-                        <Route path="*" element={<Navigate to="/" />} />
-                    </Routes>
-                </Content>
-            </Root>
-        </HashRouter>
+        <LanguageProvider>
+            <HashRouter>
+                <Root>
+                    <Content>
+                        <Routes>
+                            <Route path="" element={<HomePage paletteMode={paletteMode} setPaletteMode={setPaletteMode} />} />
+                            <Route path="robot/*" element={<RobotRouter />} />
+                            <Route path="options/*" element={<OptionsRouter />} />
+                            <Route path="valetudo/*" element={<ValetudoRouter />} />
+                            <Route path="*" element={<Navigate to="/" />} />
+                        </Routes>
+                    </Content>
+                </Root>
+            </HashRouter>
+        </LanguageProvider>
     );
 };
 

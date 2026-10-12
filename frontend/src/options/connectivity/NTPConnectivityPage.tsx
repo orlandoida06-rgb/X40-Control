@@ -45,7 +45,7 @@ const NTPClientStatusComponent: React.FunctionComponent<{
     }
 
     if (stateError) {
-        return <Typography color="error">Error loading NTPClient state</Typography>;
+        return <Typography color="error">Error al cargar el estado del cliente NTP</Typography>;
     }
 
     const getIconForState = (): React.ReactElement => {
@@ -66,23 +66,23 @@ const NTPClientStatusComponent: React.FunctionComponent<{
             case "ValetudoNTPClientErrorState":
                 return (
                     <>
-                        <Typography variant="h5" color="red">Error: {status.state.type}</Typography>
+                        <Typography variant="h5" color="red">Tipo de error: {status.state.type}</Typography>
                         <Typography color="red">{status.state.message}</Typography>
                     </>
                 );
             case "ValetudoNTPClientEnabledState":
                 return (
-                    <Typography variant="h5">Time sync enabled</Typography>
+                    <Typography variant="h5">Sincronización horaria activada</Typography>
                 );
             case "ValetudoNTPClientDisabledState":
                 return (
-                    <Typography variant="h5">Time sync disabled</Typography>
+                    <Typography variant="h5">Sincronización horaria desactivada</Typography>
                 );
             case "ValetudoNTPClientSyncedState":
                 return (
                     <>
-                        <Typography variant="h5">Time sync successful</Typography>
-                        <Typography>Offset: {status.state.offset} ms</Typography>
+                        <Typography variant="h5">Sincronización horaria correcta</Typography>
+                        <Typography>Desfase horario: {status.state.offset} ms</Typography>
                     </>
                 );
         }
@@ -135,7 +135,7 @@ const NTPConnectivity = (): React.ReactElement => {
     const {mutate: updateConfiguration, isPending: configurationUpdating} = useNTPClientConfigurationMutation();
 
     const [enabled, setEnabled] = React.useState(false);
-    const [server, setServer] = React.useState("");
+    const [server, setServidor] = React.useState("");
     const [port, setPort] = React.useState(0);
     const [ntpInterval, setNtpInterval] = React.useState(0);
     const [ntpTimeout, setNtpTimeout] = React.useState(0);
@@ -145,7 +145,7 @@ const NTPConnectivity = (): React.ReactElement => {
     React.useEffect(() => {
         if (ntpClientConfig) {
             setEnabled(ntpClientConfig.enabled);
-            setServer(ntpClientConfig.server);
+            setServidor(ntpClientConfig.server);
             setPort(ntpClientConfig.port);
             setNtpInterval(ntpClientConfig.interval);
             setNtpTimeout(ntpClientConfig.timeout);
@@ -159,7 +159,7 @@ const NTPConnectivity = (): React.ReactElement => {
     }
 
     if (ntpClientStatusError || ntpClientConfigError || !ntpClientStatus || !ntpClientConfig) {
-        return <Typography color="error">Error loading NTP Client configuration</Typography>;
+        return <Typography color="error">Error al cargar la configuración del cliente NTP</Typography>;
     }
 
     return (
@@ -180,19 +180,19 @@ const NTPConnectivity = (): React.ReactElement => {
                         }}
                     />
                 }
-                label="NTP enabled"
+                label="NTP activado"
                 sx={{mb: 1}}
             />
             <Grid2 container spacing={1} sx={{mb: 2}}>
                 <Grid2 style={{flexGrow: 1}}>
                     <TextField
                         style={{width: "100%"}}
-                        label="Server"
+                        label="Servidor"
                         value={server}
                         disabled={!enabled}
                         variant="standard"
                         onChange={e => {
-                            setServer(extractHostFromUrl(e.target.value));
+                            setServidor(extractHostFromUrl(e.target.value));
                             setConfigurationModified(true);
                         }}
                     />
@@ -200,7 +200,7 @@ const NTPConnectivity = (): React.ReactElement => {
                 <Grid2 style={{flexGrow: 1}}>
                     <TextField
                         style={{width: "100%"}}
-                        label="Port"
+                        label="Puerto"
                         value={port}
                         disabled={!enabled}
                         type="number"
@@ -215,7 +215,7 @@ const NTPConnectivity = (): React.ReactElement => {
                 <Grid2 style={{flexGrow: 1}}>
                     <TextField
                         style={{width: "100%"}}
-                        label="Interval (hours)"
+                        label="Intervalo (horas)"
                         value={ntpInterval / 3_600_000}
                         sx={{minWidth: 100}}
                         disabled={!enabled}
@@ -231,7 +231,7 @@ const NTPConnectivity = (): React.ReactElement => {
                 <Grid2 style={{flexGrow: 1}}>
                     <TextField
                         style={{width: "100%"}}
-                        label="Timeout (seconds)"
+                        label="Tiempo de espera (segundos)"
                         value={ntpTimeout / 1000}
                         sx={{minWidth: 150}}
                         disabled={!enabled}
@@ -254,8 +254,8 @@ const NTPConnectivity = (): React.ReactElement => {
                 }}
             >
                 <Typography color="info">
-                    Valetudo needs a synchronized clock for timers to work and the log timestamps to make sense.
-                    Additionally, anything using TLS (e.g. the inbuilt Updater) also requires the correct current time to work.
+                    Valetudo necesita que el reloj esté sincronizado para que funcionen las programaciones y las marcas de tiempo de los registros sean correctas.
+                    Además, las funciones que utilizan TLS (por ejemplo, el actualizador integrado) necesitan que la hora del sistema sea correcta.
                 </Typography>
             </InfoBox>
 
@@ -278,7 +278,7 @@ const NTPConnectivity = (): React.ReactElement => {
                             setConfigurationModified(false);
                         }}
                     >
-                        Save configuration
+                        Guardar configuración
                     </Button>
                 </Grid2>
             </Grid2>
@@ -297,7 +297,7 @@ const NTPConnectivityPage = (): React.ReactElement => {
             <Grid2 container direction="row">
                 <Box style={{width: "100%"}}>
                     <DetailPageHeaderRow
-                        title="NTP Connectivity"
+                        title="Conectividad NTP"
                         icon={<NTPIcon/>}
                         onRefreshClick={() => {
                             refetchNtpClientState().catch(() => {

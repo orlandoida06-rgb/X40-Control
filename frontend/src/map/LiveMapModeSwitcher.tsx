@@ -52,10 +52,10 @@ const modeToIcon: Record<LiveMapMode, React.ReactElement> = {
 };
 
 const modeToLabel: Record<LiveMapMode, string> = {
-    "segments": "Segments",
-    "zones": "Zones",
-    "goto": "Go To",
-    "none": "None"
+    "segments": "Habitaciones",
+    "zones": "Zonas",
+    "goto": "Ir a",
+    "none": "Ninguno"
 };
 
 /* eslint-disable react/display-name */
@@ -87,9 +87,9 @@ export const LiveMapModeSwitcher : React.FunctionComponent<{
                     setOpen(!open);
                 }}
                 icon={modeToIcon[currentMode]}
-                title="Map Mode Selector"
+                title="Selector de modo del mapa"
                 FabProps={{ size: "small" }}
-                ariaLabel="Map Mode Selector"
+                ariaLabel="Selector de modo del mapa"
                 direction="down"
                 TransitionComponent={NoTransition}
             >

@@ -1,150 +1,193 @@
-{
-  'name': 'Release',
-  'on': { 'release': { 'types': ['published'] } },
-  'jobs':
-    {
-      'publish-release':
-        {
-          'runs-on': 'ubuntu-latest',
-          'strategy': { 'matrix': { 'node-version': ['22.x'] } },
-          'steps':
-            [
-              { 'uses': 'actions/checkout@v6' },
-              {
-                'name': 'Use Node.js ${{ matrix.node-version }}',
-                'uses': 'actions/setup-node@v6',
-                'with': { 'node-version': '${{ matrix.node-version }}' },
-              },
-              { 'name': 'Install', 'run': 'npm ci' },
-              {
-                'name': 'Generate OpenAPI Docs',
-                'run': 'npm run build_openapi_schema',
-              },
-              {
-                'name': 'Build Valetudo frontend',
-                'run': 'npm run build --workspace=frontend',
-              },
-              {
-                'name': 'Build Valetudo armv7',
-                'run': 'npm run build_armv7 --workspace=backend',
-              },
-              {
-                'name': 'Build Valetudo armv7 lowmem',
-                'run': 'npm run build_armv7_lowmem --workspace=backend',
-              },
-              {
-                'name': 'Build Valetudo aarch64',
-                'run': 'npm run build_aarch64 --workspace=backend',
-              },
+name: Release
 
-              {
-                'name': 'Upload Valetudo armv7',
-                'uses': 'hypfer/upload-release-asset@v1.2.0',
-                'env': { 'GITHUB_TOKEN': '${{ secrets.GITHUB_TOKEN }}' },
-                'with':
-                  {
-                    'upload_url': '${{ github.event.release.upload_url }}',
-                    'asset_path': './build/armv7/valetudo',
-                    'asset_name': 'valetudo-armv7',
-                    'asset_content_type': 'binary/octet-stream',
-                  },
-              },
-              {
-                'name': 'Upload Valetudo armv7 lowmem',
-                'uses': 'hypfer/upload-release-asset@v1.2.0',
-                'env': { 'GITHUB_TOKEN': '${{ secrets.GITHUB_TOKEN }}' },
-                'with':
-                  {
-                    'upload_url': '${{ github.event.release.upload_url }}',
-                    'asset_path': './build/armv7/valetudo-lowmem',
-                    'asset_name': 'valetudo-armv7-lowmem',
-                    'asset_content_type': 'binary/octet-stream',
-                  },
-              },
-              {
-                'name': 'Upload Valetudo aarch64',
-                'uses': 'hypfer/upload-release-asset@v1.2.0',
-                'env': { 'GITHUB_TOKEN': '${{ secrets.GITHUB_TOKEN }}' },
-                'with':
-                  {
-                    'upload_url': '${{ github.event.release.upload_url }}',
-                    'asset_path': './build/aarch64/valetudo',
-                    'asset_name': 'valetudo-aarch64',
-                    'asset_content_type': 'binary/octet-stream',
-                  },
-              },
+on:
+  push:
+    branches:
+      - main
 
-              {
-                'name': 'UPX-compress valetudo binaries',
-                'run': 'npm run upx',
-              },
-              {
-                'name': 'Upload Valetudo armv7.upx',
-                'uses': 'hypfer/upload-release-asset@v1.2.0',
-                'env': { 'GITHUB_TOKEN': '${{ secrets.GITHUB_TOKEN }}' },
-                'with':
-                  {
-                    'upload_url': '${{ github.event.release.upload_url }}',
-                    'asset_path': './build/armv7/valetudo.upx',
-                    'asset_name': 'valetudo-armv7.upx',
-                    'asset_content_type': 'binary/octet-stream',
-                  },
-              },
-              {
-                'name': 'Upload Valetudo armv7 lowmem.upx',
-                'uses': 'hypfer/upload-release-asset@v1.2.0',
-                'env': { 'GITHUB_TOKEN': '${{ secrets.GITHUB_TOKEN }}' },
-                'with':
-                  {
-                    'upload_url': '${{ github.event.release.upload_url }}',
-                    'asset_path': './build/armv7/valetudo-lowmem.upx',
-                    'asset_name': 'valetudo-armv7-lowmem.upx',
-                    'asset_content_type': 'binary/octet-stream',
-                  },
-              },
-              {
-                'name': 'Upload Valetudo aarch64.upx',
-                'uses': 'hypfer/upload-release-asset@v1.2.0',
-                'env': { 'GITHUB_TOKEN': '${{ secrets.GITHUB_TOKEN }}' },
-                'with':
-                  {
-                    'upload_url': '${{ github.event.release.upload_url }}',
-                    'asset_path': './build/aarch64/valetudo.upx',
-                    'asset_name': 'valetudo-aarch64.upx',
-                    'asset_content_type': 'binary/octet-stream',
-                  },
-              },
+permissions:
+  contents: write
 
-              {
-                'name': 'Build manifest',
-                'run': 'npm run build_release_manifest',
-              },
-              {
-                'name': 'Upload manifest',
-                'uses': 'hypfer/upload-release-asset@v1.2.0',
-                'env': { 'GITHUB_TOKEN': '${{ secrets.GITHUB_TOKEN }}' },
-                'with':
-                  {
-                    'upload_url': '${{ github.event.release.upload_url }}',
-                    'asset_path': './build/valetudo_release_manifest.json',
-                    'asset_name': 'valetudo_release_manifest.json',
-                    'asset_content_type': 'application/json',
-                  },
-              },
-              
-              {
-                'name': 'Upload OpenAPI spec',
-                'uses': 'hypfer/upload-release-asset@v1.2.0',
-                'env': { 'GITHUB_TOKEN': '${{ secrets.GITHUB_TOKEN }}' },
-                'with':
-                  {
-                    'upload_url': '${{ github.event.release.upload_url }}',
-                    'asset_path': './build/valetudo.openapi.schema.json',
-                    'asset_name': 'valetudo.openapi.schema.json',
-                    'asset_content_type': 'application/json',
-                  },
-              },
-            ],
-        },
-    },
-}
+jobs:
+  publish-release:
+    if: "!contains(github.event.head_commit.message, 'chore: update OTA manifest')"
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Calculate version
+        id: version
+        run: |
+          set -e
+
+          VERSION="$(date -u +'%Y.%m.%d').${GITHUB_RUN_NUMBER}"
+
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+          echo "tag=ota-${VERSION}" >> "$GITHUB_OUTPUT"
+
+          echo "VERSION=${VERSION}"
+          echo "TAG=ota-${VERSION}"
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22.x
+
+      - name: Install
+        run: npm ci
+
+      - name: Generate OpenAPI Docs
+        run: npm run build_openapi_schema
+
+      - name: Build Valetudo frontend
+        run: npm run build --workspace=frontend
+
+      - name: Build Valetudo armv7
+        run: npm run build_armv7 --workspace=backend
+
+      - name: Build Valetudo armv7 lowmem
+        run: npm run build_armv7_lowmem --workspace=backend
+
+      - name: Build Valetudo aarch64
+        run: npm run build_aarch64 --workspace=backend
+
+      - name: UPX-compress valetudo binaries
+        run: npm run upx
+
+      - name: Build release manifest
+        run: npm run build_release_manifest
+
+      - name: Calculate OTA information
+        id: ota
+        run: |
+          set -e
+
+          SHA256="$(sha256sum ./build/aarch64/valetudo | awk '{print $1}')"
+          SIZE="$(stat -c%s ./build/aarch64/valetudo)"
+
+          echo "sha256=${SHA256}" >> "$GITHUB_OUTPUT"
+          echo "size=${SIZE}" >> "$GITHUB_OUTPUT"
+
+      - name: Create GitHub Release
+        id: release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -e
+
+          TAG="${{ steps.version.outputs.tag }}"
+          VERSION="${{ steps.version.outputs.version }}"
+
+          cat > /tmp/release-notes.md <<EOF2
+          X40-Control ${VERSION}
+
+          Actualización automática desde main.
+
+          Cambios:
+          $(git log -1 --pretty=%B)
+          EOF2
+
+          gh release create "$TAG" \
+            --title "X40-Control ${VERSION}" \
+            --notes-file /tmp/release-notes.md
+
+          cp ./build/aarch64/valetudo /tmp/valetudo
+          cp ./build/armv7/valetudo-lowmem /tmp/valetudo-armv7-lowmem
+          cp ./build/aarch64/valetudo /tmp/valetudo-aarch64
+          cp ./build/armv7/valetudo.upx /tmp/valetudo-armv7.upx
+          cp ./build/armv7/valetudo-lowmem.upx /tmp/valetudo-armv7-lowmem.upx
+          cp ./build/aarch64/valetudo.upx /tmp/valetudo-aarch64.upx
+          cp ./build/valetudo_release_manifest.json /tmp/valetudo_release_manifest.json
+          cp ./build/valetudo.openapi.schema.json /tmp/valetudo-openapi.schema.json
+
+          tar -czf /tmp/X40-Control-voices.tar.gz \
+            -C assets/X40-Control \
+            34.ogg 35.ogg 36.ogg 42.ogg 49.ogg 50.ogg 51.ogg \
+            53.ogg 70.ogg 91.ogg 92.ogg 93.ogg 96.ogg 98.ogg 99.ogg
+
+          VOICES_SHA256="$(sha256sum /tmp/X40-Control-voices.tar.gz | awk '{print $1}')"
+          VOICES_SIZE="$(stat -c%s /tmp/X40-Control-voices.tar.gz)"
+
+          echo "voices_sha256=${VOICES_SHA256}" >> "$GITHUB_OUTPUT"
+          echo "voices_size=${VOICES_SIZE}" >> "$GITHUB_OUTPUT"
+
+          echo "Voces SHA256: ${VOICES_SHA256}"
+          echo "Voces tamaño: ${VOICES_SIZE}"
+
+          gh release upload "$TAG" \
+            /tmp/valetudo \
+            /tmp/valetudo-armv7-lowmem \
+            /tmp/valetudo-aarch64 \
+            /tmp/valetudo-armv7.upx \
+            /tmp/valetudo-armv7-lowmem.upx \
+            /tmp/valetudo-aarch64.upx \
+            /tmp/valetudo_release_manifest.json \
+            /tmp/valetudo-openapi.schema.json \
+            /tmp/X40-Control-voices.tar.gz
+
+      - name: Update X40Control OTA manifest
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -e
+
+          VERSION="${{ steps.version.outputs.version }}"
+          TAG="${{ steps.version.outputs.tag }}"
+
+          RELEASE_URL="https://github.com/${{ github.repository }}/releases/download/${TAG}/valetudo"
+          VOICES_URL="https://github.com/${{ github.repository }}/releases/download/${TAG}/X40-Control-voices.tar.gz"
+
+          SHA256="${{ steps.ota.outputs.sha256 }}"
+          SIZE="${{ steps.ota.outputs.size }}"
+
+          VOICES_SHA256="${{ steps.release.outputs.voices_sha256 }}"
+          VOICES_SIZE="${{ steps.release.outputs.voices_size }}"
+
+          CHANGELOG="$(git log -1 --pretty=%B | jq -Rs 'split("\n") | map(select(length > 0))')"
+
+          if [ "$CHANGELOG" = "[]" ]; then
+            CHANGELOG='["Actualización de X40-Control"]'
+          fi
+
+          jq -n \
+            --arg product "X40Control" \
+            --arg version "$VERSION" \
+            --arg channel "stable" \
+            --arg asset "valetudo" \
+            --arg url "$RELEASE_URL" \
+            --arg sha256 "$SHA256" \
+            --argjson size "$SIZE" \
+            --arg voices_url "$VOICES_URL" \
+            --arg voices_sha256 "$VOICES_SHA256" \
+            --argjson voices_size "$VOICES_SIZE" \
+            --argjson changelog "$CHANGELOG" \
+            '{
+              product: $product,
+              version: $version,
+              channel: $channel,
+              asset: $asset,
+              url: $url,
+              sha256: $sha256,
+              size: $size,
+              voices_url: $voices_url,
+              voices_sha256: $voices_sha256,
+              voices_size: $voices_size,
+              requires_reboot: true,
+              changelog: $changelog
+            }' > ota/manifest.json
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add ota/manifest.json
+
+          if git diff --cached --quiet; then
+            echo "OTA manifest already up to date."
+            exit 0
+          fi
+
+          git commit -m "chore: update OTA manifest to ${VERSION} [skip ci]"
+          git push origin HEAD:main

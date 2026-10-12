@@ -1,0 +1,275 @@
+{
+    "version": 1,
+    "style": {
+        "floor": "wood",
+        "wallHeight": 42,
+        "wallColor": "#e7edf3",
+        "floorColor": "#b8875b"
+    },
+    "rooms": {
+        "Salón": {
+            "segmentId": "1",
+            "x": {
+                "min": 665,
+                "max": 732
+            },
+            "y": {
+                "min": 508,
+                "max": 571
+            },
+            "floor": "wood",
+            "furniture": [
+                {
+                    "type": "sofa",
+                    "x": 0.18,
+                    "y": 0.62,
+                    "w": 0.58,
+                    "h": 0.16,
+                    "rotation": 0
+                },
+                {
+                    "type": "table",
+                    "x": 0.48,
+                    "y": 0.4,
+                    "w": 0.2,
+                    "h": 0.14,
+                    "rotation": 0
+                },
+                {
+                    "type": "tv",
+                    "x": 0.72,
+                    "y": 0.18,
+                    "w": 0.12,
+                    "h": 0.05,
+                    "rotation": 0
+                }
+            ]
+        },
+        "Habitación xiana": {
+            "segmentId": "2",
+            "x": {
+                "min": 532,
+                "max": 661
+            },
+            "y": {
+                "min": 581,
+                "max": 636
+            },
+            "floor": "wood",
+            "furniture": [
+                {
+                    "type": "bed",
+                    "x": 0.18,
+                    "y": 0.24,
+                    "w": 0.58,
+                    "h": 0.32,
+                    "rotation": 0
+                },
+                {
+                    "type": "wardrobe",
+                    "x": 0.76,
+                    "y": 0.1,
+                    "w": 0.14,
+                    "h": 0.65,
+                    "rotation": 0
+                }
+            ]
+        },
+        "Habitación handy": {
+            "segmentId": "3",
+            "x": {
+                "min": 685,
+                "max": 733
+            },
+            "y": {
+                "min": 572,
+                "max": 627
+            },
+            "floor": "wood",
+            "furniture": [
+                {
+                    "type": "bed",
+                    "x": 0.12,
+                    "y": 0.24,
+                    "w": 0.58,
+                    "h": 0.32,
+                    "rotation": 0
+                },
+                {
+                    "type": "wardrobe",
+                    "x": 0.72,
+                    "y": 0.1,
+                    "w": 0.16,
+                    "h": 0.62,
+                    "rotation": 0
+                }
+            ]
+        },
+        "Entrada": {
+            "segmentId": "5",
+            "x": {
+                "min": 616,
+                "max": 657
+            },
+            "y": {
+                "min": 641,
+                "max": 673
+            },
+            "floor": "wood",
+            "furniture": [
+                {
+                    "type": "console",
+                    "x": 0.2,
+                    "y": 0.42,
+                    "w": 0.6,
+                    "h": 0.12,
+                    "rotation": 0
+                }
+            ]
+        },
+        "Cocina": {
+            "segmentId": "6",
+            "x": {
+                "min": 686,
+                "max": 724
+            },
+            "y": {
+                "min": 635,
+                "max": 683
+            },
+            "floor": "wood",
+            "furniture": [
+                {
+                    "type": "counter",
+                    "x": 0.08,
+                    "y": 0.12,
+                    "w": 0.78,
+                    "h": 0.15,
+                    "rotation": 0
+                },
+                {
+                    "type": "counter",
+                    "x": 0.08,
+                    "y": 0.12,
+                    "w": 0.15,
+                    "h": 0.68,
+                    "rotation": 0
+                },
+                {
+                    "type": "table",
+                    "x": 0.42,
+                    "y": 0.55,
+                    "w": 0.34,
+                    "h": 0.22,
+                    "rotation": 0
+                }
+            ]
+        },
+        "Baño": {
+            "segmentId": "7",
+            "x": {
+                "min": 662,
+                "max": 683
+            },
+            "y": {
+                "min": 661,
+                "max": 693
+            },
+            "floor": "wood",
+            "furniture": [
+                {
+                    "type": "shower",
+                    "x": 0.08,
+                    "y": 0.08,
+                    "w": 0.76,
+                    "h": 0.28,
+                    "rotation": 0
+                },
+                {
+                    "type": "toilet",
+                    "x": 0.58,
+                    "y": 0.56,
+                    "w": 0.22,
+                    "h": 0.2,
+                    "rotation": 0
+                },
+                {
+                    "type": "sink",
+                    "x": 0.12,
+                    "y": 0.58,
+                    "w": 0.28,
+                    "h": 0.16,
+                    "rotation": 0
+                }
+            ]
+        },
+        "Habitación matrimonio": {
+            "segmentId": "8",
+            "x": {
+                "min": 603,
+                "max": 661
+            },
+            "y": {
+                "min": 507,
+                "max": 590
+            },
+            "floor": "wood",
+            "furniture": [
+                {
+                    "type": "bed",
+                    "x": 0.18,
+                    "y": 0.25,
+                    "w": 0.62,
+                    "h": 0.36,
+                    "rotation": 0
+                },
+                {
+                    "type": "nightstand",
+                    "x": 0.08,
+                    "y": 0.28,
+                    "w": 0.1,
+                    "h": 0.16,
+                    "rotation": 0
+                },
+                {
+                    "type": "nightstand",
+                    "x": 0.82,
+                    "y": 0.28,
+                    "w": 0.1,
+                    "h": 0.16,
+                    "rotation": 0
+                },
+                {
+                    "type": "wardrobe",
+                    "x": 0.72,
+                    "y": 0.08,
+                    "w": 0.18,
+                    "h": 0.14,
+                    "rotation": 0
+                }
+            ]
+        },
+        "Pasillo": {
+            "segmentId": "9",
+            "x": {
+                "min": 658,
+                "max": 685
+            },
+            "y": {
+                "min": 571,
+                "max": 660
+            },
+            "floor": "wood",
+            "furniture": [
+                {
+                    "type": "runner",
+                    "x": 0.3,
+                    "y": 0.12,
+                    "w": 0.4,
+                    "h": 0.76,
+                    "rotation": 0
+                }
+            ]
+        }
+    }
+}

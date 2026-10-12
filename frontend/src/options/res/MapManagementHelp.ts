@@ -1,34 +1,50 @@
 export const MapManagementHelp = `
-## Map Management
+## Gestión de mapas
 
-This page allows you to do map-related tasks. What exactly can be done here depends on your model of robot as well
-as its firmware.<br/>If you don't see something on this page, it is likely not supported by your robot.
+Esta página permite realizar tareas relacionadas con los mapas. Las funciones
+disponibles dependen del modelo del robot y de su firmware.<br/>
+Si no aparece alguna opción en esta página, probablemente tu robot no sea compatible
+con ella.
 
-Some robots may require you to manually enable persistent maps before you can do most map-related things.
-Others may not even allow disabling of persistent maps because why would you.
+Algunos robots requieren activar manualmente los mapas persistentes antes de poder
+realizar la mayoría de las tareas relacionadas con mapas.
 
-There are also some legacy robots, which don't feature persistent maps at all.
+Otros ni siquiera permiten desactivar los mapas persistentes.
 
-Some robots may require a full cleanup task including them returning to the dock on their own for a new map to be saved.
-Others may either optionally allow for fast mapping via a mapping pass or even require a mapping pass before they can be used.
+También existen algunos robots antiguos que no disponen de mapas persistentes.
 
-### Terminology
+Algunos robots requieren realizar una limpieza completa, incluyendo el regreso
+automático a la estación, para poder guardar un mapa nuevo.
 
-Please note that all these concepts need firmware support by your robot.
-Not everything might be available on every robot. 
+Otros pueden permitir opcionalmente realizar un mapeo rápido mediante un proceso
+de mapeo, o incluso pueden requerirlo antes de poder utilizar determinadas funciones.
 
-#### Segments
+### Terminología
 
-A segment is a partition of the map as decided by the robots' firmware.
-Segments enable you to just clean one or more predefined areas. Most firmwares also allow naming them.
+Ten en cuenta que todos estos conceptos requieren compatibilidad por parte del
+firmware del robot.
 
-You may know them as rooms, however they don't necessarily have to be actual rooms.
-There could for example be a segment, which is just the area around your dining table.
+No todas las funciones están disponibles en todos los robots.
 
-On most firmwares, the robot uses the segment data to optimize its navigation and drive the most efficient path.
+#### Habitaciones
 
-#### Zones
+Una habitación es una división del mapa determinada por el firmware del robot.
 
-Zones are just rectangles that you can draw on the map to send the robot there.
-Depending on the firmware of your robot, it might accept just one or multiple zones as an input.
+Las habitaciones permiten limpiar una o varias zonas predefinidas. La mayoría de
+los firmwares también permiten asignarles un nombre.
+
+Puedes conocerlas como habitaciones, aunque no tienen por qué ser habitaciones reales.
+Por ejemplo, puede existir una habitación que sea simplemente la zona alrededor
+de la mesa del comedor.
+
+En la mayoría de los firmwares, el robot utiliza los datos de las habitaciones para
+optimizar la navegación y seguir la ruta más eficiente.
+
+#### Zonas
+
+Las zonas son rectángulos que puedes dibujar sobre el mapa para enviar el robot
+a una ubicación determinada.
+
+Dependiendo del firmware del robot, puede aceptar una sola zona o varias zonas
+como destino.
 `;

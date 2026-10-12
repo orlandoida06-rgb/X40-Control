@@ -1,45 +1,54 @@
 export const ConsumablesHelp = `
-## Consumables
+## Consumibles
 
-Consumables are components of the robot that need periodic cleaning, replacement or other maintenance work.
+Los consumibles son componentes del robot que necesitan limpieza periódica,
+sustitución u otras tareas de mantenimiento.
 
-They come in two flavours, which are basically the same
-- operating hours left
-- percent left
+El estado de cada consumible se muestra mediante una barra de progreso.
+Esta barra indica cuánto tiempo de uso estimado le queda al consumible.
 
-At some point, they will become depleted, requiring you to do maintenance and reset them in the Valetudo UI.
-This will restore them to either their manufacturer-dependent design operating hours or 100%.
+En algún momento, el consumible se agotará y será necesario realizar el
+mantenimiento correspondiente y restablecer su estado desde la interfaz de X40-Control.
 
-Not maintaining your consumables may lead to performance degradation.<br/>
-Still, Valetudo recommends manual inspection of the part in question. You _may_ be able to use it longer than the manufacturer recommends.
+No realizar el mantenimiento de los consumibles puede provocar una disminución
+del rendimiento del robot.
 
+### Tipos de consumibles
 
-### Types of consumables
+Existen varios tipos de consumibles que requieren diferentes cuidados.
 
-There are various types of consumables that require different treatment.
+#### Cepillos
 
-#### Brushes
+Los cepillos, como el cepillo principal y los cepillos laterales, pueden
+acumular suciedad, pelos y otros residuos.
 
-Brushes come in different types such as main or side.
-At some point, they are worn out and have to be replaced.
+Se recomienda revisarlos y limpiarlos periódicamente. Cuando estén desgastados,
+deben sustituirse.
 
-They often also require removal of tangled hair or similar for optimal performance, so you should keep an eye on them.
+#### Filtros
 
-#### Filters
+Los robots aspiradores suelen utilizar algún tipo de filtro que necesita
+limpieza periódica y sustitución cuando está desgastado o deteriorado.
 
-Vacuum-robots usually have some kind of filter, which needs periodic cleaning and replacing when it is worn out.
+#### Sensores
 
-#### Sensors
+El robot dispone de varios sensores, como los sensores de desnivel y de
+distancia a las paredes, que se utilizan para la navegación y pueden quedar
+obstruidos por suciedad, polvo, telarañas u otros residuos.
 
-Your robot has a few sensors such as cliff- or wall-distance-sensors, which are used for navigation and might get obstructed by dirt, debris, cobwebs or similar.
-Cleaning them can usually be done with a soft cloth. Make sure to not scratch the sensors as they are vital to the robot's operation.
+Normalmente se pueden limpiar con un paño suave. Procura no rayar los sensores,
+ya que son fundamentales para el funcionamiento del robot.
 
-#### Wheels
+#### Ruedas
 
-Similarly to the sensors, it also makes sense to check the wheels from time to time and remove any dirt and debris.
+Al igual que los sensores, es recomendable revisar las ruedas de vez en cuando
+y eliminar cualquier suciedad o residuo acumulado.
 
-#### Mops
+#### Otros consumibles
 
-While replacing mop pads might not always be necessary, it is strongly recommended to properly wash them from time to time.
+Dependiendo del modelo y de las funciones disponibles, también pueden aparecer
+otros elementos que requieren mantenimiento, como las mopas, el detergente,
+el depósito de suciedad o los componentes de limpieza de la estación.
 
+Sigue siempre las indicaciones específicas del fabricante para estos elementos.
 `;

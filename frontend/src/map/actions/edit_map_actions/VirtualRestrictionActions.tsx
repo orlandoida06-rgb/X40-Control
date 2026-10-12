@@ -16,7 +16,7 @@ import NoMopAreaClientStructure from "../../structures/client_structures/NoMopAr
 import RestrictedZoneClientStructure from "../../structures/client_structures/RestrictedZoneClientStructure";
 import {PointCoordinates} from "../../utils/types";
 import {
-    Save as SaveIcon,
+    Save as GuardarIcon,
     Refresh as RefreshIcon, Clear as ClearIcon,
     Add as AddIcon,
 } from "@mui/icons-material";
@@ -38,7 +38,7 @@ interface VirtualRestrictionActionsProperties {
     onAddNoGoArea(): void,
     onAddNoMopArea(): void,
 
-    onSave(): void;
+    onGuardar(): void;
     onRefresh(): void;
     onClear(): void;
 }
@@ -58,7 +58,7 @@ const VirtualRestrictionActions = (
         onAddNoGoArea,
         onAddNoMopArea,
 
-        onSave,
+        onGuardar,
         onRefresh,
         onClear
     } = props;
@@ -75,11 +75,11 @@ const VirtualRestrictionActions = (
         mutate: saveRestrictions,
         isPending: restrictionsSaving
     } = useCombinedVirtualRestrictionsMutation({
-        onSuccess: onSave,
+        onSuccess: onGuardar,
     });
     const canEdit = props.robotStatus.value === "docked";
 
-    const handleSaveClick = React.useCallback(() => {
+    const handleGuardarClick = React.useCallback(() => {
         if (!canEdit) {
             return;
         }
@@ -138,7 +138,7 @@ const VirtualRestrictionActions = (
         return (
             <Container>
                 <Typography color="error">
-                    Error loading {Capability.CombinedVirtualRestrictions} properties
+                    Error al cargar las propiedades de {Capability.CombinedVirtualRestrictions}
                 </Typography>
                 <Box m={1}/>
                 <Button color="primary" variant="contained" onClick={() => {
@@ -163,7 +163,7 @@ const VirtualRestrictionActions = (
         return (
             <Container>
                 <Typography align="center">
-                    No {Capability.CombinedVirtualRestrictions} properties
+                    No hay propiedades disponibles de {Capability.CombinedVirtualRestrictions}
                 </Typography>
             </Container>
         );
@@ -171,7 +171,7 @@ const VirtualRestrictionActions = (
 
 
     return (
-        <Grid2 container spacing={1} direction="row-reverse" flexWrap="wrap-reverse">
+        <Grid2 container spacing={2} justifyContent="center" alignItems="center" sx={{width: "100%", padding: "0 10px", gap: "28px", display: "flex", flexWrap: "wrap", transform: "translateY(-20px)"}} direction="row-reverse" flexWrap="wrap-reverse">
             {
                 canEdit &&
 
@@ -180,11 +180,11 @@ const VirtualRestrictionActions = (
                         disabled={restrictionsSaving}
                         color="inherit"
                         size="medium"
-                        variant="extended"
-                        onClick={handleSaveClick}
+                        variant="extended" sx={{fontSize: "0.8rem"}}
+                        onClick={handleGuardarClick}
                     >
-                        <SaveIcon style={{marginRight: "0.25rem", marginLeft: "-0.25rem"}}/>
-                        Save
+                        <GuardarIcon style={{marginRight: "0.25rem", marginLeft: "-0.25rem"}}/>
+                        Guardar
                         {restrictionsSaving && (
                             <CircularProgress
                                 color="inherit"
@@ -259,11 +259,11 @@ const VirtualRestrictionActions = (
                         color="inherit"
                         size="medium"
                         disabled={noGoAreas.length === 0 && noMopAreas.length === 0 && virtualWalls.length === 0}
-                        variant="extended"
+                        variant="extended" sx={{fontSize: "0.8rem"}}
                         onClick={onClear}
                     >
                         <ClearIcon style={{marginRight: "0.25rem", marginLeft: "-0.25rem"}}/>
-                        Clear
+                        Borrar
                     </ActionButton>
                 </Grid2>
             }
@@ -274,11 +274,11 @@ const VirtualRestrictionActions = (
                     <ActionButton
                         color="inherit"
                         size="medium"
-                        variant="extended"
+                        variant="extended" sx={{fontSize: "0.8rem"}}
                         onClick={onRefresh}
                     >
                         <RefreshIcon style={{marginRight: "0.25rem", marginLeft: "-0.25rem"}}/>
-                        Refresh
+                        Actualizar
                     </ActionButton>
                 </Grid2>
             }
@@ -286,7 +286,7 @@ const VirtualRestrictionActions = (
                 !canEdit &&
                 <Grid2>
                     <Typography variant="caption" color="textSecondary">
-                        Editing virtual restrictions requires the robot to be docked
+                        Para editar las restricciones virtuales, el robot debe estar en la estación
                     </Typography>
                 </Grid2>
             }

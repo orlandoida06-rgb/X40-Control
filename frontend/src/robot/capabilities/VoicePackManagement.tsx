@@ -1,14 +1,148 @@
-import React, {FunctionComponent} from "react";
-import {Button, Collapse, LinearProgress, TextField, Typography} from "@mui/material";
+import React, { FunctionComponent } from "react";
+import {
+    Button,
+    Card,
+    CardContent,
+    Collapse,
+    LinearProgress,
+    TextField,
+    Typography,
+} from "@mui/material";
 import {
     Capability,
     useVoicePackManagementMutation,
     useVoicePackManagementStateQuery,
-    VoicePackManagementCommand
+    VoicePackManagementCommand,
 } from "../../api";
-import {useCapabilitiesSupported} from "../../CapabilitiesProvider";
-import {CapabilityItem} from "./CapabilityLayout";
-import {VoicepackHelp} from "./res/VoicepackHelp";
+import { useCapabilitiesSupported } from "../../CapabilitiesProvider";
+import { CapabilityItem } from "./CapabilityLayout";
+import { VoicepackHelp } from "./res/VoicepackHelp";
+
+type VoiceCatalogEntry = {
+  id: string;
+  name: string;
+  description: string;
+  language: string;
+  hash: string;
+  size: number;
+  installed: boolean;
+  url?: string;
+};
+
+const VOICE_CATALOG: VoiceCatalogEntry[] = [
+    {
+        id: "xiana",
+        name: "XIANA",
+        description: "Voz femenina en español",
+        language: "XIANA",
+        hash: "2da72c71c4602e1ca6729c2f05fbafcf",
+        size: 8221442,
+        installed: true,
+    },
+    {
+        id: "nico",
+        name: "Nico",
+        description: "Voz masculina en español",
+        language: "NICO",
+        hash: "7363352c7c3eaa98b06363ce81d78825",
+        size: 10707143,
+        installed: true,
+    },
+    {
+        id: "espanol",
+        name: "Español",
+        description: "Paquete de voz en español",
+        language: "ES",
+        hash: "03bb20437310bfe10323bd61f87f3f2b",
+        size: 7647665,
+        installed: true,
+        url: "https://raw.githubusercontent.com/orlandoida06-rgb/voces-spanish_dreame_x40-ultra/main/ES.tar.gz",
+    },
+    {
+        id: "english",
+        name: "English",
+        description: "Paquete de voz en inglés",
+        language: "EN",
+        hash: "f21167fdf79670940c0decaf25ead58f",
+        size: 7821572,
+        installed: true,
+        url: "https://raw.githubusercontent.com/orlandoida06-rgb/voces-spanish_dreame_x40-ultra/main/EN.tar.gz",
+    },
+    {
+        id: "francais",
+        name: "Français",
+        description: "Paquete de voz en francés",
+        language: "FR",
+        hash: "f5535ccac5c0db2237512ddf8729f77f",
+        size: 8961358,
+        installed: true,
+        url: "https://raw.githubusercontent.com/orlandoida06-rgb/voces-spanish_dreame_x40-ultra/main/FR.tar.gz",
+    },
+    {
+        id: "deutsch",
+        name: "Deutsch",
+        description: "Paquete de voz en alemán",
+        language: "DE",
+        hash: "f6ce6461cab1c905d235969f2c31a24a",
+        size: 8901556,
+        installed: true,
+        url: "https://raw.githubusercontent.com/orlandoida06-rgb/voces-spanish_dreame_x40-ultra/main/DE.tar.gz",
+    },
+    {
+        id: "italiano",
+        name: "Italiano",
+        description: "Paquete de voz en italiano",
+        language: "IT",
+        hash: "d6f8181ba3646da4042acae83882c210",
+        size: 7865296,
+        installed: true,
+        url: "https://raw.githubusercontent.com/orlandoida06-rgb/voces-spanish_dreame_x40-ultra/main/IT.tar.gz",
+    },
+    {
+        id: "portugues",
+        name: "Português",
+        description: "Paquete de voz en portugués",
+        language: "PT",
+        hash: "199fca757910bbe09ec0ee6906786e75",
+        size: 8038385,
+        installed: true,
+        url: "https://raw.githubusercontent.com/orlandoida06-rgb/voces-spanish_dreame_x40-ultra/main/PT.tar.gz",
+    },
+];
+
+const formatSize = (size: number): string => {
+    if (!size) {
+        return "";
+    }
+
+    return `${(size / 1024 / 1024).toFixed(1)} MB`;
+};
+
+const voiceBackground = (voiceId: string): string => {
+    const flags: Record<string, string> = {
+        xiana:
+      "linear-gradient(rgba(0,0,0,.48), rgba(0,0,0,.48)), linear-gradient(to bottom, #aa151b 0 25%, #f1bf00 25% 75%, #aa151b 75% 100%)",
+
+        nico: "linear-gradient(rgba(0,0,0,.48), rgba(0,0,0,.48)), linear-gradient(to bottom, #aa151b 0 25%, #f1bf00 25% 75%, #aa151b 75% 100%)",
+
+        italiano:
+      "linear-gradient(rgba(0,0,0,.48), rgba(0,0,0,.48)), linear-gradient(to right, #009246 0 33.33%, #ffffff 33.33% 66.66%, #ce2b37 66.66% 100%)",
+
+        francais:
+      "linear-gradient(rgba(0,0,0,.48), rgba(0,0,0,.48)), linear-gradient(to right, #0055a4 0 33.33%, #ffffff 33.33% 66.66%, #ef4135 66.66% 100%)",
+
+        english:
+      "linear-gradient(rgba(0,0,0,.48), rgba(0,0,0,.48)), linear-gradient(135deg, transparent 37%, #ffffff 37% 43%, #c8102e 43% 57%, #ffffff 57% 63%, transparent 63%), linear-gradient(45deg, transparent 37%, #ffffff 37% 43%, #c8102e 43% 57%, #ffffff 57% 63%, transparent 63%), linear-gradient(to right, transparent 0 40%, #ffffff 40% 60%, transparent 60%), linear-gradient(to bottom, transparent 0 40%, #ffffff 40% 60%, transparent 60%), #012169",
+
+        deutsch:
+      "linear-gradient(rgba(0,0,0,.48), rgba(0,0,0,.48)), linear-gradient(to bottom, #000000 0 33.33%, #dd0000 33.33% 66.66%, #ffce00 66.66% 100%)",
+
+        portugues:
+      "linear-gradient(rgba(0,0,0,.48), rgba(0,0,0,.48)), linear-gradient(to right, #046a38 0 40%, #da291c 40% 100%)",
+    };
+
+    return flags[voiceId] || "rgba(20,29,43,.95)";
+};
 
 const VoicePackControl: FunctionComponent = () => {
     const {
@@ -22,28 +156,90 @@ const VoicePackControl: FunctionComponent = () => {
     const [languageCode, setLanguageCode] = React.useState("");
     const [hash, setHash] = React.useState("");
 
-    const {mutate: sendVoicePackCommand, isPending: voicePackMutating} = useVoicePackManagementMutation();
+    const { mutate: sendVoicePackCommand, isPending: voicePackMutating } =
+    useVoicePackManagementMutation();
 
-    const intervalRef = React.useRef<any>(undefined);
+    const intervalRef = React.useRef<ReturnType<typeof setInterval> | undefined>(
+        undefined,
+    );
+
     React.useEffect(() => {
         const operationType = voicePack?.operationStatus.type;
+
         if (operationType === "downloading" || operationType === "installing") {
             intervalRef.current = setInterval(() => {
-                return voicePackRefetch();
+                void voicePackRefetch();
             }, 1000);
+
             return () => {
                 if (intervalRef.current) {
                     clearInterval(intervalRef.current);
                 }
             };
         }
+
+        return undefined;
     }, [voicePack, voicePackRefetch]);
+
+    const installVoice = (voice: VoiceCatalogEntry): void => {
+        if (!voice.url) {
+            return;
+        }
+
+        setUrl(voice.url);
+        setLanguageCode(voice.language);
+        setHash(voice.hash);
+    };
+
+    const activateVoice = React.useCallback(
+        (voice: VoiceCatalogEntry): void => {
+            if (!voice.installed) {
+                return;
+            }
+
+            if (voice.id === "nico") {
+                sendVoicePackCommand({
+                    action: "download",
+                    url: "https://raw.githubusercontent.com/orlandoida06-rgb/voces-spanish_dreame_x40-ultra/main/voice_pack_nico.tar.gz",
+                    language: voice.language,
+                    hash: voice.hash,
+                });
+                return;
+            }
+
+            if (voice.id === "xiana") {
+                sendVoicePackCommand({
+                    action: "download",
+                    url: "https://raw.githubusercontent.com/orlandoida06-rgb/voces-spanish_dreame_x40-ultra/main/voice_pack_spanish_xiana.tar.gz",
+                    language: voice.language,
+                    hash: voice.hash,
+                });
+                return;
+            }
+
+            if (voice.url) {
+                sendVoicePackCommand({
+                    action: "download",
+                    url: voice.url,
+                    language: voice.language,
+                    hash: voice.hash,
+                });
+                return;
+            }
+
+            sendVoicePackCommand({
+                action: "activate",
+                language: voice.language,
+            });
+        },
+        [sendVoicePackCommand],
+    );
 
     const voicePackContent = React.useMemo(() => {
         if (voicePackError) {
             return (
                 <Typography color="error">
-                    Error loading voice pack management state.
+          Error loading voice pack management state.
                 </Typography>
             );
         }
@@ -59,32 +255,202 @@ const VoicePackControl: FunctionComponent = () => {
 
         return (
             <>
-                <Typography variant="body1" sx={{mb: 1}}>
-                    Current language: {voicePack?.currentLanguage}
+                <Typography variant="h6" sx={{ mb: 1 }}>
+          Voces del robot
                 </Typography>
+
+                <Typography variant="body2" sx={{ mb: 2 }}>
+          Voz activa: {voicePack?.currentLanguage || "desconocida"}
+                </Typography>
+
+                {VOICE_CATALOG.map((voice) => {
+                    const isComingSoon = !voice.installed;
+                    const isCurrent =
+            voicePack?.currentLanguage?.toLowerCase() ===
+            voice.language.toLowerCase();
+
+                    return (
+                        <Card
+                            key={voice.id}
+                            variant="outlined"
+                            sx={{
+                                mb: 0.6,
+                                overflow: "hidden",
+                                color: "#ffffff",
+                                background: voiceBackground(voice.id),
+                                backgroundSize: "cover",
+                                backgroundPosition: "center",
+                                borderColor: "rgba(255,255,255,.14)",
+                                boxShadow: isCurrent ? "0 0 0 1px rgba(80,180,255,.55), 0 8px 24px rgba(0,0,0,.28)" : "0 6px 18px rgba(0,0,0,.22)",
+                            }}
+                        >
+                            <CardContent
+                                sx={{
+                                    p: 1.15,
+                                    "&:last-child": {
+                                        pb: 1.15,
+                                    },
+                                    background:
+                    "linear-gradient(90deg, rgba(10,15,22,.58), rgba(10,15,22,.30))",
+                                }}
+                            >
+                                <Typography
+                                    variant="h6"
+                                    sx={{
+                                        mb: 0.3,
+                                        fontSize: "1.1rem",
+                                        lineHeight: 1.15,
+                                        color: "#ffffff",
+                                        fontWeight: 700,
+                                        textShadow: "0 2px 4px rgba(0,0,0,.75)",
+                                    }}
+                                >
+                                    {voice.name}
+                                </Typography>
+
+                                <Typography
+                                    variant="body2"
+                                    sx={{
+                                        mb: 0.4,
+                                        fontSize: "0.82rem",
+                                        lineHeight: 1.2,
+                                        color: "rgba(255,255,255,.88)",
+                                        textShadow: "0 1px 3px rgba(0,0,0,.8)",
+                                    }}
+                                >
+                                    {voice.description}
+                                </Typography>
+
+                                {voice.size > 0 && (
+                                    <Typography
+                                        variant="caption"
+                                        sx={{
+                                            mb: 0.4,
+                                            display: "block",
+                                            fontSize: "0.72rem",
+                                            lineHeight: 1.1,
+                                            color: "rgba(255,255,255,.78)",
+                                        }}
+                                    >
+                                        {formatSize(voice.size)}
+                                    </Typography>
+                                )}
+
+                                {isCurrent && (
+                                    <Typography
+                                        variant="body2"
+                                        sx={{
+                                            mb: 0.4,
+                                            fontSize: "0.78rem",
+                                            color: "#76ff8a",
+                                            fontWeight: 700,
+                                            textShadow: "0 1px 3px rgba(0,0,0,.8)",
+                                        }}
+                                    >
+                    Voz activa
+                                    </Typography>
+                                )}
+
+                                {isComingSoon ? (
+                                    <Button
+                                        variant="outlined"
+                                        size="small"
+                                        disabled
+                                        sx={{
+                                            color: "rgba(255,255,255,.72)",
+                                            borderColor: "rgba(255,255,255,.28)",
+                                        }}
+                                    >
+                    Próximamente
+                                    </Button>
+                                ) : voice.url ? (
+                                    <Button
+                                        variant="outlined"
+                                        size="small"
+                                        disabled={commandDisabled}
+                                        onClick={() => activateVoice(voice)}
+                                    >
+                    Instalar
+                                    </Button>
+                                ) : (
+                                    <Button
+                                        variant="outlined"
+                                        size="small"
+                                        disabled={commandDisabled || isCurrent}
+                                        onClick={() => activateVoice(voice)}
+                                    >
+                                        {isCurrent ? "Voz activa" : "Activar"}
+                                    </Button>
+                                )}
+                            </CardContent>
+                        </Card>
+                    );
+                })}
+
                 {isError && (
-                    <Typography color="error">
-                        Error installing voice pack. Check the log for details.
+                    <Typography color="error" sx={{ mb: 1 }}>
+            Error al instalar el paquete de voz. Consulta el registro para
+            obtener más detalles.
                     </Typography>
                 )}
+
                 <Collapse in={isWorking}>
                     <Typography variant="subtitle1">
                         {isDownloading ? "Downloading..." : "Installing..."}
                     </Typography>
-                    <LinearProgress color={isDownloading ? "success" : "secondary"} variant={progressVariant} value={progressValue} sx={{mb: 1}}/>
+
+                    <LinearProgress
+                        color={isDownloading ? "success" : "secondary"}
+                        variant={progressVariant}
+                        value={progressValue}
+                        sx={{ mb: 1 }}
+                    />
                 </Collapse>
 
-                <TextField label="URL" value={url} onChange={(e) => {
-                    setUrl(e.target.value);
-                }} variant="standard" placeholder="https://" disabled={commandDisabled} fullWidth sx={{mb: 0.3}}/>
-                <TextField label="Language code" value={languageCode} onChange={(e) => {
-                    setLanguageCode(e.target.value);
-                }} variant="standard" placeholder="VA" disabled={commandDisabled} fullWidth sx={{mb: 0.3}}/>
-                <TextField label="Hash" value={hash} onChange={(e) => {
-                    setHash(e.target.value);
-                }} variant="standard" disabled={commandDisabled} fullWidth sx={{mb: 1}}/>
+                <Typography variant="subtitle1" sx={{ mt: 2, mb: 1 }}>
+          Configuración avanzada
+                </Typography>
 
-                <Button loading={voicePackMutating || commandDisabled}
+                <TextField
+                    label="URL"
+                    value={url}
+                    onChange={(event) => {
+                        setUrl(event.target.value);
+                    }}
+                    variant="standard"
+                    placeholder="https://"
+                    disabled={commandDisabled}
+                    fullWidth
+                    sx={{ mb: 0.3 }}
+                />
+
+                <TextField
+                    label="Código de idioma"
+                    value={languageCode}
+                    onChange={(event) => {
+                        setLanguageCode(event.target.value);
+                    }}
+                    variant="standard"
+                    placeholder="VA"
+                    disabled={commandDisabled}
+                    fullWidth
+                    sx={{ mb: 0.3 }}
+                />
+
+                <TextField
+                    label="Hash"
+                    value={hash}
+                    onChange={(event) => {
+                        setHash(event.target.value);
+                    }}
+                    variant="standard"
+                    disabled={commandDisabled}
+                    fullWidth
+                    sx={{ mb: 1 }}
+                />
+
+                <Button
+                    loading={voicePackMutating || commandDisabled}
                     loadingPosition="center"
                     variant="outlined"
                     onClick={() => {
@@ -92,17 +458,28 @@ const VoicePackControl: FunctionComponent = () => {
                             action: "download",
                             url: url,
                             hash: hash,
-                            language: languageCode
+                            language: languageCode,
                         };
+
                         sendVoicePackCommand(command);
-                    }}>
-                    Set voice pack
+                    }}
+                >
+          Set voice pack
                 </Button>
             </>
         );
-    }, [sendVoicePackCommand, voicePack, voicePackError, voicePackMutating, hash, languageCode, url]);
+    }, [
+        sendVoicePackCommand,
+        voicePack,
+        voicePackError,
+        voicePackMutating,
+        hash,
+        languageCode,
+        url,
+    ]);
 
     const loading = voicePackFetching || voicePackMutating || !voicePack;
+
     return (
         <CapabilityItem
             title="Voice packs"
@@ -115,12 +492,15 @@ const VoicePackControl: FunctionComponent = () => {
 };
 
 const VoicePackManagement: FunctionComponent = () => {
-    const [voicePackManagement] = useCapabilitiesSupported(Capability.VoicePackManagement);
+    const [voicePackManagement] = useCapabilitiesSupported(
+        Capability.VoicePackManagement,
+    );
+
     if (!voicePackManagement) {
         return null;
     }
 
-    return <VoicePackControl/>;
+    return <VoicePackControl />;
 };
 
 export default VoicePackManagement;

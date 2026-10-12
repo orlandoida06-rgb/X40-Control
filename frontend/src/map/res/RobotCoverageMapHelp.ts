@@ -1,7 +1,7 @@
 export const RobotCoverageMapHelp = `
-## Robot Coverage Map
+## Mapa de cobertura del robot
 
-By rendering the path with a much thicker stroke, this live map view allows you to easily spot areas that weren't reached
-by the robot.
+Al mostrar la ruta con un trazo mucho más grueso, esta vista del mapa en tiempo real
+permite detectar fácilmente las zonas que el robot no ha alcanzado.
 
 `;

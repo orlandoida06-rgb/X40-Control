@@ -10,6 +10,7 @@ import {
     UpdaterConfiguration,
     Capability,
     useRestoreDefaultConfigurationMutation,
+    useX40ControlRebootMutation,
     useUpdaterConfigurationMutation,
     useUpdaterConfigurationQuery,
     useValetudoCustomizationsMutation,
@@ -24,6 +25,31 @@ import { DuststreamingListMenuItem } from "../components/list_menu/Duststreaming
 import { ActivationListMenuItem } from "./ValetudoActivation";
 import {isAprilFools} from "../utils";
 
+
+const RobotRebootButtonListMenuItem = (): React.ReactElement => {
+    const {
+        mutate: rebootRobot,
+        isPending: rebootRobotIsExecuting
+    } = useX40ControlRebootMutation();
+
+    return (
+        <ButtonListMenuItem
+            primaryLabel="Resetear robot"
+            secondaryLabel="Reinicia el robot"
+            icon={<ConfigRestoreIcon/>}
+            buttonLabel="Reiniciar"
+            buttonColor={"error"}
+            confirmationDialog={{
+                title: "¿Resetear robot?",
+                body: "El robot se reiniciará. ¿Quieres continuar?"
+            }}
+            action={() => {
+                rebootRobot();
+            }}
+            actionLoading={rebootRobotIsExecuting}
+        />
+    );
+};
 
 const ConfigRestoreButtonListMenuItem = (): React.ReactElement => {
     const {
@@ -40,7 +66,7 @@ const ConfigRestoreButtonListMenuItem = (): React.ReactElement => {
             buttonColor={"error"}
             confirmationDialog={{
                 title: "Restore default Valetudo configuration?",
-                body: "Are you sure that you want to restore the default configuration? This will not affect Wi-Fi settings, Map data etc."
+                body: "¿Seguro que quieres restaurar la configuración predeterminada? Esto no afectará a la configuración Wi-Fi, los datos del mapa, etc."
             }}
             action={() => {
                 restoreDefaultConfiguration();
@@ -60,7 +86,7 @@ const FriendlyNameEditModalListMenuItem = (): React.ReactElement => {
         isPending: valetudoCustomizationsUpdating
     } = useValetudoCustomizationsMutation();
 
-    const description = "Set a custom friendly name for Network Advertisement, MQTT etc.";
+    const description = "Establece un nombre personalizado para el anuncio de red, MQTT, etc.";
     let secondaryLabel = description;
 
     if (valetudoCustomizations && valetudoCustomizations.friendlyName !== "") {
@@ -79,7 +105,7 @@ const FriendlyNameEditModalListMenuItem = (): React.ReactElement => {
                 validatingTransformer: (newValue: string) => {
                     return newValue.replace(/[^a-zA-Z0-9 -]/g, "").slice(0,24);
                 },
-                onSave: (newValue: string) => {
+                onGuardar: (newValue: string) => {
                     updateValetudoCustomizations({
                         friendlyName: newValue
                     });
@@ -129,8 +155,8 @@ const UpdateProviderSelectListMenuItem = (): React.ReactElement => {
             disabled={disabled}
             loadingOptions={false}
             loadError={configurationError}
-            primaryLabel="Update Channel"
-            secondaryLabel="Select the channel used by the inbuilt updater"
+            primaryLabel="Canal de actualización"
+            secondaryLabel="Selecciona el canal utilizado por el actualizador integrado"
             icon={<UpdaterIcon/>}
         />
     );
@@ -143,6 +169,7 @@ const ValetudoOptions = (): React.ReactElement => {
 
     const listItems = React.useMemo(() => {
         const items = [
+            <RobotRebootButtonListMenuItem key={"robotRebootAction"}/>,
             <ConfigRestoreButtonListMenuItem key={"configRestoreAction"}/>,
             <SpacerListMenuItem key={"spacer0"}/>,
             <FriendlyNameEditModalListMenuItem key={"friendlyName"}/>,
@@ -169,8 +196,8 @@ const ValetudoOptions = (): React.ReactElement => {
     return (
         <PaperContainer>
             <ListMenu
-                primaryHeader={"Valetudo Options"}
-                secondaryHeader={"Tunables and actions provided by Valetudo"}
+                primaryHeader={"Opciones de Valetudo"}
+                secondaryHeader={"Ajustes y acciones proporcionados por Valetudo"}
                 listItems={listItems}
             />
         </PaperContainer>

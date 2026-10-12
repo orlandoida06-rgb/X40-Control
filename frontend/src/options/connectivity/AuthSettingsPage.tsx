@@ -35,17 +35,17 @@ const AuthSettings = (): React.ReactElement => {
     const {mutate: updateConfiguration, isPending: configurationUpdating} = useHTTPBasicAuthConfigurationMutation();
 
     const [enabled, setEnabled] = React.useState(false);
-    const [username, setUsername] = React.useState("");
-    const [password, setPassword] = React.useState("");
+    const [username, setUsuario] = React.useState("");
+    const [password, setContraseña] = React.useState("");
 
-    const [showPasswordAsPlain, setShowPasswordAsPlain] = React.useState(false);
+    const [showContraseñaAsPlain, setShowContraseñaAsPlain] = React.useState(false);
     const [configurationModified, setConfigurationModified] = React.useState<boolean>(false);
 
     React.useEffect(() => {
         if (storedConfiguration) {
             setEnabled(storedConfiguration.enabled);
-            setUsername(storedConfiguration.username);
-            setPassword(storedConfiguration.password);
+            setUsuario(storedConfiguration.username);
+            setContraseña(storedConfiguration.password);
         }
     }, [storedConfiguration]);
 
@@ -56,7 +56,7 @@ const AuthSettings = (): React.ReactElement => {
     }
 
     if (configurationError || !storedConfiguration) {
-        return <Typography color="error">Error loading HTTP Basic Auth configuration</Typography>;
+        return <Typography color="error">Error al cargar la configuración de Autenticación HTTP básica</Typography>;
     }
 
     return (
@@ -71,49 +71,49 @@ const AuthSettings = (): React.ReactElement => {
                         }}
                     />
                 }
-                label="HTTP Basic Auth enabled"
+                label="Autenticación HTTP básica activada"
                 sx={{mb: 1}}
             />
             <Grid2 container spacing={1} sx={{mb: 1}} direction="row">
                 <Grid2 size="grow" style={{flexGrow: 1}}>
                     <TextField
                         style={{width: "100%"}}
-                        label="Username"
+                        label="Usuario"
                         value={username}
                         variant="standard"
                         disabled={!enabled}
                         onChange={e => {
-                            setUsername(e.target.value);
+                            setUsuario(e.target.value);
                             setConfigurationModified(true);
                         }}
                     />
                 </Grid2>
                 <Grid2 size="grow" style={{flexGrow: 1}}>
                     <FormControl style={{width: "100%"}} variant="standard">
-                        <InputLabel htmlFor="standard-adornment-password">Password</InputLabel>
+                        <InputLabel htmlFor="standard-adornment-password">Contraseña</InputLabel>
                         <Input
-                            type={showPasswordAsPlain ? "text" : "password"}
+                            type={showContraseñaAsPlain ? "text" : "password"}
                             fullWidth
                             value={password}
                             disabled={!enabled}
                             endAdornment={
                                 <InputAdornment position="end">
                                     <IconButton
-                                        aria-label="toggle password visibility"
+                                        aria-label="Mostrar u ocultar contraseña"
                                         onClick={() => {
-                                            setShowPasswordAsPlain(!showPasswordAsPlain);
+                                            setShowContraseñaAsPlain(!showContraseñaAsPlain);
                                         }}
                                         onMouseDown={e => {
                                             e.preventDefault();
                                         }}
                                         edge="end"
                                     >
-                                        {showPasswordAsPlain ? <VisibilityOffIcon/> : <VisibilityIcon/>}
+                                        {showContraseñaAsPlain ? <VisibilityOffIcon/> : <VisibilityIcon/>}
                                     </IconButton>
                                 </InputAdornment>
                             }
                             onChange={(e) => {
-                                setPassword(e.target.value);
+                                setContraseña(e.target.value);
                                 setConfigurationModified(true);
                             }}/>
                     </FormControl>
@@ -128,16 +128,16 @@ const AuthSettings = (): React.ReactElement => {
                 }}
             >
                 <Typography color="info">
-                    Valetudo will by default try to block access from public-routable IP addresses
-                    for your safety and convenience.
+                    De forma predeterminada, Valetudo intenta bloquear el acceso desde direcciones IP públicas
+                    para proteger tu red.
                     <br/>
-                    If you want to allow external access to your Valetudo instance, consider using a VPN such as
-                    WireGuard or OpenVPN to ensure the safety of your network.
+                    Si quieres acceder a Valetudo desde fuera de tu red, considera utilizar una VPN como
+                    WireGuard u OpenVPN para mantener tu red protegida.
                     <br/><br/>
-                    If you don&apos;t want to use a VPN, usage of a reverse proxy in front of Valetudo and all of your
-                    other IoT and network services (e.g. Home Assistant, Jellyfin) is strongly recommended.
-                    A proper Webserver (e.g. nginx, Apache) is engineered and hardened to be public-facing.
-                    Additionally, a setup like that provides you with central access logs and the ability to implement a central auth.
+                    Si no quieres utilizar una VPN, se recomienda encarecidamente colocar un proxy inverso delante de Valetudo
+                    y del resto de tus servicios de red e IoT (por ejemplo, Home Assistant o Jellyfin).
+                    Un servidor web adecuado, como nginx o Apache, está diseñado y reforzado para ofrecer acceso público.
+                    Además, esta configuración centraliza los registros de acceso y permite implementar una autenticación común.
                 </Typography>
             </InfoBox>
 
@@ -158,7 +158,7 @@ const AuthSettings = (): React.ReactElement => {
                             setConfigurationModified(false);
                         }}
                     >
-                        Save configuration
+                        Guardar configuración
                     </Button>
                 </Grid2>
             </Grid2>
@@ -172,7 +172,7 @@ const AuthSettingsPage = (): React.ReactElement => {
             <Grid2 container direction="row">
                 <Box style={{width: "100%"}}>
                     <DetailPageHeaderRow
-                        title="HTTP Basic Auth"
+                        title="Autenticación HTTP básica"
                         icon={<BasicAuthIcon/>}
                     />
                     <AuthSettings/>

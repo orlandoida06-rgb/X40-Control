@@ -9,6 +9,7 @@ import WifiConnectivityPage from "./connectivity/WifiConnectivityPage";
 import NetworkAdvertisementSettingsPage from "./connectivity/NetworkAdvertisementSettingsPage";
 import React from "react";
 import MQTTConnectivityPage from "./connectivity/MQTTConnectivityPage";
+import TailscaleConnectivityPage from "./connectivity/TailscaleConnectivityPage";
 
 const OptionsRouter = (): React.ReactElement => {
     const [
@@ -22,6 +23,7 @@ const OptionsRouter = (): React.ReactElement => {
             <Route path={""} element={<ConnectivityOptions />} />
             <Route path={"auth"} element={<AuthSettingsPage />} />
             <Route path={"mqtt"} element={<MQTTConnectivityPage />} />
+            <Route path={"tailscale"} element={<TailscaleConnectivityPage />} />
             <Route path={"networkadvertisement"} element={<NetworkAdvertisementSettingsPage />} />
             <Route path={"ntp"} element={<NTPConnectivityPage />} />
 

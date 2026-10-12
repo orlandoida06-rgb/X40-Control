@@ -15,9 +15,9 @@ const SystemRobotOptions = (): React.ReactElement => {
     return (
         <PaperContainer>
             <CapabilityContainer>
-                {components.map((Component, idx) => {
-                    return <Component key={idx}/>;
-                })}
+                {components.map((Component, idx) => (
+                    <Component key={idx}/>
+                ))}
             </CapabilityContainer>
         </PaperContainer>
     );

@@ -7,7 +7,9 @@ import {
     useMapSegmentMaterialControlPropertiesQuery,
     useRenameSegmentMutation,
     useSetSegmentMaterialMutation,
-    useSplitSegmentMutation
+    useSplitSegmentMutation,
+    useX40ControlRoomVoicesQuery,
+    useSetX40ControlRoomVoiceMutation
 } from "../../../api";
 import React from "react";
 import {
@@ -79,7 +81,7 @@ const SegmentRenameDialog = (props: SegmentRenameDialogProps) => {
 
     return (
         <Dialog open={open} onClose={onClose} sx={{userSelect: "none"}}>
-            <DialogTitle>Rename Segment</DialogTitle>
+            <DialogTitle>Renombrar habitación</DialogTitle>
             <DialogContent>
                 <DialogContentText>
                     How should the segment &apos;{currentName}&apos; be called?
@@ -103,13 +105,13 @@ const SegmentRenameDialog = (props: SegmentRenameDialogProps) => {
                 />
             </DialogContent>
             <DialogActions>
-                <Button onClick={onClose}>Cancel</Button>
+                <Button onClick={onClose}>Cancelar</Button>
                 <Button
                     onClick={() => {
                         onRename(name.trim());
                     }}
                 >
-                    Rename
+                        Renombrar
                 </Button>
             </DialogActions>
         </Dialog>
@@ -143,7 +145,7 @@ const SegmentMaterialDialog = (props: SegmentMaterialDialogProps) => {
 
     return (
         <Dialog open={open} onClose={onClose} sx={{userSelect: "none"}}>
-            <DialogTitle>Segment Material</DialogTitle>
+            <DialogTitle>Material de la habitación</DialogTitle>
             <DialogContent>
                 <DialogContentText style={{marginBottom: "1rem"}}>
                     What material is the floor of segment &apos;{name}&apos; made of?
@@ -169,7 +171,7 @@ const SegmentMaterialDialog = (props: SegmentMaterialDialogProps) => {
                 )}
             </DialogContent>
             <DialogActions>
-                <Button onClick={onClose}>Cancel</Button>
+                <Button onClick={onClose}>Cancelar</Button>
                 <Button
                     onClick={() => {
                         onSubmit(material);
@@ -218,6 +220,7 @@ const SegmentActions = (
 
     const [renameDialogOpen, setRenameDialogOpen] = React.useState(false);
     const [materialDialogOpen, setMaterialDialogOpen] = React.useState(false);
+    const [selectedRoomVoice, setSelectedRoomVoice] = React.useState<string>("");
 
     const {
         mutate: joinSegments,
@@ -245,6 +248,71 @@ const SegmentActions = (
     });
 
     const canEdit = props.robotStatus.value === "docked";
+
+    const {
+        data: roomVoices = {}
+    } = useX40ControlRoomVoicesQuery();
+
+    const {
+        mutate: setRoomVoice,
+        isPending: setRoomVoiceExecuting
+    } = useSetX40ControlRoomVoiceMutation();
+
+    React.useEffect(() => {
+        if (selectedSegmentIds.length !== 1) {
+            setSelectedRoomVoice("");
+            return;
+        }
+
+        const voiceId = roomVoices[selectedSegmentIds[0]];
+
+        if (voiceId !== undefined) {
+            setSelectedRoomVoice(voiceId);
+        }
+    }, [
+        selectedSegmentIds.length,
+        selectedSegmentIds[0],
+        roomVoices,
+    ]);
+
+    const handleRoomVoiceChange = React.useCallback((
+        event: React.ChangeEvent<HTMLInputElement>
+    ) => {
+        const value = event.target.value;
+        const segmentId = selectedSegmentIds[0];
+
+        if (!segmentId) {
+            return;
+        }
+        const voiceId = value === "" ? null : value;
+
+        setSelectedRoomVoice(value);
+
+        setRoomVoice(
+            {
+                segmentId: segmentId,
+                voiceId: voiceId
+            },
+            {
+                onSuccess: (data) => {
+                    const savedVoiceId = data[segmentId];
+                    setSelectedRoomVoice(
+                        savedVoiceId !== undefined ? savedVoiceId : ""
+                    );
+                },
+                onError: (error) => {
+                    window.alert(
+                        "Error guardando voz: " +
+                        (error instanceof Error ? error.message : String(error))
+                    );
+                }
+            }
+        );
+    }, [
+        canEdit,
+        selectedSegmentIds,
+        setRoomVoice
+    ]);
 
     const handleSplitClick = React.useCallback(() => {
         if (!canEdit || !cuttingLine || selectedSegmentIds.length !== 1) {
@@ -299,7 +367,25 @@ const SegmentActions = (
 
 
     return (
-        <Grid2 container spacing={1} direction="row-reverse" flexWrap="wrap-reverse">
+        <Grid2
+            container
+            spacing={2}
+            justifyContent="center"
+            alignItems="center"
+            sx={{
+                width: "100%",
+                padding: "10px",
+                display: "flex",
+                flexWrap: "wrap",
+                justifyContent: "center",
+                alignItems: "center",
+                rowGap: 1,
+                columnGap: "45px",
+                position: "relative",
+            }}
+            direction="row-reverse"
+            flexWrap="wrap"
+        >
             {
                 supportedCapabilities[Capability.MapSegmentEdit] &&
                 (selectedSegmentIds.length === 1 || selectedSegmentIds.length === 2) &&
@@ -310,11 +396,11 @@ const SegmentActions = (
                         disabled={joinSegmentsExecuting || !canEdit || selectedSegmentIds.length !== 2}
                         color="inherit"
                         size="medium"
-                        variant="extended"
+                        variant="extended" sx={{fontSize: "0.8rem"}}
                         onClick={handleJoinClick}
                     >
                         <JoinIcon style={{marginRight: "0.25rem", marginLeft: "-0.25rem"}}/>
-                        Join {segmentNames[selectedSegmentIds[0]]} and {selectedSegmentIds.length === 2 ? segmentNames[selectedSegmentIds[1]] : "?"}
+                        Unir {segmentNames[selectedSegmentIds[0]]} y {selectedSegmentIds.length === 2 ? segmentNames[selectedSegmentIds[1]] : "?"}
                         {joinSegmentsExecuting && (
                             <CircularProgress
                                 color="inherit"
@@ -335,11 +421,11 @@ const SegmentActions = (
                         disabled={splitSegmentExecuting || !canEdit}
                         color="inherit"
                         size="medium"
-                        variant="extended"
+                        variant="extended" sx={{fontSize: "0.8rem"}}
                         onClick={handleSplitClick}
                     >
                         <SplitIcon style={{marginRight: "0.25rem", marginLeft: "-0.25rem"}}/>
-                        Split {segmentNames[selectedSegmentIds[0]]}
+                        Dividir {segmentNames[selectedSegmentIds[0]]}
                         {splitSegmentExecuting && (
                             <CircularProgress
                                 color="inherit"
@@ -360,13 +446,13 @@ const SegmentActions = (
                         disabled={renameSegmentExecuting || !canEdit}
                         color="inherit"
                         size="medium"
-                        variant="extended"
+                        variant="extended" sx={{fontSize: "0.8rem"}}
                         onClick={() => {
                             setRenameDialogOpen(true);
                         }}
                     >
                         <RenameIcon style={{marginRight: "0.25rem", marginLeft: "-0.25rem"}}/>
-                        Rename
+                        Renombrar
                         {renameSegmentExecuting && (
                             <CircularProgress
                                 color="inherit"
@@ -375,6 +461,74 @@ const SegmentActions = (
                             />
                         )}
                     </ActionButton>
+                </Grid2>
+            }
+            {
+                selectedSegmentIds.length === 1 &&
+                cuttingLine === undefined &&
+
+                <Grid2
+                    sx={{
+                        position: "absolute",
+                        left: "50%",
+                        bottom: "58px",
+                        transform: "translateX(-50%)",
+                        width: 220,
+                        zIndex: 40,
+                        pointerEvents: "auto",
+                    }}
+                >
+                    <select
+                        value={selectedRoomVoice}
+                        disabled={setRoomVoiceExecuting}
+                        onChange={(event) => handleRoomVoiceChange(
+                            event as unknown as React.ChangeEvent<HTMLInputElement>
+                        )}
+                        style={{
+                            width: 240,
+                            height: 40,
+                            padding: "0 12px",
+                            borderRadius: 4,
+                            background: "transparent",
+                            color: "inherit",
+                            fontSize: 14,
+                        }}
+                    >
+                        <option value="">Sin voz</option>
+                        {[
+                            ["1", "Cocina"],
+                            ["2", "Salón"],
+                            ["3", "Dormitorio"],
+                            ["4", "Baño"],
+                            ["5", "Entrada"],
+                            ["6", "Pasillo"],
+                            ["7", "Comedor"],
+                            ["8", "Despacho"],
+                            ["9", "Habitación"],
+                            ["10", "Habitación infantil"],
+                            ["11", "Lavadero"],
+                            ["12", "Terraza"],
+                            ["13", "Balcón"],
+                            ["14", "Garaje"],
+                            ["15", "Vestidor"],
+                            ["16", "Sala de juegos"],
+                            ["17", "Biblioteca"],
+                            ["18", "Gimnasio"],
+                            ["19", "Estudio"],
+                            ["20", "Sala"],
+                        ].map(([voiceId, roomName]) => (
+                            <option
+                                key={voiceId}
+                                value={voiceId}
+                                style={{
+                                    color: "#000",
+                                    backgroundColor: "#fff",
+                                }}
+                            >
+                                {roomName}
+                            </option>
+                        ))}
+                    </select>
                 </Grid2>
             }
             {
@@ -387,7 +541,7 @@ const SegmentActions = (
                         disabled={setSegmentMaterialExecuting || !canEdit}
                         color="inherit"
                         size="medium"
-                        variant="extended"
+                        variant="extended" sx={{fontSize: "0.8rem"}}
                         onClick={() => {
                             setMaterialDialogOpen(true);
                         }}
@@ -414,11 +568,11 @@ const SegmentActions = (
                         disabled={joinSegmentsExecuting || !canEdit}
                         color="inherit"
                         size="medium"
-                        variant="extended"
+                        variant="extended" sx={{fontSize: "0.8rem"}}
                         onClick={onAddCuttingLine}
                     >
                         <AddCuttingLineIcon style={{marginRight: "0.25rem", marginLeft: "-0.25rem"}}/>
-                        Cutting Line
+                        Línea de corte
                     </ActionButton>
                 </Grid2>
             }
@@ -432,11 +586,11 @@ const SegmentActions = (
                     <ActionButton
                         color="inherit"
                         size="medium"
-                        variant="extended"
+                        variant="extended" sx={{fontSize: "0.8rem"}}
                         onClick={onClear}
                     >
                         <ClearIcon style={{marginRight: "0.25rem", marginLeft: "-0.25rem"}}/>
-                        Clear
+                        Borrar segmento
                     </ActionButton>
                 </Grid2>
             }
@@ -444,7 +598,7 @@ const SegmentActions = (
                 !canEdit &&
                 <Grid2>
                     <Typography variant="caption" color="textSecondary">
-                        Editing segments requires the robot to be docked
+                        Para editar las habitaciones, el robot debe estar en la base
                     </Typography>
                 </Grid2>
             }
@@ -453,7 +607,7 @@ const SegmentActions = (
                 selectedSegmentIds.length === 0 &&
                 <Grid2>
                     <Typography variant="caption" color="textSecondary" style={{fontSize: "1em"}}>
-                        Please select a segment to start editing
+                        Selecciona una habitación para comenzar a editar
                     </Typography>
                 </Grid2>
             }

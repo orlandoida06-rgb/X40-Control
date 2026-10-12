@@ -27,8 +27,8 @@ import {
     Visibility as VisibilityIcon,
     VisibilityOff as VisibilityOffIcon,
 
-    LinkOff as MQTTDisconnectedIcon,
-    Link as MQTTConnectedIcon,
+    LinkOff as MQTTDesconectadoIcon,
+    Link as MQTTConectadoIcon,
     Sync as MQTTConnectingIcon,
     Warning as MQTTErrorIcon,
 } from "@mui/icons-material";
@@ -67,15 +67,15 @@ const MQTTStatusComponent: React.FunctionComponent<{
     }
 
     if (statusError) {
-        return <Typography color="error">Error loading MQTT status</Typography>;
+        return <Typography color="error">Error al cargar el estado MQTT</Typography>;
     }
 
     const getIconForState = (): React.ReactElement => {
         switch (status.state) {
             case "disconnected":
-                return <MQTTDisconnectedIcon sx={{fontSize: "4rem"}}/>;
+                return <MQTTDesconectadoIcon sx={{fontSize: "4rem"}}/>;
             case "ready":
-                return <MQTTConnectedIcon sx={{fontSize: "4rem"}}/>;
+                return <MQTTConectadoIcon sx={{fontSize: "4rem"}}/>;
             case "init":
                 return <MQTTConnectingIcon sx={{fontSize: "4rem"}}/>;
             case "lost":
@@ -88,20 +88,20 @@ const MQTTStatusComponent: React.FunctionComponent<{
         switch (status.state) {
             case "disconnected":
                 return (
-                    <Typography variant="h5">Disconnected</Typography>
+                    <Typography variant="h5">Desconectado</Typography>
                 );
             case "ready":
                 return (
-                    <Typography variant="h5">Connected</Typography>
+                    <Typography variant="h5">Conectado</Typography>
                 );
             case "init":
                 return (
-                    <Typography variant="h5">Connecting/Reconfiguring</Typography>
+                    <Typography variant="h5">Conectando/Reconfigurando</Typography>
                 );
             case "lost":
             case "alert":
                 return (
-                    <Typography variant="h5">Connection error</Typography>
+                    <Typography variant="h5">Error de conexión</Typography>
                 );
         }
     };
@@ -109,19 +109,19 @@ const MQTTStatusComponent: React.FunctionComponent<{
     const getMessageStats = (): React.ReactElement => {
         const items = [
             {
-                header: "Messages Sent",
+                header: "Mensajes enviados",
                 body: status.stats.messages.count.sent.toString()
             },
             {
-                header: "Bytes Sent",
+                header: "Bytes enviados",
                 body: convertBytesToHumans(status.stats.messages.bytes.sent)
             },
             {
-                header: "Messages Received",
+                header: "Mensajes recibidos",
                 body: status.stats.messages.count.received.toString()
             },
             {
-                header: "Bytes Received",
+                header: "Bytes recibidos",
                 body: convertBytesToHumans(status.stats.messages.bytes.received)
             },
         ];
@@ -129,22 +129,22 @@ const MQTTStatusComponent: React.FunctionComponent<{
         return <TextInformationGrid items={items}/>;
     };
 
-    const getConnectionStats = (): React.ReactElement => {
+    const getConexiónStats = (): React.ReactElement => {
         const items = [
             {
-                header: "Connects",
+                header: "Conexiones",
                 body: status.stats.connection.connects.toString()
             },
             {
-                header: "Disconnects",
+                header: "Desconexiones",
                 body: status.stats.connection.disconnects.toString()
             },
             {
-                header: "Reconnects",
+                header: "Reconexiones",
                 body: status.stats.connection.reconnects.toString()
             },
             {
-                header: "Errors",
+                header: "Errores",
                 body: status.stats.connection.errors.toString()
             },
         ];
@@ -198,10 +198,10 @@ const MQTTStatusComponent: React.FunctionComponent<{
                     >
                         <CardContent>
                             <Typography variant="h6" gutterBottom>
-                                Connection Statistics
+                                Estadísticas de conexión
                             </Typography>
                             <Divider/>
-                            {getConnectionStats()}
+                            {getConexiónStats()}
                         </CardContent>
                     </Card>
                 </Grid2>
@@ -267,7 +267,7 @@ const MQTTInput: React.FunctionComponent<{
     helperText: string,
     required: boolean,
     configPath: Array<string>,
-    additionalProps?: InputProps
+    añadiritionalProps?: InputProps
     inputPostProcessor?: (value: any) => any
 }> = ({
     mqttConfiguration,
@@ -278,7 +278,7 @@ const MQTTInput: React.FunctionComponent<{
     helperText,
     required,
     configPath,
-    additionalProps,
+    añadiritionalProps,
     inputPostProcessor
 }) => {
     const idBase = "mqtt-config-" + configPath.join("-");
@@ -300,7 +300,7 @@ const MQTTInput: React.FunctionComponent<{
                 id={inputId}
                 value={value}
                 onChange={(e) => {
-                    let newValue = additionalProps?.type === "number" ? parseInt(e.target.value) : e.target.value;
+                    let newValue = añadiritionalProps?.type === "number" ? parseInt(e.target.value) : e.target.value;
                     if (inputPostProcessor) {
                         newValue = inputPostProcessor(newValue);
                     }
@@ -309,7 +309,7 @@ const MQTTInput: React.FunctionComponent<{
                 }}
                 aria-describedby={helperId}
 
-                {...additionalProps}
+                {...añadiritionalProps}
             />
             <FormHelperText id={helperId} sx={{userSelect: "none"}}>
                 {helperText}
@@ -462,7 +462,7 @@ const MQTTConnectivity = (): React.ReactElement => {
     const [configurationModified, setConfigurationModified] = React.useState<boolean>(false);
 
 
-    const [showMQTTAuthPasswordAsPlain, setShowMQTTAuthPasswordAsPlain] = React.useState(false);
+    const [showMQTTAuthContraseñaAsPlain, setShowMQTTAuthContraseñaAsPlain] = React.useState(false);
 
     React.useEffect(() => {
         if (storedMQTTConfiguration && !configurationModified && !mqttConfigurationUpdating) {
@@ -492,7 +492,7 @@ const MQTTConnectivity = (): React.ReactElement => {
     }
 
     if (mqttConfigurationError || mqttPropertiesError || !storedMQTTConfiguration || !mqttProperties) {
-        return <Typography color="error">Error loading MQTT configuration</Typography>;
+        return <Typography color="error">Error al cargar la configuración MQTT</Typography>;
     }
 
     return (
@@ -513,17 +513,17 @@ const MQTTConnectivity = (): React.ReactElement => {
                         }}
                     />
                 }
-                label="MQTT enabled"
+                label="MQTT activado"
                 sx={{userSelect: "none", marginLeft: "0.5rem", marginBottom: "0.5rem"}}
             />
 
-            <GroupBox title="Connection">
+            <GroupBox title="Conexión">
                 <MQTTInput
                     mqttConfiguration={mqttConfiguration}
                     modifyMQTTConfig={modifyMQTTConfig}
 
-                    title="Host"
-                    helperText="The MQTT Broker hostname"
+                    title="Servidor"
+                    helperText="Nombre del servidor MQTT"
                     required={true}
                     configPath={["connection", "host"]}
                     inputPostProcessor={(value) => {
@@ -534,11 +534,11 @@ const MQTTConnectivity = (): React.ReactElement => {
                     mqttConfiguration={mqttConfiguration}
                     modifyMQTTConfig={modifyMQTTConfig}
 
-                    title="Port"
-                    helperText="The MQTT Broker port"
+                    title="Puerto"
+                    helperText="Puerto del servidor MQTT"
                     required={true}
                     configPath={["connection", "port"]}
-                    additionalProps={{type: "number"}}
+                    añadiritionalProps={{type: "number"}}
                 />
 
                 <GroupBox title="TLS" checked={mqttConfiguration.connection.tls.enabled}
@@ -550,10 +550,10 @@ const MQTTConnectivity = (): React.ReactElement => {
                         modifyMQTTConfig={modifyMQTTConfig}
 
                         title="CA"
-                        helperText="The optional Certificate Authority to verify the connection with"
+                        helperText="Autoridad de certificación opcional para verificar la conexión"
                         required={false}
                         configPath={["connection", "tls", "ca"]}
-                        additionalProps={{
+                        añadiritionalProps={{
                             multiline: true,
                             minRows: 3,
                             maxRows: 10,
@@ -563,13 +563,13 @@ const MQTTConnectivity = (): React.ReactElement => {
                     <MQTTSwitch
                         mqttConfiguration={mqttConfiguration}
                         modifyMQTTConfig={modifyMQTTConfig}
-                        title="Ignore certificate errors"
-                        configPath={["connection", "tls", "ignoreCertificateErrors"]}
+                        title="Ignorar errores de certificado"
+                        configPath={["connection", "tls", "ignoreCertificadoErrors"]}
                     />
                 </GroupBox>
 
-                <GroupBox title="Authentication">
-                    <GroupBox title="Credentials"
+                <GroupBox title="Autenticación">
+                    <GroupBox title="Credenciales"
                         checked={mqttConfiguration.connection.authentication.credentials.enabled}
                         onChange={(e) => {
                             modifyMQTTConfig(e.target.checked, ["connection", "authentication", "credentials", "enabled"]);
@@ -578,8 +578,8 @@ const MQTTConnectivity = (): React.ReactElement => {
                             mqttConfiguration={mqttConfiguration}
                             modifyMQTTConfig={modifyMQTTConfig}
 
-                            title="Username"
-                            helperText="Username for authentication"
+                            title="Usuario"
+                            helperText="Usuario para la autenticación"
                             required={true}
                             configPath={["connection", "authentication", "credentials", "username"]}
                         />
@@ -587,32 +587,32 @@ const MQTTConnectivity = (): React.ReactElement => {
                             mqttConfiguration={mqttConfiguration}
                             modifyMQTTConfig={modifyMQTTConfig}
 
-                            title="Password"
-                            helperText="Password for authentication"
+                            title="Contraseña"
+                            helperText="Contraseña para la autenticación"
                             required={false}
                             configPath={["connection", "authentication", "credentials", "password"]}
-                            additionalProps={{
-                                type: showMQTTAuthPasswordAsPlain ? "text" : "password",
+                            añadiritionalProps={{
+                                type: showMQTTAuthContraseñaAsPlain ? "text" : "password",
                                 endAdornment: (
                                     <InputAdornment position="end">
                                         <IconButton
-                                            aria-label="toggle password visibility"
+                                            aria-label="Mostrar u ocultar contraseña"
                                             onClick={() => {
-                                                setShowMQTTAuthPasswordAsPlain(!showMQTTAuthPasswordAsPlain);
+                                                setShowMQTTAuthContraseñaAsPlain(!showMQTTAuthContraseñaAsPlain);
                                             }}
                                             onMouseDown={e => {
                                                 e.preventDefault();
                                             }}
                                             edge="end"
                                         >
-                                            {showMQTTAuthPasswordAsPlain ? <VisibilityOffIcon/> : <VisibilityIcon/>}
+                                            {showMQTTAuthContraseñaAsPlain ? <VisibilityOffIcon/> : <VisibilityIcon/>}
                                         </IconButton>
                                     </InputAdornment>
                                 )
                             }}
                         />
                     </GroupBox>
-                    <GroupBox title="Client certificate"
+                    <GroupBox title="Certificado del cliente"
                         checked={mqttConfiguration.connection.authentication.clientCertificate.enabled}
                         onChange={(e) => {
                             modifyMQTTConfig(e.target.checked, ["connection", "authentication", "clientCertificate", "enabled"]);
@@ -622,11 +622,11 @@ const MQTTConnectivity = (): React.ReactElement => {
                             mqttConfiguration={mqttConfiguration}
                             modifyMQTTConfig={modifyMQTTConfig}
 
-                            title="Certificate"
-                            helperText="The full certificate as a multi-line string"
+                            title="Certificado"
+                            helperText="Certificado completo como texto multilínea"
                             required={true}
                             configPath={["connection", "authentication", "clientCertificate", "certificate"]}
-                            additionalProps={{
+                            añadiritionalProps={{
                                 multiline: true,
                                 minRows: 3,
                                 maxRows: 10
@@ -636,11 +636,11 @@ const MQTTConnectivity = (): React.ReactElement => {
                             mqttConfiguration={mqttConfiguration}
                             modifyMQTTConfig={modifyMQTTConfig}
 
-                            title="Key"
-                            helperText="The full key as a multi-line string"
+                            title="Clave"
+                            helperText="La clave completa como texto de varias líneas"
                             required={true}
                             configPath={["connection", "authentication", "clientCertificate", "key"]}
-                            additionalProps={{
+                            añadiritionalProps={{
                                 multiline: true,
                                 minRows: 3,
                                 maxRows: 10
@@ -650,7 +650,7 @@ const MQTTConnectivity = (): React.ReactElement => {
                 </GroupBox>
             </GroupBox>
 
-            <GroupBox title="Integrations">
+            <GroupBox title="Integraciones">
                 <GroupBox title="Home Assistant" checked={mqttConfiguration.interfaces.homeassistant.enabled}
                     onChange={(e) => {
                         modifyMQTTConfig(e.target.checked, ["interfaces", "homeassistant", "enabled"]);
@@ -660,7 +660,7 @@ const MQTTConnectivity = (): React.ReactElement => {
                             <MQTTSwitch
                                 mqttConfiguration={mqttConfiguration}
                                 modifyMQTTConfig={modifyMQTTConfig}
-                                title="Delete autodiscovery metadata on shutdown"
+                                title="Eliminar metadatos de autodetección al apagar"
                                 configPath={["interfaces", "homeassistant", "cleanAutoconfOnShutdown"]}
                             />
                         </FormGroup>
@@ -676,7 +676,7 @@ const MQTTConnectivity = (): React.ReactElement => {
                             <MQTTSwitch
                                 mqttConfiguration={mqttConfiguration}
                                 modifyMQTTConfig={modifyMQTTConfig}
-                                title="Delete autodiscovery metadata on shutdown"
+                                title="Eliminar metadatos de autodetección al apagar"
                                 configPath={["interfaces", "homie", "cleanAttributesOnShutdown"]}
                             />
                         </FormGroup>
@@ -684,16 +684,16 @@ const MQTTConnectivity = (): React.ReactElement => {
                 </GroupBox>
             </GroupBox>
 
-            <GroupBox title="Customizations">
+            <GroupBox title="Personalización">
                 <MQTTInput
                     mqttConfiguration={mqttConfiguration}
                     modifyMQTTConfig={modifyMQTTConfig}
 
-                    title="Topic prefix"
-                    helperText="MQTT topic prefix"
+                    title="Prefijo del tópico"
+                    helperText="Prefijo de tópicos MQTT"
                     required={false}
                     configPath={["customizations", "topicPrefix"]}
-                    additionalProps={{
+                    añadiritionalProps={{
                         placeholder: mqttProperties.defaults.customizations.topicPrefix,
                         color: "warning",
                         onFocus: () => {
@@ -717,11 +717,11 @@ const MQTTConnectivity = (): React.ReactElement => {
                     mqttConfiguration={mqttConfiguration}
                     modifyMQTTConfig={modifyMQTTConfig}
 
-                    title="Identifier"
-                    helperText="The machine-readable name of the robot"
+                    title="Identificador"
+                    helperText="Nombre identificable del robot"
                     required={false}
                     configPath={["identity", "identifier"]}
-                    additionalProps={{
+                    añadiritionalProps={{
                         placeholder: mqttProperties.defaults.identity.identifier,
                         color: "secondary",
                         onFocus: () => {
@@ -737,7 +737,7 @@ const MQTTConnectivity = (): React.ReactElement => {
                 />
                 <br/>
                 <Typography variant="subtitle2" sx={{mt: "0.5rem", mb: "2rem", userSelect: "none"}} noWrap={false}>
-                    The MQTT Topic structure will look like this:<br/>
+                    La estructura del tema MQTT será la siguiente:<br/>
                     <span style={{
                         fontFamily: "\"JetBrains Mono\",monospace",
                         fontWeight: 200,
@@ -767,14 +767,14 @@ const MQTTConnectivity = (): React.ReactElement => {
                 <MQTTSwitch
                     mqttConfiguration={mqttConfiguration}
                     modifyMQTTConfig={modifyMQTTConfig}
-                    title="Provide map data"
+                    title="Proporcionar datos del mapa"
                     configPath={["customizations", "provideMapData"]}
                 />
             </GroupBox>
 
             {
                 mqttProperties.optionalExposableCapabilities.length > 0 &&
-                <GroupBox title="Optionally exposable capabilities">
+                <GroupBox title="Capacidades opcionalmente disponibles">
                     <MQTTOptionalExposedCapabilitiesEditor
                         mqttConfiguration={mqttConfiguration}
                         modifyMQTTConfig={modifyMQTTConfig}
@@ -801,12 +801,12 @@ const MQTTConnectivity = (): React.ReactElement => {
                 }}
             >
                 <Typography color="info">
-                    Valetudo is developed against and tested with the Mosquitto MQTT broker.<br/>
-                    In an ideal world, any broker would work, but in reality, some only implement subsets of the MQTT spec.
-                    Thus, if you&apos;re experiencing any issues, try Mosquitto.
+                    Valetudo se desarrolla y prueba con el broker MQTT Mosquitto.<br/>
+                    En un mundo ideal, cualquier intermediario MQTT funcionaría. Sin embargo, algunos solo implementan una parte de la especificación MQTT.
+                    Por tanto, si tienes problemas, prueba a utilizar Mosquitto.
                     <br/>
-                    Another common issue are incorrectly configured ACLs. Because the MQTT v3 protocol does not provide
-                    feedback on ACL failures, Valetudo cannot report these, meaning that things fail silently.
+                    Otro problema habitual son las listas de control de acceso (ACL) mal configuradas. Como el protocolo MQTT v3 no proporciona
+                    información sobre los errores de las ACL, Valetudo no puede detectarlos ni mostrarlos, por lo que los fallos pueden producirse sin avisos.
                 </Typography>
             </InfoBox>
 
@@ -826,7 +826,7 @@ const MQTTConnectivity = (): React.ReactElement => {
                             setConfigurationModified(false);
                         }}
                     >
-                        Save configuration
+                        Guardar configuración
                     </Button>
                 </Grid2>
             </Grid2>
@@ -845,7 +845,7 @@ const MQTTConnectivityPage = (): React.ReactElement => {
             <Grid2 container direction="row">
                 <Box style={{width: "100%"}}>
                     <DetailPageHeaderRow
-                        title="MQTT Connectivity"
+                        title="Conectividad MQTT"
                         icon={<MQTTIcon/>}
                         onRefreshClick={() => {
                             refetchMqttStatus().catch(() => {

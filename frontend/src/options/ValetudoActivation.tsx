@@ -418,7 +418,7 @@ export const ActivationListMenuItem = (): React.ReactElement => {
     const theme = useTheme();
     const valetudoColors = useValetudoColorsInverse();
 
-    const handleClose = () => {
+    const handleCerrar = () => {
         setOpen(false);
         setKeyInput("");
         setError(false);
@@ -434,7 +434,7 @@ export const ActivationListMenuItem = (): React.ReactElement => {
 
     const handleManualActivate = () => {
         if (VALID_KEYS.includes(keyInput.trim().toUpperCase())) {
-            handleClose();
+            handleCerrar();
             setIsActivated(true);
         } else {
             setError(true);
@@ -541,7 +541,7 @@ export const ActivationListMenuItem = (): React.ReactElement => {
                 actionLoading={false}
             />
 
-            <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
+            <Dialog open={open} onClose={handleCerrar} fullWidth maxWidth="sm">
                 <DialogTitle>
                     {isActivated ? "Valetudo Genuine Advantage" : "Activation Required"}
                 </DialogTitle>
@@ -551,10 +551,10 @@ export const ActivationListMenuItem = (): React.ReactElement => {
                             <>
                                 <Box sx={{ display: "flex", alignItems: "center", gap: 1}}>
                                     <VerifiedIcon sx={{color: valetudoColors.green}} fontSize="large" />
-                                    <Typography variant="h6">Licensed Product</Typography>
+                                    <Typography variant="h6">Producto con licencia</Typography>
                                 </Box>
                                 <DialogContentText>
-                                    Valetudo is activated with a digital license.
+                                    Valetudo se activa mediante una licencia digital.
                                 </DialogContentText>
 
                                 <Box sx={{
@@ -567,7 +567,7 @@ export const ActivationListMenuItem = (): React.ReactElement => {
                                     boxShadow: 2
                                 }}>
                                     <Box sx={{mb: 1}}>
-                                        <Typography variant="caption" sx={{color: theme.palette.text.secondary, display: "block"}}>LICENSE TYPE</Typography>
+                                        <Typography variant="caption" sx={{color: theme.palette.text.secondary, display: "block"}}>TIPO DE LICENCIA</Typography>
                                         <Typography variant="body2" sx={{color: valetudoColors.lightBlue, fontWeight: "bold"}}>
                                             Unlimited Company License
                                         </Typography>
@@ -575,7 +575,7 @@ export const ActivationListMenuItem = (): React.ReactElement => {
                                     <Divider sx={{ mb: 1}} />
 
                                     <Box sx={{mb: 1}}>
-                                        <Typography variant="caption" sx={{color: theme.palette.text.secondary, display: "block"}}>REGISTERED TO</Typography>
+                                        <Typography variant="caption" sx={{color: theme.palette.text.secondary, display: "block"}}>REGISTRADO A</Typography>
                                         <Typography variant="body2" sx={{color: valetudoColors.lightBlue}}>
                                             Hackerman
                                         </Typography>
@@ -586,10 +586,10 @@ export const ActivationListMenuItem = (): React.ReactElement => {
                             <>
                                 <Box>
                                     <DialogContentText sx={{ color: "text.primary", fontWeight: 500 }}>
-                                        Your Evaluation License for Valetudo has expired.
+                                        Tu licencia de evaluación de Valetudo ha caducado.
                                     </DialogContentText>
                                     <DialogContentText sx={{ fontSize: "0.9rem", mt: 1 }}>
-                                        Continued use of this software requires a valid <strong>Valetudo</strong> subscription.
+                                        El uso continuado de este software requiere una suscripción válida a <strong>Valetudo</strong>.
                                     </DialogContentText>
                                 </Box>
 
@@ -606,7 +606,7 @@ export const ActivationListMenuItem = (): React.ReactElement => {
                                         {">"} Cloud Activation
                                     </Typography>
                                     <Typography variant="caption" display="block" sx={{mb: 2, color: theme.palette.text.secondary, fontFamily: "monospace"}}>
-                                        Automatically fetch a license from the Valetudo Licensing Server.<br/>
+                                        Obtener automáticamente una licencia del servidor de licencias de Valetudo.<br/>
                                         Requires an active internet connection.
                                     </Typography>
 
@@ -624,7 +624,7 @@ export const ActivationListMenuItem = (): React.ReactElement => {
                                         <Box sx={{ width: "100%" }}>
                                             <LinearProgress />
                                             <Typography variant="caption" align="center" display="block" sx={{mt: 1, color: theme.palette.text.secondary, fontFamily: "monospace"}}>
-                                                Handshaking with licensing.valetudo.cloud...
+                                                Conectando con licensing.valetudo.cloud...
                                             </Typography>
                                         </Box>
                                     )}
@@ -635,7 +635,7 @@ export const ActivationListMenuItem = (): React.ReactElement => {
                                                 CONNECTION TIMED OUT (Error 000)
                                             </Typography>
                                             <Typography variant="caption" display="block" sx={{color: theme.palette.text.secondary, fontFamily: "monospace", mb: 2}}>
-                                                The licensing server is unreachable.
+                                                No se puede acceder al servidor de licencias.
                                             </Typography>
                                             <Button
                                                 variant="outlined"
@@ -675,7 +675,7 @@ export const ActivationListMenuItem = (): React.ReactElement => {
                                         setError(false);
                                     }}
                                     error={error}
-                                    helperText={error ? "Error: Invalid checksum or revoked key." : "If you have a license key, enter it here."}
+                                    helperText={error ? "Error: suma de comprobación no válida o clave revocada." : "Si tienes una clave de licencia, introdúcela aquí."}
                                     InputProps={{
                                         style: {fontFamily: "monospace"},
                                         endAdornment: <VpnKey color="action" />
@@ -687,8 +687,8 @@ export const ActivationListMenuItem = (): React.ReactElement => {
                 </DialogContent>
 
                 <DialogActions sx={{ p: 2 }}>
-                    <Button onClick={handleClose} color="inherit">
-                        {isActivated ? "Close" : "Cancel"}
+                    <Button onClick={handleCerrar} color="inherit">
+                        {isActivated ? "Cerrar" : "Cancelar"}
                     </Button>
 
                     {!isActivated ? (

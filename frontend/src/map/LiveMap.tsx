@@ -1,7 +1,13 @@
 import BaseMap, {MapContainer, MapProps, MapState, usePendingMapAction} from "./BaseMap";
-import {Capability} from "../api";
+import {
+    Capability,
+} from "../api";
 import GoToTargetClientStructure from "./structures/client_structures/GoToTargetClientStructure";
-import {ActionsContainer} from "./Styled";
+import {
+    ActionsContainer,
+    ActionButton,
+    MapControlsPanel,
+} from "./Styled";
 import SegmentActions from "./actions/live_map_actions/SegmentActions";
 import SegmentLabelMapStructure from "./structures/map_structures/SegmentLabelMapStructure";
 import ZoneActions from "./actions/live_map_actions/ZoneActions";
@@ -10,7 +16,7 @@ import GoToActions from "./actions/live_map_actions/GoToActions";
 import {TapTouchHandlerEvent} from "./utils/touch_handling/events/TapTouchHandlerEvent";
 import React from "react";
 import {LiveMapModeSwitcher} from "./LiveMapModeSwitcher";
-import {Button, Dialog, DialogActions, DialogContent, DialogTitle} from "@mui/material";
+import {Box, Button, Dialog, DialogActions, DialogContent, DialogTitle} from "@mui/material";
 
 
 export type LiveMapMode = "segments" | "zones" | "goto" | "none";
@@ -21,14 +27,16 @@ interface LiveMapProps extends MapProps {
         [Capability.MapSegmentation]: boolean,
         [Capability.ZoneCleaning]: boolean,
         [Capability.GoToLocation]: boolean
-    }
-}
+    },
+ }
 
 interface LiveMapState extends MapState {
     mode: LiveMapMode,
     zones: Array<ZoneClientStructure>,
     goToTarget: GoToTargetClientStructure | undefined
 }
+
+
 
 class LiveMap extends BaseMap<LiveMapProps, LiveMapState> {
     private readonly supportedModes: Array<LiveMapMode>;
@@ -71,6 +79,44 @@ class LiveMap extends BaseMap<LiveMapProps, LiveMapState> {
             zones: [],
             goToTarget: undefined
         };
+    }
+
+    public setMapMode(newMode: LiveMapMode): void {
+        this.structureManager.getMapStructures().forEach(s => {
+            if (s.type === SegmentLabelMapStructure.TYPE) {
+                const label = s as SegmentLabelMapStructure;
+                label.selected = false;
+            }
+        });
+
+        this.structureManager.getClientStructures().forEach(s => {
+            if (s.type === GoToTargetClientStructure.TYPE) {
+                this.structureManager.removeClientStructure(s);
+            }
+
+            if (s.type === ZoneClientStructure.TYPE) {
+                this.structureManager.removeClientStructure(s);
+            }
+        });
+
+        try {
+            window.localStorage.setItem(
+                LIVE_MAP_MODE_LOCAL_STORAGE_KEY,
+                newMode
+            );
+        } catch (e) {
+            // Ignore localStorage failures
+        }
+
+        this.setState({
+            mode: newMode,
+            selectedSegmentIds: [],
+            zones: [],
+            goToTarget: undefined
+        }, () => {
+            this.redrawLayers();
+            this.draw();
+        });
     }
 
     protected updateState() : void {
@@ -147,7 +193,14 @@ class LiveMap extends BaseMap<LiveMapProps, LiveMapState> {
         }
     }
 
-    componentDidUpdate(prevProps: Readonly<MapProps>, prevState: Readonly<MapState>): void {
+    componentDidMount(): void {
+        super.componentDidMount();
+    }
+
+    componentDidUpdate(
+        prevProps: Readonly<LiveMapProps>,
+        prevState: Readonly<LiveMapState>
+    ): void {
         super.componentDidUpdate(prevProps, prevState);
 
         if (
@@ -163,62 +216,92 @@ class LiveMap extends BaseMap<LiveMapProps, LiveMapState> {
 
     render(): React.ReactElement {
         return (
-            <MapContainer style={{overflow: "hidden"}}>
-                <canvas
-                    ref={this.canvasRef}
+            <Box
+                sx={{
+                    width: "100%",
+                    height: "100%",
+                    display: "flex",
+                    flexDirection: "column",
+                    overflow: "hidden",
+                }}
+            >
+
+
+
+
+                <MapContainer
                     style={{
-                        width: "100%",
-                        height: "100%",
-                        imageRendering: "crisp-edges"
+                        overflow: "hidden",
+                        flex: 1,
+                        minHeight: 0,
                     }}
-                />
-                {
-                    this.supportedModes.length > 0 &&
+                >
+                    <canvas
+                        ref={this.canvasRef}
+                        style={{
+                            width: "100%",
+                            height: "100%",
+                            imageRendering: "crisp-edges"
+                        }}
+                    />
+
+                    {/* ===== X40-CONTROL TESLA UI ===== */}
+
+                    <MapControlsPanel>
+                        <ActionButton
+                            aria-label="Girar mapa a la izquierda"
+                            title="Girar mapa 90° a la izquierda"
+                            onClick={() => this.rotateMap(-90)}
+                        >
+                            ↶
+                        </ActionButton>
+
+                        <ActionButton
+                            aria-label="Restablecer orientación del mapa"
+                            title="Restablecer orientación del mapa"
+                            onClick={() => this.resetMapRotation()}
+                        >
+                            0°
+                        </ActionButton>
+
+                        <ActionButton
+                            aria-label="Girar mapa a la derecha"
+                            title="Girar mapa 90° a la derecha"
+                            onClick={() => this.rotateMap(90)}
+                        >
+                            ↷
+                        </ActionButton>
+                    </MapControlsPanel>
+
+
+
+                    {/* ===== FIN X40-CONTROL TESLA UI ===== */}
+                    {
+                        this.supportedModes.length > 0 &&
                     <LiveMapModeSwitcher
                         supportedModes={this.supportedModes}
                         currentMode={this.state.mode}
                         setMode={(newMode) => {
-                            this.structureManager.getMapStructures().forEach(s => {
-                                if (s.type === SegmentLabelMapStructure.TYPE) {
-                                    const label = s as SegmentLabelMapStructure;
-
-                                    label.selected = false;
-                                }
-                            });
-
-                            this.structureManager.getClientStructures().forEach(s => {
-                                if (s.type === GoToTargetClientStructure.TYPE) {
-                                    this.structureManager.removeClientStructure(s);
-                                }
-
-                                if (s.type === ZoneClientStructure.TYPE) {
-                                    this.structureManager.removeClientStructure(s);
-                                }
-                            });
-
-                            this.updateState();
-
-                            this.redrawLayers();
-
-                            this.setState({
-                                mode: newMode
-                            });
-
-                            try {
-                                window.localStorage.setItem(LIVE_MAP_MODE_LOCAL_STORAGE_KEY, newMode);
-                            } catch (e) {
-                                /* intentional */
-                            }
+                            this.setMapMode(newMode);
                         }}
                     />
-                }
+                    }
 
-                <ActionsContainer>
-                    {
-                        this.state.mode === "segments" &&
+
+                    <ActionsContainer>
+                        {
+                            this.state.mode === "segments" &&
 
                         <SegmentActions
                             segments={this.state.selectedSegmentIds}
+                            segmentNames={Object.fromEntries(
+                                this.structureManager.getMapStructures()
+                                    .filter(s => s.type === SegmentLabelMapStructure.TYPE)
+                                    .map(s => {
+                                        const label = s as SegmentLabelMapStructure;
+                                        return [label.id, label.name ?? label.id];
+                                    })
+                            )}
                             onClear={() => {
                                 this.structureManager.getMapStructures().forEach(s => {
                                     if (s.type === SegmentLabelMapStructure.TYPE) {
@@ -232,9 +315,9 @@ class LiveMap extends BaseMap<LiveMapProps, LiveMapState> {
                                 this.redrawLayers();
                             }}
                         />
-                    }
-                    {
-                        this.state.mode === "zones" &&
+                        }
+                        {
+                            this.state.mode === "zones" &&
 
                         <ZoneActions
                             zones={this.state.zones}
@@ -275,9 +358,9 @@ class LiveMap extends BaseMap<LiveMapProps, LiveMapState> {
                                 this.draw();
                             }}
                         />
-                    }
-                    {
-                        this.state.mode === "goto" &&
+                        }
+                        {
+                            this.state.mode === "goto" &&
 
                         <GoToActions
                             goToTarget={this.state.goToTarget}
@@ -295,29 +378,30 @@ class LiveMap extends BaseMap<LiveMapProps, LiveMapState> {
                                 this.draw();
                             }}
                         />
-                    }
-                </ActionsContainer>
-                <Dialog
-                    open={this.state.dialogOpen}
-                    onClose={() =>{
-                        this.setState({dialogOpen: false});
-                    }}
-                >
-                    <DialogTitle>
-                        {this.state.dialogTitle}
-                    </DialogTitle>
-                    <DialogContent>
-                        {this.state.dialogBody}
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={() => {
+                        }
+                    </ActionsContainer>
+                    <Dialog
+                        open={this.state.dialogOpen}
+                        onClose={() =>{
                             this.setState({dialogOpen: false});
-                        }} autoFocus>
-                            Close
-                        </Button>
-                    </DialogActions>
-                </Dialog>
-            </MapContainer>
+                        }}
+                    >
+                        <DialogTitle>
+                            {this.state.dialogTitle}
+                        </DialogTitle>
+                        <DialogContent>
+                            {this.state.dialogBody}
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={() => {
+                                this.setState({dialogOpen: false});
+                            }} autoFocus>
+                            Cerrar
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
+                </MapContainer>
+            </Box>
         );
     }
 }

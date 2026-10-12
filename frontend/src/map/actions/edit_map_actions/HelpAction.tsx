@@ -31,7 +31,7 @@ const ModeSwitchAction: React.FunctionComponent<{ helpDialogOpen: boolean, setHe
                 onClick={() => {
                     setHelpDialogOpen(true);
                 }}
-                title="Help"
+                title="Ayuda"
             >
                 <HelpIcon/>
             </ActionButton>

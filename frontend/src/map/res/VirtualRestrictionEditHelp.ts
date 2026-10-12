@@ -1,21 +1,32 @@
 export const VirtualRestrictionEditHelp = `
-## Virtual Restriction Management
+## Gestión de restricciones virtuales
 
-Virtual restrictions are things such as virtual walls, no go areas or no mop areas, that either stop your robot
-from driving somewhere all the time or just conditionally (e.g. when there's a specific attachment such as the mop attached to it).
+Las restricciones virtuales incluyen elementos como paredes virtuales, zonas prohibidas
+o zonas donde no se permite fregar.
 
-You can use virtual restrictions to protect your fragile furniture from your robot or your fragile robot from your furniture.
+Estas restricciones pueden impedir que el robot entre en determinadas zonas siempre
+o de forma condicionada, por ejemplo cuando lleva colocada una mopa concreta.
 
-Not all firmwares support all of those. Also, usually, there's a firmware-determined limit on how many virtual
-restrictions you can have.
+Puedes utilizar las restricciones virtuales para proteger tus muebles delicados
+del robot o para proteger el robot de determinados muebles.
+
+No todos los firmwares son compatibles con todas estas funciones. Además, normalmente
+existe un límite determinado por el firmware sobre el número de restricciones virtuales
+que puedes crear.
 
 
-Keep in mind that while these work great most of the time, robots may sometimes forget where they are and then start
-driving around not knowing anything about any of the previously configured virtual restrictions.
-Make sure that they're not the only thing preventing a disaster.
+Ten en cuenta que, aunque funcionan correctamente la mayor parte del tiempo, en
+ocasiones los robots pueden perder su posición y empezar a desplazarse sin conocer
+las restricciones virtuales configuradas anteriormente.
+
+Por eso, asegúrate de que estas restricciones no sean la única protección frente
+a posibles problemas.
 
 
-Note that you won't see any map updates while editing unless you press refresh.
-Therefore, don't forget to click save before refreshing and/or leaving this page to commit your changes.
+Mientras editas las restricciones no verás actualizaciones del mapa a menos que
+pulses actualizar.
+
+Por lo tanto, no olvides pulsar guardar antes de actualizar la página o salir de ella
+para confirmar los cambios.
 
 `;

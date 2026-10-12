@@ -55,20 +55,20 @@ export const weekdays = [
 type TimerCardProps = {
     timer: Timer;
     timerProperties: TimerProperties;
-    onSave: (newProps: Timer) => void;
+    onGuardar: (newProps: Timer) => void;
     onDelete: () => void;
     onExecNow: () => void;
 };
 
 export const timerActionLabels: Record<ValetudoTimerActionType, string> = {
-    [ValetudoTimerActionType.FULL_CLEANUP]: "Full cleanup",
+    [ValetudoTimerActionType.FULL_CLEANUP]: "Limpieza completa",
     [ValetudoTimerActionType.SEGMENT_CLEANUP]: "Segment cleanup",
 };
 
 const TimerCard: FunctionComponent<TimerCardProps> = ({
     timer,
     timerProperties,
-    onSave,
+    onGuardar,
     onDelete,
     onExecNow
 }): React.ReactElement => {
@@ -240,7 +240,7 @@ const TimerCard: FunctionComponent<TimerCardProps> = ({
                         setDeleteDialogOpen(false);
                     }}
                 >
-                    <DialogTitle>Delete timer?</DialogTitle>
+                    <DialogTitle>¿Eliminar programación?</DialogTitle>
                     <DialogContent>
                         <DialogContentText>
                             Do you really want to delete {dialogTimerText}?
@@ -273,9 +273,9 @@ const TimerCard: FunctionComponent<TimerCardProps> = ({
                         onCancel={() => {
                             setEditDialogOpen(false);
                         }}
-                        onSave={(timer) => {
+                        onGuardar={(timer) => {
                             setEditDialogOpen(false);
-                            onSave(timer);
+                            onGuardar(timer);
                         }}
                         timerProperties={timerProperties}
                     />

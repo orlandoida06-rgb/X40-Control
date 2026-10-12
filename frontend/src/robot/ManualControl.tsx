@@ -32,7 +32,7 @@ import { KeyboardInput } from "./manual_control/KeyboardInput";
 import { DPadInput } from "./manual_control/DPadInput";
 import { ControllerVisual } from "./manual_control/ControllerVisual";
 
-function ModeSwitchReset({ mode }: { mode: InputMode }) {
+function ModeSwitchRestablecer({ mode }: { mode: InputMode }) {
     const { resetState } = useVirtualController();
     const prevMode = useRef(mode);
     useEffect(() => {
@@ -64,7 +64,7 @@ const HighResolutionControlToggle = () => {
                     }}
                 />
             }
-            label="Enable manual control"
+            label="Activar control manual"
             style={{ marginLeft: 0 }}
         />
     );
@@ -90,7 +90,7 @@ const StandardControlToggle = () => {
                     }}
                 />
             }
-            label="Enable manual control"
+            label="Activar control manual"
             style={{ marginLeft: 0 }}
         />
     );
@@ -119,7 +119,7 @@ const HighResolutionMovementControls = () => {
             <VirtualControllerProvider>
                 <Box sx={{ minHeight: 240, display: "flex", flexDirection: "column", alignItems: "center" }}>
                     <MovementSampler enabled={controlsEnabled} sendMoveCommand={controllerSender} />
-                    <ModeSwitchReset mode={inputMode} />
+                    <ModeSwitchRestablecer mode={inputMode} />
                     <ControllerVisual mode={inputMode} enabled={controlsEnabled} />
 
                     {inputMode === "keyboard" && (
@@ -173,7 +173,7 @@ const StandardMovementControls = () => {
             <VirtualControllerProvider>
                 <Box sx={{ minHeight: 240, display: "flex", flexDirection: "column", alignItems: "center" }}>
                     <MovementSampler enabled={controlsEnabled} sendMoveCommand={sendMoveCommand} />
-                    <ModeSwitchReset mode={inputMode} />
+                    <ModeSwitchRestablecer mode={inputMode} />
                     <ControllerVisual mode={inputMode} enabled={controlsEnabled} />
 
                     {inputMode === "keyboard" && (
@@ -190,19 +190,24 @@ const HighResolutionManualControlInternal: React.FunctionComponent = (): React.R
     const { isPending: stateLoading, isError: stateError } = useHighResolutionManualControlStateQuery();
 
     return (
-        <Box>
-            {stateLoading ? (
-                <Skeleton height={"12rem"} />
-            ) : (
-                <>
-                    {stateError && <Typography color="error">Error loading manual controls</Typography>}
-                    <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
-                        <HighResolutionControlToggle />
-                    </Box>
-                    <HighResolutionMovementControls />
-                </>
-            )}
-        </Box>
+        <FullHeightGrid container direction="column">
+            <Grid2 flexGrow={1}>
+                <Box>
+                    {stateLoading ? (
+                        <Skeleton height={"12rem"} />
+                    ) : (
+                        <>
+                            {stateError && <Typography color="error">Error al cargar los controles manuales</Typography>}
+                            <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
+                                <HighResolutionControlToggle />
+                            </Box>
+                            <HighResolutionMovementControls />
+                        </>
+                    )}
+                </Box>
+            </Grid2>
+        </FullHeightGrid>
+
     );
 };
 
@@ -214,19 +219,24 @@ const ManualControlInternal: React.FunctionComponent = (): React.ReactElement =>
     const hasError = stateError || propertiesError;
 
     return (
-        <Box>
-            {loading ? (
-                <Skeleton height={"12rem"} />
-            ) : (
-                <>
-                    {hasError && <Typography color="error">Error loading manual controls</Typography>}
-                    <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
-                        <StandardControlToggle />
-                    </Box>
-                    <StandardMovementControls />
-                </>
-            )}
-        </Box>
+        <FullHeightGrid container direction="column">
+            <Grid2 flexGrow={1}>
+                <Box>
+                    {loading ? (
+                        <Skeleton height={"12rem"} />
+                    ) : (
+                        <>
+                            {hasError && <Typography color="error">Error al cargar los controles manuales</Typography>}
+                            <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
+                                <StandardControlToggle />
+                            </Box>
+                            <StandardMovementControls />
+                        </>
+                    )}
+                </Box>
+            </Grid2>
+        </FullHeightGrid>
+
     );
 };
 
@@ -247,7 +257,7 @@ const ManualControl = (): React.ReactElement => {
     } else if (standardSupported) {
         controlComponent = <ManualControlInternal />;
     } else {
-        controlComponent = <Typography color="error">This robot does not support manual control.</Typography>;
+        controlComponent = <Typography color="error">Este robot no admite control manual.</Typography>;
     }
 
     return (

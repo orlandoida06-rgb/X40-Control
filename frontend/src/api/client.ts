@@ -467,6 +467,16 @@ export const sendDismissWelcomeDialogAction = async (): Promise<void> => {
         });
 };
 
+export const sendX40ControlRebootAction = async (): Promise<void> => {
+    await valetudoAPI
+        .post("/valetudo/x40-control/reboot")
+        .then(({status}) => {
+            if (status !== 200) {
+                throw new Error("Could not reboot robot.");
+            }
+        });
+};
+
 export const sendRestoreDefaultConfigurationAction = async (): Promise<void> => {
     await valetudoAPI
         .put("/valetudo/action", {"action": "restoreDefaultConfiguration"})
@@ -480,6 +490,40 @@ export const sendRestoreDefaultConfigurationAction = async (): Promise<void> => 
 export const fetchValetudoVersionInformation = async (): Promise<ValetudoVersion> => {
     return valetudoAPI
         .get<ValetudoVersion>("/valetudo/version")
+        .then(({data}) => {
+            return data;
+        });
+};
+
+export interface X40ControlOTAUpdateResult {
+    success: boolean;
+    output: string;
+    stderr?: string;
+    error?: string;
+}
+
+export interface X40ControlOTAInformation {
+    product: string;
+    installed: boolean;
+    installedVersion: string | null;
+    availableVersion: string;
+    installedSha256: string;
+    expectedSha256: string;
+    requiresReboot: boolean;
+    changelog: string[];
+}
+
+export const fetchX40ControlOTAInformation = async (): Promise<X40ControlOTAInformation> => {
+    return valetudoAPI
+        .get<X40ControlOTAInformation>("/valetudo/x40-control/ota")
+        .then(({data}) => {
+            return data;
+        });
+};
+
+export const sendX40ControlOTAUpdate = async (): Promise<X40ControlOTAUpdateResult> => {
+    return valetudoAPI
+        .post<X40ControlOTAUpdateResult>("/valetudo/x40-control/ota/update")
         .then(({data}) => {
             return data;
         });
@@ -1420,4 +1464,43 @@ export const fetchAutoEmptyDockAutoEmptyDurationControlProperties = async (): Pr
         .then(({data}) => {
             return data;
         });
+};
+
+export interface X40ControlRoomVoices {
+    [segmentId: string]: string;
+}
+
+export const fetchX40ControlRoomVoices = async (): Promise<X40ControlRoomVoices> => {
+    return valetudoAPI
+        .get<X40ControlRoomVoices>("/valetudo/x40-control/room-voices")
+        .then(({data}) => {
+            return data;
+        });
+};
+
+export const setX40ControlRoomVoice = async (
+    segmentId: string,
+    voiceId: string | null
+): Promise<X40ControlRoomVoices> => {
+    return valetudoAPI
+        .put<X40ControlRoomVoices>(
+            "/valetudo/x40-control/room-voices",
+            {
+                segmentId: segmentId,
+                voiceId: voiceId
+            }
+        )
+        .then(({data}) => {
+            return data;
+        });
+};
+
+export const playX40ControlRoomVoice = async (
+    segmentId: string,
+    roomName: string
+): Promise<void> => {
+    await valetudoAPI.post("/valetudo/x40-control/room-voice", {
+        segmentId: segmentId,
+        roomName: roomName
+    });
 };

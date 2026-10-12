@@ -52,6 +52,8 @@ const SCROLL_PARAMETERS = {
     PIXELS_PER_FULL_STEP: 100
 };
 
+const MAP_ROTATION_LOCAL_STORAGE_KEY = "x40-control-map-rotation";
+
 abstract class BaseMap<P, S> extends React.Component<P & MapProps, S & MapState > {
     protected readonly canvasRef: React.RefObject<HTMLCanvasElement | null>;
     protected structureManager: StructureManager;
@@ -65,6 +67,7 @@ abstract class BaseMap<P, S> extends React.Component<P & MapProps, S & MapState 
     protected drawableComponentsMutex: semaphore.Semaphore = semaphore(1); //Required to sync up with the render webWorker
 
     protected currentScaleFactor = 1;
+    protected mapRotation = 0;
 
     //TODO: understand wtf is going on there and replace with better state variables than this hack
     protected touchHandlingState: any = {};
@@ -176,6 +179,18 @@ abstract class BaseMap<P, S> extends React.Component<P & MapProps, S & MapState 
         this.ctxWrapper.scale(initialScalingFactor, initialScalingFactor);
         this.ctxWrapper.translate(-boundingBox.minX, -boundingBox.minY);
 
+        // Restore the user's preferred map rotation.
+        try {
+            const savedRotation = Number(
+                localStorage.getItem(MAP_ROTATION_LOCAL_STORAGE_KEY)
+            );
+
+            if (Number.isFinite(savedRotation)) {
+                this.setMapRotation(savedRotation, false);
+            }
+        } catch (e) {
+            // Ignore browsers with unavailable localStorage.
+        }
 
         this.updateInternalDrawableState();
 
@@ -366,6 +381,116 @@ abstract class BaseMap<P, S> extends React.Component<P & MapProps, S & MapState 
 
     protected getCurrentViewportCenterCoordinatesInPixelSpace() : PointCoordinates {
         return this.ctxWrapper.mapPointToCurrentTransform(this.canvas.width/2, this.canvas.height/2);
+    }
+
+    /**
+     * Zooms the map around the center of the viewport.
+     *
+     * @param {number} factor Zoom multiplier applied to the current map scale.
+     */
+    protected zoomMap(factor: number): void {
+        if (!this.ctxWrapper || !this.canvas) {
+            return;
+        }
+
+        const {scaleX: currentScaleFactor} = this.ctxWrapper.getScaleFactor();
+        const clampedFactor = clampMapScalingFactorFactor(currentScaleFactor, factor);
+
+        const center = this.ctxWrapper.mapPointToCurrentTransform(
+            this.canvas.width / 2,
+            this.canvas.height / 2
+        );
+
+        this.ctxWrapper.translate(center.x, center.y);
+        this.ctxWrapper.scale(clampedFactor, clampedFactor);
+        this.ctxWrapper.translate(-center.x, -center.y);
+
+        this.updateScaleFactor();
+        this.draw();
+    }
+
+    /**
+     * Zooms in one step.
+     */
+    protected zoomIn(): void {
+        this.zoomMap(1.25);
+    }
+
+    /**
+     * Zooms out one step.
+     */
+    protected zoomOut(): void {
+        this.zoomMap(0.8);
+    }
+
+    /**
+     * Returns the current map zoom factor.
+     */
+    protected getMapZoom(): number {
+        return this.currentScaleFactor;
+    }
+
+    /**
+     * Set the complete map rotation around the viewport center.
+     *
+     * @param {number} degrees Target rotation in degrees.
+     * @param {boolean} redraw Whether to redraw the map immediately.
+     */
+    protected setMapRotation(degrees: number, redraw = true): void {
+        if (!this.ctxWrapper || !this.canvas) {
+            return;
+        }
+
+        const normalizedDegrees = ((degrees % 360) + 360) % 360;
+        const delta = normalizedDegrees - this.mapRotation;
+
+        if (Math.abs(delta) < 0.001) {
+            this.mapRotation = normalizedDegrees;
+            return;
+        }
+
+        // mapPointToCurrentTransform converts the viewport center from
+        // screen space to map space. Rotating around that point keeps the
+        // map visually centered regardless of zoom/pan/previous rotations.
+        const center = this.ctxWrapper.mapPointToCurrentTransform(
+            this.canvas.width / 2,
+            this.canvas.height / 2
+        );
+
+        this.ctxWrapper.translate(center.x, center.y);
+        this.ctxWrapper.rotate(delta * Math.PI / 180);
+        this.ctxWrapper.translate(-center.x, -center.y);
+
+        this.mapRotation = normalizedDegrees;
+
+        try {
+            localStorage.setItem(
+                MAP_ROTATION_LOCAL_STORAGE_KEY,
+                String(this.mapRotation)
+            );
+        } catch (e) {
+            // Ignore browsers with unavailable localStorage.
+        }
+
+        if (redraw) {
+            this.draw();
+        }
+    }
+
+    /**
+     * Rotate the map by the requested amount.
+     *
+     * @param {number} degrees Rotation delta in degrees.
+     */
+    protected rotateMap(degrees: number): void {
+        this.setMapRotation(this.mapRotation + degrees);
+    }
+
+    /**
+     * Restore the default map orientation.
+     */
+    protected resetMapRotation(): void {
+        this.setMapRotation(0);
     }
 
     protected onTap(evt: TapTouchHandlerEvent) : boolean | void {

@@ -34,7 +34,7 @@ const RobotCoverageMapPage = (): React.ReactElement => {
     if (mapLoadError) {
         return (
             <Container>
-                <Typography color="error">Error loading map data</Typography>
+                <Typography color="error">Error al cargar los datos del mapa</Typography>
                 <Box m={1}/>
                 <Button color="primary" variant="contained" onClick={() => {
                     return refetchMap();
@@ -56,7 +56,7 @@ const RobotCoverageMapPage = (): React.ReactElement => {
     if (!mapData) {
         return (
             <Container>
-                <Typography align="center">No map data</Typography>;
+                <Typography align="center">No hay datos del mapa</Typography>;
             </Container>
         );
     }
@@ -64,7 +64,7 @@ const RobotCoverageMapPage = (): React.ReactElement => {
     if (!robotStatus) {
         return (
             <Container>
-                <Typography align="center">No robot status</Typography>;
+                <Typography align="center">No hay estado del robot</Typography>;
             </Container>
         );
     }

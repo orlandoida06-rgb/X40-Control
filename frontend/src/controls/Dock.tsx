@@ -30,6 +30,7 @@ import {
     ExpandLess as CloseIcon
 } from "@mui/icons-material";
 import React from "react";
+import {useLanguage} from "../i18n";
 import ControlsCard from "./ControlsCard";
 import {useFeedbackPending} from "../hooks/useFeedbackPending";
 import {
@@ -40,28 +41,72 @@ import {
 } from "../components/CustomIcons";
 import {useValetudoColorsInverse} from "../hooks/useValetudoColors";
 
-const DockComponentTile = ({ label, icon: IconComponent, statusText, statusColor }: { label: string, icon: React.ElementType, statusText: string, statusColor: string }) => {
+const DockComponentTile = ({
+    label,
+    icon: IconComponent,
+    statusText,
+    statusColor
+}: {
+    label: string,
+    icon: React.ElementType,
+    statusText: string,
+    statusColor: string
+}) => {
     return (
-        <Grid2 size={6} container alignItems="center" spacing={1} wrap="nowrap" sx={{padding: "0.25rem"}}>
-            <Grid2 sx={{ display: "flex", alignItems: "center" }}>
-                <IconComponent />
-            </Grid2>
-            <Grid2 sx={{ display: "flex", flexDirection: "column", justifyContent: "center"}}>
-                <Typography variant="body2" sx={{ lineHeight: "1.1rem", overflow: "hidden", textOverflow: "ellipsis" }}>
-                    {label}
-                </Typography>
-                <Typography
-                    variant="caption"
+        <Grid2
+            size={6}
+            sx={{
+                minWidth: 0,
+            }}
+        >
+            <Box
+                sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 1,
+                    minHeight: "52px",
+                    px: 1,
+                    py: 0.75,
+                    borderRadius: "12px",
+                    backgroundColor: "action.hover",
+                }}
+            >
+                <Box
                     sx={{
-                        color: statusColor,
-                        fontWeight: "bold",
-                        lineHeight: "1.1rem",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis"
-                    }}>
-                    {statusText}
-                </Typography>
-            </Grid2>
+                        display: "flex",
+                        alignItems: "center",
+                        opacity: 0.75,
+                    }}
+                >
+                    <IconComponent />
+                </Box>
+
+                <Box sx={{minWidth: 0}}>
+                    <Typography
+                        variant="body2"
+                        sx={{
+                            lineHeight: 1.1,
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            whiteSpace: "nowrap",
+                            fontWeight: 500,
+                        }}
+                    >
+                        {label}
+                    </Typography>
+
+                    <Typography
+                        variant="caption"
+                        sx={{
+                            color: statusColor,
+                            fontWeight: 700,
+                            lineHeight: 1.1,
+                        }}
+                    >
+                        {statusText}
+                    </Typography>
+                </Box>
+            </Box>
         </Grid2>
     );
 };
@@ -73,39 +118,58 @@ const DOCK_COMPONENT_ORDER: DockComponentStateAttributeType[] = [
     "dustbag"
 ];
 
-const DockComponents = ({ supportedTypes, dockComponents }: { supportedTypes: DockComponentStateAttributeType[], dockComponents: any[] }) => {
+const DockComponents = ({
+    supportedTypes,
+    dockComponents
+}: {
+    supportedTypes: DockComponentStateAttributeType[],
+    dockComponents: any[]
+}) => {
     const palette = useValetudoColorsInverse();
 
     const components = React.useMemo(() => {
         return supportedTypes
             .slice()
-            .sort((a, b) => DOCK_COMPONENT_ORDER.indexOf(a) - DOCK_COMPONENT_ORDER.indexOf(b))
+            .sort(
+                (a, b) =>
+                    DOCK_COMPONENT_ORDER.indexOf(a) -
+                    DOCK_COMPONENT_ORDER.indexOf(b)
+            )
             .map(type => {
-                const attribute = dockComponents?.find(a => a.type === type);
-                const value = (attribute?.value as DockComponentStateAttributeValue) || "unknown";
+                const attribute = dockComponents?.find(
+                    a => a.type === type
+                );
+
+                const value =
+                    (attribute?.value as DockComponentStateAttributeValue) ||
+                    "unknown";
 
                 let label: string;
                 let IconComponent: React.ElementType;
 
                 switch (type) {
                     case "water_tank_clean":
-                        label = "Freshwater";
+                        label = "Agua limpia";
                         IconComponent = DockComponentWaterTankClean;
                         break;
+
                     case "water_tank_dirty":
-                        label = "Wastewater";
+                        label = "Agua residual";
                         IconComponent = DockComponentWaterTankDirty;
                         break;
+
                     case "detergent":
-                        label = "Detergent";
+                        label = "Detergente";
                         IconComponent = DockComponentDetergent;
                         break;
+
                     case "dustbag":
-                        label = "Dustbag";
+                        label = "Bolsa de polvo";
                         IconComponent = DockComponentDustbag;
                         break;
+
                     default:
-                        label = "Unknown";
+                        label = "Desconocido";
                         IconComponent = DockComponentUnknownIcon;
                         break;
                 }
@@ -118,20 +182,24 @@ const DockComponents = ({ supportedTypes, dockComponents }: { supportedTypes: Do
                         statusText = "OK";
                         statusColor = palette.green;
                         break;
+
                     case "empty":
-                        statusText = "Empty";
+                        statusText = "Vacío";
                         statusColor = palette.red;
                         break;
+
                     case "full":
-                        statusText = "Full";
+                        statusText = "Lleno";
                         statusColor = palette.red;
                         break;
+
                     case "missing":
-                        statusText = "Missing";
+                        statusText = "Falta";
                         statusColor = palette.yellow;
                         break;
+
                     default:
-                        statusText = "Unknown";
+                        statusText = "Desconocido";
                         statusColor = palette.purple;
                         break;
                 }
@@ -154,10 +222,15 @@ const DockComponents = ({ supportedTypes, dockComponents }: { supportedTypes: Do
             if (component.statusColor === palette.red) {
                 return palette.red;
             }
+
             if (component.statusColor === palette.yellow) {
                 color = palette.yellow;
             }
-            if (component.statusColor === palette.purple && color === palette.green) {
+
+            if (
+                component.statusColor === palette.purple &&
+                color === palette.green
+            ) {
                 color = palette.purple;
             }
         }
@@ -166,70 +239,211 @@ const DockComponents = ({ supportedTypes, dockComponents }: { supportedTypes: Do
     }, [components, palette]);
 
     const isOk = statusColor === palette.green;
-    const [expanded, setExpanded] = React.useState<boolean>(!isOk);
 
     return (
-        <Paper variant="outlined" sx={{ mt: 1, mb: 1, p: 1, backgroundColor: "transparent" }}>
-            <Grid2
-                container
-                alignItems="center"
-                onClick={() => setExpanded(!expanded)}
-                sx={{ cursor: "pointer" }}
+        <Paper
+            variant="outlined"
+            sx={{
+                mt: 1,
+                mb: 1,
+                p: 1.25,
+                borderRadius: "14px",
+                backgroundColor: "rgba(255,255,255,.015)",
+                borderColor: "rgba(110,155,215,.16)",
+            }}
+        >
+            <Box
+                sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    mb: 1.2,
+                }}
             >
-                <Grid2 sx={{ flexGrow: 1 }}>
-                    <Typography variant="subtitle2" sx={{ml: 0.5}}>Components</Typography>
-                </Grid2>
-                <Grid2 sx={{ display: "flex", alignItems: "center" }}>
-                    <Typography variant="caption" sx={{ color: statusColor, fontWeight: "bold", mr: 1 }}>
-                        {isOk ? "OK" : "Not OK"}
-                    </Typography>
-                    <Icon component={expanded ? CloseIcon : OpenIcon} />
-                </Grid2>
-            </Grid2>
+                <Typography
+                    variant="subtitle2"
+                    sx={{
+                        fontWeight: 800,
+                        ml: 0.5,
+                        color: "text.primary",
+                    }}
+                >
+                    Componentes
+                </Typography>
 
-            <Box sx={{ display: expanded ? "block" : "none", pt: 2 }}>
-                <Grid2 container spacing={1}>
-                    {components.map((component) => {
-                        return (
-                            <DockComponentTile
-                                key={component.type}
-                                label={component.label}
-                                icon={component.icon}
-                                statusText={component.statusText}
-                                statusColor={component.statusColor}
+                <Box
+                    sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 0.6,
+                        mr: 0.5,
+                    }}
+                >
+                    <Box
+                        sx={{
+                            width: 7,
+                            height: 7,
+                            borderRadius: "50%",
+                            backgroundColor: statusColor,
+                            boxShadow: `0 0 8px ${statusColor}`,
+                        }}
+                    />
+
+                    <Typography
+                        variant="caption"
+                        sx={{
+                            color: statusColor,
+                            fontWeight: 800,
+                            letterSpacing: ".04em",
+                        }}
+                    >
+                        {isOk ? "TODO OK" : "COMPROBAR"}
+                    </Typography>
+                </Box>
+            </Box>
+
+            <Box
+                sx={{
+                    display: "grid",
+                    gridTemplateColumns: {
+                        xs: "repeat(2, minmax(0, 1fr))",
+                        sm: "repeat(4, minmax(0, 1fr))",
+                    },
+                    gap: 0.8,
+                }}
+            >
+                {components.map(component => (
+                    <Box
+                        key={component.type}
+                        sx={{
+                            minWidth: 0,
+                            minHeight: 78,
+                            p: 1,
+                            borderRadius: "11px",
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            background:
+                                "linear-gradient(145deg, rgba(19,34,53,.72), rgba(10,21,35,.72))",
+                            border:
+                                "1px solid rgba(110,155,215,.13)",
+                        }}
+                    >
+                        <Box
+                            sx={{
+                                width: 34,
+                                height: 34,
+                                borderRadius: "10px",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                mb: 0.7,
+                                background:
+                                    "rgba(255,255,255,.045)",
+                            }}
+                        >
+                            <component.icon
+                                sx={{
+                                    fontSize: 22,
+                                }}
                             />
-                        );
-                    })}
-                </Grid2>
+                        </Box>
+
+                        <Typography
+                            sx={{
+                                fontSize: 10.5,
+                                lineHeight: 1.15,
+                                fontWeight: 700,
+                                textAlign: "center",
+                                color: "text.primary",
+                                minHeight: 24,
+                                display: "flex",
+                                alignItems: "center",
+                            }}
+                        >
+                            {component.label}
+                        </Typography>
+
+                        <Box
+                            sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 0.45,
+                                mt: 0.45,
+                            }}
+                        >
+                            <Box
+                                sx={{
+                                    width: 6,
+                                    height: 6,
+                                    borderRadius: "50%",
+                                    backgroundColor:
+                                        component.statusColor,
+                                }}
+                            />
+
+                            <Typography
+                                sx={{
+                                    fontSize: 10,
+                                    fontWeight: 800,
+                                    color: component.statusColor,
+                                }}
+                            >
+                                {component.statusText}
+                            </Typography>
+                        </Box>
+                    </Box>
+                ))}
             </Box>
         </Paper>
     );
 };
 
 const Dock = (): React.ReactElement => {
-    const { data: robotStatus, isPending: isRobotStatusPending } = useRobotStatusQuery();
-    const { data: robotInfo, isPending: isRobotInfoPending } = useRobotInformationQuery();
+    const {t} = useLanguage();
+    const {
+        data: robotStatus,
+        isPending: isRobotStatusPending
+    } = useRobotStatusQuery();
+
+    const {
+        data: robotInfo,
+        isPending: isRobotInfoPending
+    } = useRobotInformationQuery();
+
     const {
         data: dockStatus,
         isPending: isDockStatusPending,
-    } = useRobotAttributeQuery(RobotAttributeClass.DockStatusState);
+    } = useRobotAttributeQuery(
+        RobotAttributeClass.DockStatusState
+    );
+
     const {
         data: attachments,
         isPending: isAttachmentPending,
-    } = useRobotAttributeQuery(RobotAttributeClass.AttachmentState);
+    } = useRobotAttributeQuery(
+        RobotAttributeClass.AttachmentState
+    );
+
     const {
         data: dockComponents,
         isPending: isDockComponentsPending
-    } = useRobotAttributeQuery(RobotAttributeClass.DockComponentState);
+    } = useRobotAttributeQuery(
+        RobotAttributeClass.DockComponentState
+    );
 
-    const isPending = isRobotStatusPending || isDockStatusPending || isAttachmentPending || isRobotInfoPending || isDockComponentsPending;
+    const isPending =
+        isRobotStatusPending ||
+        isDockStatusPending ||
+        isAttachmentPending ||
+        isRobotInfoPending ||
+        isDockComponentsPending;
 
-    const StyledIcon = styled(Icon)(({ theme }) => {
-        return {
-            marginRight: theme.spacing(1),
-            marginLeft: -theme.spacing(1),
-        };
-    });
+    const StyledIcon = styled(Icon)(({theme}) => ({
+        marginRight: theme.spacing(0.75),
+        marginLeft: -theme.spacing(0.5),
+    }));
 
     const [
         triggerEmptySupported,
@@ -245,44 +459,110 @@ const Dock = (): React.ReactElement => {
         mutate: triggerDockEmpty,
         isPending: emptyIsExecuting,
     } = useAutoEmptyDockManualTriggerMutation();
+
     const {
         mutate: triggerMopDockCleanCommand,
-        isPending: mopDockCleanCommandExecuting,
+        isPending: mopDockCleanCommandExecuting
     } = useMopDockCleanManualTriggerMutation();
+
     const {
         mutate: triggerMopDockDryCommand,
-        isPending: mopDockDryCommandExecuting,
+        isPending: mopDockDryCommandExecuting
     } = useMopDockDryManualTriggerMutation();
 
-    const { value: dockState } = dockStatus?.[0] ?? {value: "idle"};
+    const {value: dockState} =
+        dockStatus?.[0] ?? {value: "idle"};
 
-    const [feedbackPending, setFeedbackPending] = useFeedbackPending(dockState, 25_000);
+    const [feedbackPending, setFeedbackPending] =
+        useFeedbackPending(dockState, 25_000);
 
     const body = React.useMemo(() => {
-        const dockStatusIsRelevant = mopDockCleanTriggerSupported || mopDockDryTriggerSupported;
-        const commandIsExecuting = emptyIsExecuting || mopDockCleanCommandExecuting || mopDockDryCommandExecuting;
-        const mopAttachmentAttached = attachments?.find(a => {
-            return a.type === "mop";
-        })?.attached === true;
+        const dockStatusIsRelevant =
+            mopDockCleanTriggerSupported ||
+            mopDockDryTriggerSupported;
+
+        const commandIsExecuting =
+            emptyIsExecuting ||
+            mopDockCleanCommandExecuting ||
+            mopDockDryCommandExecuting;
+
+        const mopAttachmentAttached =
+            attachments?.find(a => a.type === "mop")?.attached === true;
 
         if (isPending) {
             return <></>;
         }
 
-        if (robotStatus === undefined || (dockStatusIsRelevant && dockStatus?.length !== 1)) {
+        if (
+            robotStatus === undefined ||
+            (
+                dockStatusIsRelevant &&
+                dockStatus?.length !== 1
+            )
+        ) {
             return (
-                <Typography color="error">Error loading dock controls</Typography>
+                <Typography color="error">
+                    Error al cargar los controles de la estación
+                </Typography>
             );
         }
 
-        const { value: robotState } = robotStatus;
-        const supportedComponents = robotInfo?.modelDetails?.supportedDockComponents ?? [];
+        const {value: robotState} = robotStatus;
+
+        const supportedComponents =
+            robotInfo?.modelDetails?.supportedDockComponents ?? [];
+
+        let dockStateText: string = dockState;
+
+        switch (dockState) {
+            case "idle":
+                dockStateText = "En espera";
+                break;
+            case "cleaning":
+                dockStateText = "Limpiando";
+                break;
+            case "drying":
+                dockStateText = "Secando";
+                break;
+            case "pause":
+                dockStateText = "Pausado";
+                break;
+        }
 
         return (
             <>
-                <Typography variant="overline">
-                    {dockState}
-                </Typography>
+                <Box
+                    sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 1,
+                        mb: 0.5,
+                    }}
+                >
+                    <Box
+                        sx={{
+                            width: 8,
+                            height: 8,
+                            borderRadius: "50%",
+                            backgroundColor:
+                                dockState === "idle" ?
+                                    "success.main" :
+                                    "warning.main",
+                        }}
+                    />
+
+                    <Typography
+                        sx={{
+                            fontSize: "0.75rem",
+                            fontWeight: 700,
+                            letterSpacing: "0.08em",
+                            textTransform: "uppercase",
+                            opacity: 0.7,
+                        }}
+                    >
+                        {dockStateText}
+                    </Typography>
+                </Box>
 
                 {supportedComponents.length > 0 && (
                     <DockComponents
@@ -291,64 +571,178 @@ const Dock = (): React.ReactElement => {
                     />
                 )}
 
-                <Grid2 container direction="row" alignItems="center" sx={{flex: 1}} spacing={1} pt={1} wrap={"wrap"}>
-                    {
-                        mopDockCleanTriggerSupported &&
-                        <Grid2 sx={{flex: 1, minWidth: "min-content"}}>
+                <Grid2
+                    container
+                    spacing={1}
+                    sx={{
+                        pt: 1,
+                    }}
+                >
+                    {mopDockCleanTriggerSupported && (
+                        <Grid2 size={4}>
                             <Button
-                                disabled={feedbackPending || commandIsExecuting || !["idle", "cleaning", "pause"].includes(dockState) || robotState !== "docked" || !mopAttachmentAttached}
+                                fullWidth
+                                disabled={
+                                    feedbackPending ||
+                                    commandIsExecuting ||
+                                    ![
+                                        "idle",
+                                        "cleaning",
+                                        "pause"
+                                    ].includes(dockState) ||
+                                    robotState !== "docked" ||
+                                    !mopAttachmentAttached
+                                }
                                 variant="outlined"
-                                size="medium"
                                 color="inherit"
                                 onClick={() => {
-                                    const command = dockState === "cleaning" ? "stop" : "start";
+                                    const command =
+                                        dockState === "cleaning" ?
+                                            "stop" :
+                                            "start";
 
                                     triggerMopDockCleanCommand(command);
                                     setFeedbackPending(true);
                                 }}
-                                sx={{width: "100%"}}
+                                sx={{
+                                    minHeight: "58px",
+                                    borderRadius: "14px",
+                                    flexDirection: "column",
+                                    gap: 0.25,
+                                    textTransform: "none",
+                                    fontSize: "0.7rem",
+                                    fontWeight: 600,
+                                    borderColor: "divider",
+
+                                    "& .MuiSvgIcon-root": {
+                                        fontSize: "1.45rem",
+                                    },
+
+                                    "&:hover": {
+                                        backgroundColor: "action.hover",
+                                    },
+
+                                    "&:active": {
+                                        transform: "scale(0.96)",
+                                    },
+                                }}
                             >
-                                <StyledIcon as={CleanMopIcon} /> { dockState === "cleaning" ? "Stop" : "Clean" }
+                                <StyledIcon
+                                    as={CleanMopIcon}
+                                />
+                                {dockState === "cleaning" ?
+                                    t("stop") :
+                                    "Limpiar"}
                             </Button>
                         </Grid2>
-                    }
-                    {
-                        mopDockDryTriggerSupported &&
-                        <Grid2 sx={{flex: 1, minWidth: "min-content"}}>
+                    )}
+
+                    {mopDockDryTriggerSupported && (
+                        <Grid2 size={4}>
                             <Button
-                                disabled={feedbackPending || commandIsExecuting || !["idle", "drying", "pause"].includes(dockState) || robotState !== "docked" || !mopAttachmentAttached}
+                                fullWidth
+                                disabled={
+                                    feedbackPending ||
+                                    commandIsExecuting ||
+                                    ![
+                                        "idle",
+                                        "drying",
+                                        "pause"
+                                    ].includes(dockState) ||
+                                    robotState !== "docked" ||
+                                    !mopAttachmentAttached
+                                }
                                 variant="outlined"
-                                size="medium"
                                 color="inherit"
                                 onClick={() => {
-                                    const command = dockState === "drying" ? "stop" : "start";
+                                    const command =
+                                        dockState === "drying" ?
+                                            "stop" :
+                                            "start";
 
                                     triggerMopDockDryCommand(command);
                                     setFeedbackPending(true);
                                 }}
-                                sx={{width: "100%"}}
+                                sx={{
+                                    minHeight: "58px",
+                                    borderRadius: "14px",
+                                    flexDirection: "column",
+                                    gap: 0.25,
+                                    textTransform: "none",
+                                    fontSize: "0.7rem",
+                                    fontWeight: 600,
+                                    borderColor: "divider",
+
+                                    "& .MuiSvgIcon-root": {
+                                        fontSize: "1.45rem",
+                                    },
+
+                                    "&:hover": {
+                                        backgroundColor: "action.hover",
+                                    },
+
+                                    "&:active": {
+                                        transform: "scale(0.96)",
+                                    },
+                                }}
                             >
-                                <StyledIcon as={DryMopIcon} /> { dockState === "drying" ? "Stop" : "Dry" }
+                                <StyledIcon
+                                    as={DryMopIcon}
+                                />
+                                {dockState === "drying" ?
+                                    t("stop") :
+                                    "Secar"}
                             </Button>
                         </Grid2>
-                    }
-                    {
-                        triggerEmptySupported &&
-                        <Grid2 sx={{flex: 1, minWidth: "min-content"}}>
+                    )}
+
+                    {triggerEmptySupported && (
+                        <Grid2 size={4}>
                             <Button
-                                disabled={commandIsExecuting || !["idle", "pause"].includes(dockState) || robotState !== "docked"}
+                                fullWidth
+                                disabled={
+                                    commandIsExecuting ||
+                                    ![
+                                        "idle",
+                                        "pause"
+                                    ].includes(dockState) ||
+                                    robotState !== "docked"
+                                }
                                 variant="outlined"
-                                size="medium"
                                 color="inherit"
                                 onClick={() => {
                                     triggerDockEmpty();
                                 }}
-                                sx={{width: "100%"}}
+                                sx={{
+                                    minHeight: "58px",
+                                    borderRadius: "14px",
+                                    flexDirection: "column",
+                                    gap: 0.25,
+                                    textTransform: "none",
+                                    fontSize: "0.7rem",
+                                    fontWeight: 600,
+                                    borderColor: "divider",
+
+                                    "& .MuiSvgIcon-root": {
+                                        fontSize: "1.45rem",
+                                    },
+
+                                    "&:hover": {
+                                        backgroundColor: "action.hover",
+                                    },
+
+                                    "&:active": {
+                                        transform: "scale(0.96)",
+                                    },
+                                }}
                             >
-                                <StyledIcon as={EmptyIcon} /> Empty
+                                <StyledIcon
+                                    as={EmptyIcon}
+                                />
+                                Vaciar
                             </Button>
                         </Grid2>
-                    }
+                    )}
                 </Grid2>
             </>
         );
@@ -374,10 +768,9 @@ const Dock = (): React.ReactElement => {
         dockComponents
     ]);
 
-
     return (
         <ControlsCard
-            title="Dock"
+            title="Estación"
             pending={feedbackPending}
             icon={DockIcon}
             isLoading={isPending}

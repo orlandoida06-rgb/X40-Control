@@ -109,7 +109,7 @@ const PresetSelectionPreActionControl: FunctionComponent<{
             </Grid2>
             <Grid2 sx={{flexGrow: 1, marginLeft: "1rem"}}>
                 <FormControl sx={{width: "100%"}}>
-                    <InputLabel id={"FanSpeedControlPreActionControl_presets_label"}>Preset</InputLabel>
+                    <InputLabel id={"FanSpeedControlPreActionControl_presets_label"}>Preajuste</InputLabel>
                     <Select
                         labelId={"FanSpeedControlPreActionControl_presets_label"}
                         id={"FanSpeedControlPreActionControl_presets-select"}
@@ -146,7 +146,7 @@ export const FanSpeedControlPreActionControl: FunctionComponent<TimerPreActionCo
             setParams={setParams}
 
             capability={Capability.FanSpeedControl}
-            label={"Set Fan to"}
+            label={"Establecer ventilador en"}
         />
     );
 };
@@ -163,7 +163,7 @@ export const WaterUsageControlPreActionControl: FunctionComponent<TimerPreAction
             setParams={setParams}
 
             capability={Capability.WaterUsageControl}
-            label={"Set Water to"}
+            label={"Establecer agua en"}
         />
     );
 };
@@ -180,7 +180,7 @@ export const OperationModeControlPreActionControl: FunctionComponent<TimerPreAct
             setParams={setParams}
 
             capability={Capability.OperationModeControl}
-            label={"Set Mode to"}
+            label={"Establecer modo en"}
         />
     );
 };

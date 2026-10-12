@@ -1,6 +1,7 @@
 export const MapUtilitiesHelp = `
-## Map Utilities
+## Utilidades del mapa
 
-In this section, you will find useful things built on top of the map data provided by the robot.
+En esta sección encontrarás herramientas útiles construidas sobre los datos del mapa
+proporcionados por el robot.
 
 `;

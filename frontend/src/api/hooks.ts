@@ -49,6 +49,8 @@ import {
     fetchValetudoLogLevel,
     fetchVoicePackManagementState,
     fetchWifiStatus,
+    fetchX40ControlRoomVoices,
+    playX40ControlRoomVoice,
     fetchZoneProperties,
     sendAutoEmptyDockManualTriggerCommand,
     sendBasicControlCommand,
@@ -60,6 +62,7 @@ import {
     sendDoNotDisturbConfiguration,
     sendGoToCommand,
     sendHTTPBasicAuthConfiguration,
+    setX40ControlRoomVoice,
     sendJoinSegmentsCommand,
     sendKeyLockEnable,
     sendLocateCommand,
@@ -101,6 +104,7 @@ import {
     fetchWifiScan,
     sendDismissWelcomeDialogAction,
     sendRestoreDefaultConfigurationAction,
+    sendX40ControlRebootAction,
     fetchUpdaterConfiguration,
     sendUpdaterConfiguration,
     fetchValetudoCustomizations,
@@ -753,6 +757,18 @@ export const useDismissWelcomeDialogMutation = () => {
             });
         },
         onError: useOnSettingsChangeError("Welcome Dialog")
+    });
+};
+
+export const useX40ControlRebootMutation = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: () => sendX40ControlRebootAction(),
+        onSuccess: () => {
+            queryClient.clear();
+        },
+        onError: useOnSettingsChangeError("Robot Reboot")
     });
 };
 
@@ -1897,5 +1913,46 @@ export const useMapAnnotationsMutation = (
             await queryClient.invalidateQueries({ queryKey: [QueryKey.Map] });
             await options?.onSuccess?.(data, ...args);
         },
+
+
+    });
+};
+
+export const useX40ControlRoomVoicesQuery = () => {
+    return useQuery({
+        queryKey: ["X40ControlRoomVoices"],
+        queryFn: fetchX40ControlRoomVoices
+    });
+};
+
+export const usePlayX40ControlRoomVoiceMutation = () => {
+    return useMutation({
+        mutationFn: ({
+            segmentId,
+            roomName
+        }: {
+            segmentId: string;
+            roomName: string;
+        }) => playX40ControlRoomVoice(segmentId, roomName)
+    });
+};
+
+export const useSetX40ControlRoomVoiceMutation = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: ({
+            segmentId,
+            voiceId
+        }: {
+            segmentId: string;
+            voiceId: string | null;
+        }) => setX40ControlRoomVoice(segmentId, voiceId),
+        onSuccess: () => {
+            return queryClient.invalidateQueries({
+                queryKey: ["X40ControlRoomVoices"]
+            });
+        }
+
     });
 };

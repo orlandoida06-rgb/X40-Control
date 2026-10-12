@@ -1,22 +1,29 @@
 export const VoicepackHelp = `
-## Voice packs
+## Paquetes de voz
 
-Custom voice packs are a bit more complicated as the exact format differs depending on your choice of robot.
+Los paquetes de voz personalizados son algo más complicados, ya que el formato exacto
+depende del robot que utilices.
 
-As I personally don't really care about them, this feature is a bit rough around the edges.
-For me, these things are first and foremost tools that should simply work and do so reliably.
-Thus, I'm fine with it just talking english as that's perfectly serviceable for a tool.
+La instalación de estos paquetes depende del modelo y del firmware del robot.
 
-If you want to install a custom one anyways, you will need a voicepack in the correct format as required by your
-robot hosted on some http server. Note that the official CDN is often blocked in the robots firmware meaning that just
-using the official URL likely won't work.
+Si quieres instalar un paquete personalizado, necesitarás un paquete de voz en el
+formato correcto para tu robot y alojado en algún servidor HTTP.
 
-Depending on the model of robot, you will also need a hash of that voice pack file.
-The type of hash differs depending on the firmware.
+Ten en cuenta que la CDN oficial suele estar bloqueada por el firmware de los robots,
+por lo que utilizar directamente la URL oficial probablemente no funcionará.
 
-Furthermore, you'll also need to specify a language code. That value largely doesn't matter much unless you use a reserved code.
-"EN", "CN" etc are often codes reserved for the inbuilt voice packs of the firmware.
+Dependiendo del modelo del robot, también necesitarás un hash del archivo del paquete
+de voz.
 
-Usually it's possible to revert to the initially installed voice pack by specifying one of those inbuilt voicepack codes during the install.
+El tipo de hash necesario depende del firmware.
+
+Además, tendrás que especificar un código de idioma. Este valor normalmente no es
+demasiado importante, salvo que utilices un código reservado.
+
+Códigos como "EN", "CN", etc. suelen estar reservados para los paquetes de voz
+integrados en el firmware.
+
+Normalmente es posible volver al paquete de voz instalado originalmente utilizando
+uno de esos códigos de paquetes de voz integrados durante la instalación.
 
 `;

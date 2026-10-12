@@ -58,7 +58,7 @@ const NetworkAdvertisementSettings = (): React.ReactElement => {
     }
 
     if (configurationError || propertiesLoadError || !storedConfiguration) {
-        return <Typography color="error">Error loading Network Advertisement configuration</Typography>;
+        return <Typography color="error">Error al cargar la configuración del anuncio de red</Typography>;
     }
 
     return (
@@ -74,14 +74,14 @@ const NetworkAdvertisementSettings = (): React.ReactElement => {
                         }}
                     />
                 }
-                label="Network Advertisement enabled"
+                label="Anuncio de red activado"
                 sx={{mb: 1, marginTop: "1rem", userSelect: "none"}}
             />
             <Grid2 container spacing={1} sx={{mb: 1, mt: "1rem"}} direction="row">
                 <Grid2 style={{flexGrow: 1}}>
                     <TextField
                         style={{width: "100%"}}
-                        label="Zeroconf Hostname"
+                        label="Nombre de host Zeroconf"
                         value={properties?.zeroconfHostname ?? ""}
                         variant="standard"
                         disabled={true}
@@ -100,16 +100,13 @@ const NetworkAdvertisementSettings = (): React.ReactElement => {
                 }}
             >
                 <Typography color="info">
-                    To allow quick autodiscovery by the companion apps, Valetudo advertises its presence on your
-                    local network using mDNS/Bonjour and SSDP/UPnP.
-                    It is not recommended to disable this feature, as it will break those companion apps.
+                    Para que las aplicaciones complementarias puedan encontrar el robot rápidamente, Valetudo anuncia su presencia en la
+                    red local mediante mDNS/Bonjour y SSDP/UPnP.
+                    No se recomienda desactivar esta función, ya que las aplicaciones complementarias dejarán de funcionar correctamente.
                     <br/><br/>
-                    One common pitfall of these &quot;it just works&quot; technologies is that they&apos;re incredibly hard to debug
-                    the moment they don&apos;t anymore. They&apos;re using Multicast broadcasts, which, by-default, cannot traverse
-                    subnet boundaries. It is also a networking feature obscure enough to still sometimes be broken
-                    by bad Wi-Fi driver or OS updates, misconfiguration or just broken hardware in general.<br/>
-                    They are, however, optional, as you just need to know the IP of the robot to talk with Valetudo.
-                    You can get that from your router&apos;s webinterface and then e.g., create a browser bookmark for it.
+                    Un inconveniente habitual de estas tecnologías, que normalmente funcionan sin configuración, es que resulta muy difícil diagnosticar sus fallos cuando dejan de funcionar. Utilizan mensajes de difusión multidifusión (multicast) que, por defecto, no atraviesan los límites entre subredes. Además, pueden verse afectadas por controladores Wi-Fi defectuosos, actualizaciones del sistema operativo, configuraciones incorrectas o problemas de hardware.<br/>
+                    No obstante, son funciones opcionales: basta con conocer la dirección IP del robot para acceder a Valetudo.
+                    Puedes consultarla en la interfaz web del router y, por ejemplo, guardar esa dirección como favorito en el navegador.
                 </Typography>
             </InfoBox>
 
@@ -128,7 +125,7 @@ const NetworkAdvertisementSettings = (): React.ReactElement => {
                             setConfigurationModified(false);
                         }}
                     >
-                        Save configuration
+                        Guardar configuración
                     </Button>
                 </Grid2>
             </Grid2>
@@ -142,7 +139,7 @@ const NetworkAdvertisementSettingsPage = (): React.ReactElement => {
             <Grid2 container direction="row">
                 <Box style={{width: "100%"}}>
                     <DetailPageHeaderRow
-                        title="Network Advertisement"
+                        title="Anuncio de red"
                         icon={<NetworkAdvertisementIcon/>}
                     />
 

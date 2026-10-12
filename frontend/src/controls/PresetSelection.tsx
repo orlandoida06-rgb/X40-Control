@@ -1,7 +1,6 @@
 import {
     Box,
     Grid2,
-    Icon,
     Paper,
     Skeleton,
     Slider,
@@ -19,50 +18,92 @@ import {
     usePresetSelectionsQuery,
     useRobotAttributeQuery,
 } from "../api";
-import {ExpandLess as CloseIcon, ExpandMore as OpenIcon} from "@mui/icons-material";
+import {
+    ExpandLess as CloseIcon,
+    ExpandMore as OpenIcon,
+} from "@mui/icons-material";
 import LoadingFade from "../components/LoadingFade";
 import {useCommittingSlider} from "../hooks/useCommittingSlider";
-import {getPresetIconOrLabel, presetFriendlyNames, sortPresets} from "../presetUtils";
+import {
+    getPresetIconOrLabel,
+    presetFriendlyNames,
+    sortPresets,
+} from "../presetUtils";
 import {Mark} from "@mui/material/Slider/useSlider.types";
+import {playX40ControlVoice} from "../voice/X40ControlVoice";
+const X40_CONTROL_VOICE_TEST = "X40_CONTROL_VOICE_TEST_2026";
 
-const StyledIcon = styled(Icon)(({theme}) => {
-    return {
-    };
-});
+const DiscreteSlider = styled(Slider)(({theme}) => ({
+    paddingTop: theme.spacing(1.25),
+    paddingBottom: theme.spacing(1),
 
-const DiscreteSlider = styled(Slider)(({ theme }) => {
-    return {
-        [`& .${sliderClasses.track}`]: {
-            height: 2,
-        },
-        [`& .${sliderClasses.rail}`]: {
-            opacity: 0.5,
-            color: theme.palette.grey[400],
-        },
-        [`& .${sliderClasses.mark}`]: {
-            color: theme.palette.grey[600],
-            height: 8,
-            width: 1,
-            margintop: -3,
-        },
-        [`& .${sliderClasses.markActive}`]: {
-            opacity: 1,
-            backgroundColor: "currentcolor",
-        },
-    };
-});
+    [`& .${sliderClasses.track}`]: {
+        height: 5,
+        borderRadius: 99,
+    },
+
+    [`& .${sliderClasses.rail}`]: {
+        height: 5,
+        opacity: 0.25,
+        borderRadius: 99,
+    },
+
+    [`& .${sliderClasses.thumb}`]: {
+        width: 18,
+        height: 18,
+        boxShadow: "0 2px 8px rgba(0,0,0,0.25)",
+        transition: "transform 120ms ease",
+    },
+
+    [`& .${sliderClasses.thumb}:hover`]: {
+        boxShadow: "0 3px 12px rgba(0,0,0,0.35)",
+    },
+
+    [`& .${sliderClasses.thumb}:active`]: {
+        transform: "scale(1.12)",
+    },
+
+    [`& .${sliderClasses.mark}`]: {
+        width: 3,
+        height: 8,
+        borderRadius: 99,
+        marginTop: -2,
+    },
+
+    [`& .${sliderClasses.markActive}`]: {
+        opacity: 1,
+        backgroundColor: "currentColor",
+    },
+
+    [`& .${sliderClasses.markLabel}`]: {
+        fontSize: "0.62rem",
+        opacity: 0.75,
+        transform: "translateX(-50%)",
+        whiteSpace: "nowrap",
+        lineHeight: 1.1,
+    },
+}));
 
 export interface PresetSelectionProps {
-    capability: Capability.FanSpeedControl | Capability.WaterUsageControl | Capability.OperationModeControl;
+    capability:
+        | Capability.FanSpeedControl
+        | Capability.WaterUsageControl
+        | Capability.OperationModeControl;
     label: string;
     icon: React.ReactElement;
 }
 
-const PresetSelectionControl = (props: PresetSelectionProps): React.ReactElement => {
-    const [presetSelectionSliderOpen, setPresetSelectionSliderOpen] = React.useState(false);
+const PresetSelectionControl = (
+    props: PresetSelectionProps
+): React.ReactElement => {
+    const [
+        presetSelectionSliderOpen,
+        setPresetSelectionSliderOpen
+    ] = React.useState(false);
 
-    const { capability, label, icon } = props;
-    const { data: preset } = useRobotAttributeQuery(
+    const {capability, label, icon} = props;
+
+    const {data: preset} = useRobotAttributeQuery(
         RobotAttributeClass.PresetSelectionState,
         (attributes) => {
             return attributes.filter((attribute) => {
@@ -70,6 +111,7 @@ const PresetSelectionControl = (props: PresetSelectionProps): React.ReactElement
             })[0];
         }
     );
+
     const {
         isPending: presetsPending,
         isError: presetLoadError,
@@ -84,14 +126,20 @@ const PresetSelectionControl = (props: PresetSelectionProps): React.ReactElement
     const filteredPresets = React.useMemo(() => {
         return sortPresets(
             presets?.filter(
-                (x): x is Exclude<PresetSelectionState["value"], "custom"> => {
+                (x): x is Exclude<
+                    PresetSelectionState["value"],
+                    "custom"
+                > => {
                     return x !== "custom";
                 }
             ) ?? []
         );
     }, [presets]);
 
-    const presetSliderValue = filteredPresets.indexOf(preset?.value || filteredPresets[0]);
+    const presetSliderValue = filteredPresets.indexOf(
+        preset?.value || filteredPresets[0]
+    );
+
     const [
         sliderValue,
         onChange,
@@ -101,8 +149,10 @@ const PresetSelectionControl = (props: PresetSelectionProps): React.ReactElement
         presetSliderValue !== -1 ? presetSliderValue : 0,
         (value) => {
             const level = filteredPresets[value];
+
             if (level !== preset?.value) {
                 selectPreset(level);
+                playX40ControlVoice(level);
             }
         },
         5_000
@@ -112,7 +162,14 @@ const PresetSelectionControl = (props: PresetSelectionProps): React.ReactElement
         return filteredPresets.map((preset, index) => {
             return {
                 value: index,
-                label: getPresetIconOrLabel(props.capability, preset, {height: "20px", width: "auto"})
+                label: getPresetIconOrLabel(
+                    props.capability,
+                    preset,
+                    {
+                        height: "20px",
+                        width: "auto"
+                    }
+                )
             };
         });
     }, [filteredPresets, props.capability]);
@@ -123,7 +180,7 @@ const PresetSelectionControl = (props: PresetSelectionProps): React.ReactElement
         if (presetsPending) {
             return (
                 <Grid2>
-                    <Skeleton height={"3rem"} />
+                    <Skeleton height="3rem"/>
                 </Grid2>
             );
         }
@@ -131,13 +188,15 @@ const PresetSelectionControl = (props: PresetSelectionProps): React.ReactElement
         if (presetLoadError || preset === undefined) {
             return (
                 <Grid2>
-                    <Typography color="error">Error loading {capability}</Typography>
+                    <Typography color="error">
+                        Error loading {capability}
+                    </Typography>
                 </Grid2>
             );
         }
 
         return (
-            <Box px={2.5}>
+            <Box px={1}>
                 <DiscreteSlider
                     aria-labelledby={`${capability}-slider-label`}
                     step={null}
@@ -148,7 +207,11 @@ const PresetSelectionControl = (props: PresetSelectionProps): React.ReactElement
                     min={0}
                     max={marks.length - 1}
                     marks={marks}
-                    track={capability !== Capability.OperationModeControl ? "normal" : false}
+                    track={
+                        capability !== Capability.OperationModeControl ?
+                            "normal" :
+                            false
+                    }
                 />
             </Box>
         );
@@ -163,65 +226,136 @@ const PresetSelectionControl = (props: PresetSelectionProps): React.ReactElement
         sliderValue,
     ]);
 
+    const currentPreset = preset?.value ?
+        presetFriendlyNames[preset.value] :
+        "";
+
     return (
         <Grid2>
-            <Paper sx={{minHeight: "2.5em"}}>
-                <Grid2 container direction="column">
-                    <Box px={1.5} pt={1}>
+            <Paper
+                elevation={0}
+                sx={{
+                    borderRadius: "18px",
+                    overflow: "hidden",
+                    border: "1px solid",
+                    borderColor: "divider",
+                    background: (theme) =>
+                        theme.palette.mode === "dark" ?
+                            "rgba(255,255,255,0.035)" :
+                            theme.palette.background.paper,
+                    boxShadow: (theme) =>
+                        theme.palette.mode === "dark" ?
+                            "0 8px 30px rgba(0,0,0,0.20)" :
+                            "0 4px 18px rgba(0,0,0,0.05)",
+                }}
+            >
+                <Box
+                    sx={{
+                        px: 1.5,
+                        py: 1,
+                    }}
+                >
+                    <Grid2
+                        container
+                        alignItems="center"
+                        spacing={1.25}
+                        onClick={() => {
+                            setPresetSelectionSliderOpen(
+                                !presetSelectionSliderOpen
+                            );
+                        }}
+                        sx={{
+                            cursor: "pointer",
+                            minHeight: "30px",
+                            width: "100%",
+                        }}
+                    >
                         <Grid2
-                            container
-                            alignItems="center"
-                            spacing={1}
-                            onClick={() => {
-                                setPresetSelectionSliderOpen(!presetSelectionSliderOpen);
+                            sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                opacity: 0.8,
                             }}
-                            style={{cursor: "pointer"}}
                         >
-                            <Grid2>{icon}</Grid2>
-                            <Grid2 sx={{marginTop: "-8px" /* ugh */}}>
-                                <Typography variant="subtitle1" id={`${capability}-slider-label`}>
-                                    {label}
-                                </Typography>
-                            </Grid2>
-                            <Grid2>
-                                <LoadingFade in={pending}
-                                    transitionDelay={pending ? "500ms" : "0ms"}
-                                    size={20}/>
-                            </Grid2>
-                            <Grid2
+                            {icon}
+                        </Grid2>
+
+                        <Grid2>
+                            <Typography
+                                variant="subtitle1"
+                                id={`${capability}-slider-label`}
                                 sx={{
-                                    marginLeft: "auto"
+                                    fontWeight: 600,
+                                    lineHeight: 1.2,
                                 }}
                             >
-                                <Grid2 container>
-                                    {
-                                        !pending &&
-                                        <Grid2 sx={{marginTop: "-2px" /* ugh */}}>
-                                            <Typography variant="subtitle1" sx={{paddingRight: "8px"}}>
-                                                {preset?.value ? presetFriendlyNames[preset.value] : ""}
-                                            </Typography>
-                                        </Grid2>
-                                    }
+                                {label}
+                            </Typography>
+                        </Grid2>
 
-                                    <Grid2
-                                        sx={{
-                                            marginLeft: "auto"
-                                        }}
-                                    >
-                                        <StyledIcon as={presetSelectionSliderOpen ? CloseIcon : OpenIcon}/>
+                        <Grid2>
+                            <LoadingFade
+                                in={pending}
+                                transitionDelay={
+                                    pending ? "500ms" : "0ms"
+                                }
+                                size={18}
+                            />
+                        </Grid2>
+
+                        <Grid2 sx={{marginLeft: "auto"}}>
+                            <Grid2
+                                container
+                                alignItems="center"
+                                spacing={0.75}
+                            >
+                                {!pending && currentPreset && (
+                                    <Grid2>
+                                        <Typography
+                                            sx={{
+                                                fontSize: "0.68rem",
+                                                fontWeight: 700,
+                                                letterSpacing: "0.025em",
+                                                opacity: 0.8,
+                                                textTransform: "uppercase",
+                                                lineHeight: 1.15,
+                                                maxWidth: "150px",
+                                                textAlign: "right",
+                                            }}
+                                        >
+                                            {currentPreset}
+                                        </Typography>
                                     </Grid2>
+                                )}
 
+                                <Grid2
+                                    sx={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        opacity: 0.65,
+                                    }}
+                                >
+                                    {presetSelectionSliderOpen ?
+                                        <CloseIcon fontSize="small"/> :
+                                        <OpenIcon fontSize="small"/>
+                                    }
                                 </Grid2>
                             </Grid2>
                         </Grid2>
-                        <Grid2 sx={{
-                            display: presetSelectionSliderOpen ? "inherit" : "none",
-                            minHeight: "3.75rem"
-                        }}>
-                            {body}
-                        </Grid2>
+                    </Grid2>
+
+                    <Box
+                        sx={{
+                            display: presetSelectionSliderOpen ?
+                                "block" :
+                                "none",
+                            pt: 0.5,
+                            px: 0.5,
+                        }}
+                    >
+                        {body}
                     </Box>
-                </Grid2>
+                </Box>
             </Paper>
         </Grid2>
     );

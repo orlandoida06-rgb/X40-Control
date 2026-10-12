@@ -127,35 +127,46 @@ export const deepCopy = <T>(target: T): T => {
 };
 
 const consumableTypeMapping: Record<ConsumableType, string> = {
-    "brush": "Brush",
-    "filter": "Filter",
-    "cleaning": "Cleaning",
-    "mop": "Mop",
+    "brush": "Cepillo",
+    "filter": "Filtro",
+    "cleaning": "Limpieza",
+    "mop": "Mopa",
     "detergent": "Detergent",
     "bin": "Bin"
 };
 
 const consumableSubtypeMapping: Record<ConsumableSubType, string> = {
-    "main": "Main",
+    "main": "Principal",
     "secondary": "Secondary",
     "side_right": "Right",
     "side_left": "Left",
     "all": "",
     "none": "",
-    "dock": "Dock",
+    "dock": "Estación",
     "sensor": "Sensor",
-    "wheel": "Wheel",
+    "wheel": "Rueda",
 };
 
 export const getConsumableName = (type: ConsumableType, subType?: ConsumableSubType): string => {
-    let ret = "";
-    if (subType && subType in consumableSubtypeMapping) {
-        ret += consumableSubtypeMapping[subType] + " ";
+    const names: Record<string, string> = {
+        main: "Principal",
+        right: "Derecho",
+        left: "Izquierdo",
+        brush: "Cepillo",
+        filter: "Filtro",
+        sensor: "Sensor",
+        wheel: "Rueda",
+        dock: "Estación",
+    };
+
+    const typeName = names[type] || "";
+    const subTypeName = subType ? names[subType] || "" : "";
+
+    if (typeName && subTypeName) {
+        return `${typeName} ${subTypeName}`.trim();
     }
-    if (type in consumableTypeMapping) {
-        ret += consumableTypeMapping[type];
-    }
-    return ret.trim() || "Unknown consumable: " + type + ", " + subType;
+
+    return typeName || subTypeName || `Consumible desconocido: ${type}, ${subType}`;
 };
 
 // Adapted from https://stackoverflow.com/a/53660837

@@ -40,7 +40,7 @@ export const validateParams: Record<
 
 export const ActionFallbackControls: FunctionComponent<TimerActionControlProps> =
     () => {
-        return <Typography color="error">The currently configured action does not exist. Please select a different action.</Typography>;
+        return <Typography color="error">La acción configurada actualmente no existe. Selecciona otra acción.</Typography>;
     };
 
 
@@ -95,14 +95,14 @@ export const SegmentCleanupActionControls: FunctionComponent<TimerActionControlP
                         <IconButton
                             disabled={disabled}
                             edge="end"
-                            aria-label="remove"
+                            aria-label="eliminar"
                             onClick={() => {
                                 const newParams = deepCopy(params);
                                 const sids: Array<string> =
                                         newParams.segment_ids as Array<string>;
-                                const removeIdx = sids.indexOf(segmentId);
-                                if (removeIdx !== -1) {
-                                    sids.splice(removeIdx, 1);
+                                const eliminarIdx = sids.indexOf(segmentId);
+                                if (eliminarIdx !== -1) {
+                                    sids.splice(eliminarIdx, 1);
                                 }
                                 setParams(newParams);
                             }}
@@ -133,7 +133,7 @@ export const SegmentCleanupActionControls: FunctionComponent<TimerActionControlP
                             <IconButton
                                 disabled={disabled}
                                 edge="end"
-                                aria-label="add"
+                                aria-label="añadir"
                                 onClick={() => {
                                     const newParams = deepCopy(params);
                                     if (newParams.segment_ids) {

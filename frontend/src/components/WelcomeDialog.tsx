@@ -26,12 +26,12 @@ const FullCleanupButtonItem = (): React.ReactElement => {
 
     return (
         <ButtonListMenuItem
-            primaryLabel="Full Cleanup"
-            secondaryLabel="Create a new map"
+            primaryLabel="Limpieza completa"
+            secondaryLabel="Crear un mapa nuevo"
             icon={<MappingPassIcon/>}
             buttonLabel="Go"
             confirmationDialog={{
-                title: "Start full cleanup?",
+                title: "¿Iniciar una limpieza completa?",
                 body: "The robot needs to return to the dock on its own to save the newly created map. Do not interfere with the cleanup or else it won't be saved."
             }}
             action={() => {
@@ -64,7 +64,7 @@ const WelcomeDialog: FunctionComponent<{open: boolean, hide: () => void}> = ({
             open={open}
         >
             <DialogTitle>
-                Welcome to Valetudo
+                Bienvenido a Valetudo
             </DialogTitle>
             <DialogContent>
                 <DialogContentText
@@ -74,26 +74,26 @@ const WelcomeDialog: FunctionComponent<{open: boolean, hide: () => void}> = ({
                     component="span"
                 >
                     <Typography>
-                        It looks like it might be the first time that you&apos;re using Valetudo on this robot.
+                        Parece que es la primera vez que utilizas Valetudo en este robot.
                     </Typography>
                     <br/>
                     <Typography>
                         The first step is usually to let the robot create a new map of your home.
-                        Depending on your firmware, the map will allow you to clean specific rooms, add virtual walls and more.
+                        Depending on your firmware, the map will allow you to clean specific rooms, añadir virtual walls and more.
                         <br/><br/>
                         There are some variations in the map creation process based on the model of robot.
                         For example, some robots might require you to enable map persistence first, whereas others might offer a dedicated Mapping Pass.
                     </Typography>
                     <br/>
                     <Typography component="span">
-                        For the initial mapping, please ensure that:
+                        Para el mapeo inicial, asegúrate de que:
                         <ul>
-                            <li>the robot is docked</li>
-                            <li>all relevant doors are open</li>
-                            <li>there are no loose cables lying around</li>
-                            <li>all areas you don&apos;t want it to go are blocked off</li>
+                            <li>el robot está en la estación</li>
+                            <li>todas las puertas necesarias están abiertas</li>
+                            <li>no haya cables sueltos por el suelo</li>
+                            <li>todas las zonas a las que no quieras que vaya estén bloqueadas</li>
                         </ul>
-                        With that done, here&apos;s what you&apos;ll need to let your robot create a new map:
+                        Una vez hecho esto, esto es lo que necesitas para que el robot cree un mapa nuevo:
                     </Typography>
                     {
                         persistentMapControlSupported &&
@@ -131,10 +131,10 @@ const WelcomeDialog: FunctionComponent<{open: boolean, hide: () => void}> = ({
                     }
                     <br/>
                     <Typography>
-                        While watching your robot zip around, you might want to <Link href="https://github.com/sponsors/Hypfer" target="_blank" rel="noopener">consider donating</Link>.
+                        Mientras ves al robot recorrer la casa, es posible que quieras <Link href="https://github.com/sponsors/Hypfer" target="_blank" rel="noopener">consider donating</Link>.
                         If you&apos;d rather decide later, the donation link can also be found hiding unobtrusively at the bottom of the sidebar menu.
                         <br/><br/>
-                        Now, please enjoy your cloud-free robot :)
+                        Ahora disfruta de tu robot sin nube :)
                     </Typography>
                 </DialogContentText>
             </DialogContent>

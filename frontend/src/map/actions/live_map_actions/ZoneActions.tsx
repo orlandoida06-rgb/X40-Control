@@ -156,7 +156,7 @@ const ZoneActions = (
 
     return (
         <>
-            <Grid2 container spacing={1} direction="row-reverse" flexWrap="wrap-reverse">
+            <Grid2 container spacing={2} justifyContent="center" alignItems="center" sx={{width: "100%", padding: "10px", gap: "12px", display: "flex", flexWrap: "wrap"}} direction="row-reverse" flexWrap="wrap-reverse">
                 <Grid2>
                     <ActionButton
                         disabled={!didSelectZones || cleanTemporaryZonesIsExecuting || !canClean}
@@ -166,7 +166,7 @@ const ZoneActions = (
                         {...setupClickHandlers()}
                     >
                         <GoIcon style={{marginRight: "0.25rem", marginLeft: "-0.25rem"}}/>
-                        Clean {zones.length} zones
+                        Limpiar {zones.length} zonas
                         {cleanTemporaryZonesIsExecuting && (
                             <CircularProgress
                                 color="inherit"
@@ -224,7 +224,7 @@ const ZoneActions = (
                     (didSelectZones && !canClean) &&
                     <Grid2>
                         <Typography variant="caption" color="textSecondary">
-                            Cannot start zone cleaning while the robot is busy
+                            No se puede iniciar la limpieza de zonas mientras el robot está ocupado
                         </Typography>
                     </Grid2>
                 }
@@ -235,7 +235,7 @@ const ZoneActions = (
                     setIntegrationHelpDialogOpen(open);
                 }}
                 coordinatesWarning={true}
-                helperText={"To start a cleanup of the currently drawn zones with the currently configured parameters via MQTT or REST, simply use this payload."}
+                helperText={"Para iniciar la limpieza de las zonas dibujadas con los parámetros configurados mediante MQTT o REST, utiliza este contenido."}
                 payload={integrationHelpDialogPayload}
             />
         </>
