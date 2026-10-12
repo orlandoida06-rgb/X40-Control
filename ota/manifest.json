@@ -1,16 +1,16 @@
 {
   "product": "X40Control",
-  "version": "2026.10.11.62",
+  "version": "2026.10.12.63",
   "channel": "stable",
   "asset": "valetudo",
-  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.10.11.62/valetudo",
-  "sha256": "81092b577f472771291d86c031aafbc2e6ee9ebf2b206d47e1ef1a5e051fa47a",
-  "size": 41706901,
-  "voices_url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.10.11.62/X40-Control-voices.tar.gz",
-  "voices_sha256": "160f238e37cd1e90d434475656499bfa7ababe2a3ed3599547e67abf0402155d",
-  "voices_size": 535516,
+  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.10.12.63/valetudo",
+  "sha256": "8ac972d192bc76516d87860ff7ef79f87f5731e960908c1e6e67a0532de12867",
+  "size": 41707326,
+  "voices_url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.10.12.63/X40-Control-voices.tar.gz",
+  "voices_sha256": "56d31943feeac53bdade1b00450dbd8242653e0904c6cf649f88076b7ab343d5",
+  "voices_size": 535522,
   "requires_reboot": true,
   "changelog": [
-    "feat: improve connectivity and clean Tailscale warnings"
+    "feat: activar HTTPS Tailscale automáticamente"
   ]
 }
