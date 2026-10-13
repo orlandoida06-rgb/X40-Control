@@ -1,9 +1,13 @@
 import {Box, Typography} from "@mui/material";
-import {CRTCompositor, FetchSource, Player} from "jsmpeg";
+import {FetchSource, Player} from "jsmpeg";
 import type {JSMpegOptions} from "jsmpeg";
 import React from "react";
 import {valetudoAPIBaseURL, Capability} from "../api";
-import {useDuststreamingPropertiesQuery} from "../api";
+import {
+    useDuststreamingPropertiesQuery,
+    useDuststreamingConfigurationQuery,
+    useDuststreamingConfigurationMutation,
+} from "../api";
 import {getScaledConfusedPlaceholderDog} from "../components/res/ValetudogPlaceholder";
 import PaperContainer from "../components/PaperContainer";
 
@@ -34,7 +38,6 @@ export const DuststreamCanvas = ({
             decodeFirstFrame: false,
             videoWidth: dimensions.width,
             videoHeight: dimensions.height,
-            createRenderer: (o) => new CRTCompositor(o, {label: "VALETUDO"})
         };
 
         const player = new Player(STREAM_URL, options);
@@ -46,7 +49,7 @@ export const DuststreamCanvas = ({
                 // intentional
             }
         };
-    }, [dimensions]);
+    }, [dimensions.width, dimensions.height]);
 
     return (
         <Box sx={{
@@ -128,7 +131,17 @@ export const DuststreamPlaceholder = ({
 
 const Duststream = (): React.ReactElement => {
     const {data: properties} = useDuststreamingPropertiesQuery();
+    const {data: configuration} = useDuststreamingConfigurationQuery();
+    const duststreamingMutation = useDuststreamingConfigurationMutation();
 
+    React.useEffect(() => {
+        if (configuration && configuration.enabled !== true && !duststreamingMutation.isPending) {
+            duststreamingMutation.mutate({
+                ...configuration,
+                enabled: true,
+            });
+        }
+    }, [configuration, duststreamingMutation.isPending, duststreamingMutation.mutate]);
 
     const [isFullscreen, setIsFullscreen] = React.useState(false);
 
