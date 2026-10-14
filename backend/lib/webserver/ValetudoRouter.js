@@ -689,16 +689,16 @@ if [ -f "$POSTBOOT" ]; then
                 next
             }
 
-            if ($0 ~ /^[[:space:]]*if([[:space:]]|$)/) depth++
+            line = $0
+            opens = gsub(/(^|[[:space:];])if([[:space:]]|$)/, "&", line)
+            closes = gsub(/(^|[[:space:];])fi([[:space:]]|$)/, "&", line)
+            depth += opens - closes
 
-            if ($0 ~ /^[[:space:]]*fi([[:space:]]|$)/) {
-                depth--
-                if (depth < 0) {
-                    bad=1
-                    exit 2
-                }
-                if (depth == 0) inblock=0
+            if (depth < 0) {
+                bad=1
+                exit 2
             }
+            if (depth == 0) inblock=0
             next
         }
 
