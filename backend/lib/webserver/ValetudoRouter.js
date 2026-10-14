@@ -740,8 +740,21 @@ if [ -x "$CLI" ]; then
 fi
 
 # Terminar únicamente el daemon de Tailscale, sin usar pkill -f.
-for pid in $(pgrep -f '^/data/tailscale/current/tailscaled([[:space:]]|$)' 2>/dev/null || true); do
+TAILSCALED_PATTERN='^/data/tailscale/current/tailscaled([[:space:]]|$)'
+
+for pid in $(pgrep -f "$TAILSCALED_PATTERN" 2>/dev/null || true); do
     kill "$pid" 2>/dev/null || true
+done
+
+# Esperar a que el daemon termine antes de retirar sus binarios.
+attempt=0
+while pgrep -f "$TAILSCALED_PATTERN" >/dev/null 2>&1; do
+    if [ "$attempt" -ge 5 ]; then
+        echo "Tailscale sigue ejecutándose; no se han retirado los binarios." >&2
+        exit 1
+    fi
+    sleep 1
+    attempt=$((attempt + 1))
 done
 
 rm -f /data/tailscale/tailscaled.sock /data/tailscale/current
