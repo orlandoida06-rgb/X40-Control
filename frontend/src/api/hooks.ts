@@ -122,6 +122,9 @@ import {
     sendAutoEmptyDockAutoEmptyInterval,
     fetchAutoEmptyDockAutoEmptyIntervalProperties,
     fetchObstacleImagesProperties,
+    fetchDuststreamingProperties,
+    fetchDuststreamingConfiguration,
+    sendDuststreamingConfiguration,
     fetchObstacleImagesState,
     sendObstacleImagesState,
     fetchHighResolutionManualControlState,
@@ -169,6 +172,7 @@ import {
     CombinedVirtualRestrictionsUpdateRequestParameters,
     ConsumableId,
     DoNotDisturbConfiguration,
+    DuststreamingConfiguration,
     HighResolutionManualControlInteraction,
     HTTPBasicAuthConfiguration,
     ManualControlInteraction,
@@ -270,6 +274,9 @@ enum QueryKey {
     MopDockMopDryingTimeControlProperties = "mop_dock_mop_drying_time_control_properties",
     AutoEmptyDockAutoEmptyDurationControl = "auto_empty_dock_auto_empty_duration_control",
     AutoEmptyDockAutoEmptyDurationControlProperties = "auto_empty_dock_auto_empty_duration_control_properties",
+DuststreamingProperties = "duststreaming_properties",
+DuststreamingConfiguration = "duststreaming_configuration",
+
 }
 
 const useOnCommandError = (capability: Capability | string): ((error: unknown) => void) => {
@@ -1874,5 +1881,46 @@ export const useSetX40ControlRoomVoiceMutation = () => {
                 queryKey: ["X40ControlRoomVoices"]
             });
         }
+    });
+};
+
+
+export const useDuststreamingPropertiesQuery = () => {
+    return useQuery( {
+        queryKey: [QueryKey.DuststreamingProperties],
+        queryFn: fetchDuststreamingProperties,
+
+        staleTime: Infinity,
+    });
+};
+
+
+export const useDuststreamingConfigurationQuery = (options?: { enabled?: boolean }) => {
+    return useQuery( {
+        queryKey: [QueryKey.DuststreamingConfiguration],
+        queryFn: fetchDuststreamingConfiguration,
+
+        enabled: options?.enabled ?? true,
+        staleTime: Infinity,
+    });
+};
+
+
+export const useDuststreamingConfigurationMutation = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: (configuration: DuststreamingConfiguration) => {
+            return sendDuststreamingConfiguration(configuration).then(fetchDuststreamingConfiguration).then((configuration) => {
+                queryClient.setQueryData<DuststreamingConfiguration>([QueryKey.DuststreamingConfiguration], configuration, {
+                    updatedAt: Date.now(),
+                });
+
+                queryClient.invalidateQueries({
+                    queryKey: [QueryKey.DuststreamingProperties]
+                });
+            });
+        },
+        onError: useOnSettingsChangeError("Camera Streaming")
     });
 };
