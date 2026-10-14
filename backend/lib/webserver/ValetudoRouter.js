@@ -646,43 +646,79 @@ if [ -f "$POSTBOOT" ]; then
     cp -p "$POSTBOOT" "$BACKUP"
     TMP="$POSTBOOT.uninstall.$$"
 
-    if ! python3 - "$POSTBOOT" "$TMP" <<'PYREMOVE'
-import sys
-from pathlib import Path
+    if ! awk '
+        BEGIN {
+            inblock=0
+            depth=0
+            waiting=0
+            managed=0
+            serve=0
+            bad=0
+        }
 
-src, dst = map(Path, sys.argv[1:])
-lines = src.read_text().splitlines(keepends=True)
-markers = {
-    "# X40-Control Tailscale managed startup",
-    "# X40-Control Tailscale Serve HTTPS startup",
-}
-out = []
-found = set()
-skip = False
+        /^# X40-Control Tailscale managed startup$/ {
+            if (inblock || managed++) {
+                bad=1
+                exit 2
+            }
+            inblock=1
+            waiting=1
+            depth=0
+            next
+        }
 
-for line in lines:
-    value = line.rstrip("\r\n")
+        /^# X40-Control Tailscale Serve HTTPS startup$/ {
+            if (inblock || serve++) {
+                bad=1
+                exit 2
+            }
+            inblock=1
+            waiting=1
+            depth=0
+            next
+        }
 
-    if not skip and value in markers:
-        skip = True
-        found.add(value)
-        continue
+        inblock {
+            if (waiting) {
+                if ($0 !~ /^[[:space:]]*if([[:space:]]|$)/) {
+                    bad=1
+                    exit 2
+                }
+                waiting=0
+                depth=1
+                next
+            }
 
-    if skip:
-        if value == "fi":
-            skip = False
-        continue
+            if ($0 ~ /^[[:space:]]*if([[:space:]]|$)/) depth++
 
-    out.append(line)
+            if ($0 ~ /^[[:space:]]*fi([[:space:]]|$)/) {
+                depth--
+                if (depth < 0) {
+                    bad=1
+                    exit 2
+                }
+                if (depth == 0) inblock=0
+            }
+            next
+        }
 
-if skip or found != markers:
-    sys.exit("No se identificaron ambos bloques completos; arranque intacto.")
+        { print }
 
-dst.write_text("".join(out))
-PYREMOVE
-    then
+        END {
+            if (bad || inblock || managed != 1 || serve != 1) {
+                print "No se pudieron validar ambos bloques completos." > "/dev/stderr"
+                exit 2
+            }
+        }
+    ' "$POSTBOOT" > "$TMP"; then
         rm -f "$TMP"
-        echo "No se pudo identificar el arranque; no se ha modificado." >&2
+        echo "No se pudieron retirar los bloques de forma segura; arranque intacto." >&2
+        exit 1
+    fi
+
+    if grep -q "X40-Control Tailscale" "$TMP"; then
+        rm -f "$TMP"
+        echo "Quedan marcadores de Tailscale; arranque intacto." >&2
         exit 1
     fi
 
