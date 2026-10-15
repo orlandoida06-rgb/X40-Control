@@ -3,8 +3,9 @@ import {FetchSource, Player} from "jsmpeg";
 import type {JSMpegOptions} from "jsmpeg";
 import React from "react";
 import {valetudoAPIBaseURL, Capability} from "../api";
-import {useDuststreamingPropertiesQuery} from "../api";
+import {useDuststreamingPropertiesQuery, useDuststreamingConfigurationQuery, useDuststreamingConfigurationMutation} from "../api";
 import PaperContainer from "../components/PaperContainer";
+import ManualControl from "./ManualControl";
 
 const STREAM_URL = `${valetudoAPIBaseURL}/robot/capabilities/${Capability.Duststreaming}/stream`;
 
@@ -126,6 +127,16 @@ export const DuststreamPlaceholder = ({
 
 const Duststream = (): React.ReactElement => {
     const {data: properties} = useDuststreamingPropertiesQuery();
+    const {data: configuration} = useDuststreamingConfigurationQuery();
+    const configurationMutation = useDuststreamingConfigurationMutation();
+
+    React.useEffect(() => {
+        if (configuration && configuration.enabled === false &&
+            !configurationMutation.isPending) {
+            configurationMutation.mutate({enabled: true});
+        }
+    }, [configuration, configurationMutation.isPending, configurationMutation.mutate]);
+
 
 
     const [isFullscreen, setIsFullscreen] = React.useState(false);
@@ -154,17 +165,17 @@ const Duststream = (): React.ReactElement => {
             containerStyle={{
                 display: "flex",
                 flexDirection: "column",
-                flex: "0 1 auto",
-                maxHeight: "100%",
+                flex: "1 1 auto",
+                height: "calc(100dvh - 110px)",
                 minHeight: 0,
+                overflowY: "auto",
             }}
             paperStyle={{
                 display: "flex",
                 flexDirection: "column",
-                flex: "0 1 auto",
-                maxHeight: "100%",
+                flex: "1 1 auto",
                 minHeight: 0,
-                overflow: "hidden",
+                overflow: "visible",
             }}
         >
             {properties && (
@@ -177,10 +188,11 @@ const Duststream = (): React.ReactElement => {
                         inset: isFullscreen ? 0 : undefined,
                         zIndex: isFullscreen ? 1300 : undefined,
                         height: isFullscreen ? "100%" : undefined,
-                        width: "100%",
+                        width: isFullscreen ? "100%" : { xs: "100%", md: "60%" },
+                        maxWidth: isFullscreen ? "100%" : 760,
                         aspectRatio: isFullscreen ? undefined : `${properties.width} / ${properties.height}`,
                         mx: "auto",
-                        flex: "0 1 auto",
+                        flex: "0 0 auto",
                         minHeight: 0,
                         bgcolor: "#000",
                         cursor: "pointer",
@@ -197,6 +209,9 @@ const Duststream = (): React.ReactElement => {
                     )}
                 </Box>
             )}
+            <Box sx={{ width: "100%", mt: 2, flex: "0 0 auto" }}>
+                <ManualControl />
+            </Box>
         </PaperContainer>
     );
 };

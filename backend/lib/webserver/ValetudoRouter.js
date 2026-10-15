@@ -1180,6 +1180,25 @@ echo "Binarios de Tailscale retirados; claves y estado conservados."
             }
         });
 
+        this.router.get("/config/duststreaming", (req, res) => {
+            res.json(this.config.get("duststreaming") || {enabled: false});
+        });
+
+        this.router.put("/config/duststreaming", this.validator, (req, res) => {
+            if (typeof req.body.enabled !== "boolean") {
+                return res.sendStatus(400);
+            }
+
+            const config = Object.assign(
+                {},
+                this.config.get("duststreaming") || {},
+                {enabled: req.body.enabled}
+            );
+
+            this.config.set("duststreaming", config);
+            res.sendStatus(200);
+        });
+
         this.router.get("/config/customizations", (req, res) => {
             const valetudoConfig = this.config.get("valetudo");
 

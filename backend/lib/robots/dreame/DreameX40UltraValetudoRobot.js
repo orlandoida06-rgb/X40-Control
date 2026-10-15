@@ -10,6 +10,7 @@ const MiioValetudoRobot = require("../MiioValetudoRobot");
 const QuirksCapability = require("../../core/capabilities/QuirksCapability");
 const ValetudoSelectionPreset = require("../../entities/core/ValetudoSelectionPreset");
 const {IMAGE_FILE_FORMAT} = require("../../utils/const");
+const LinuxDuststreamingCapability = require("../common/linuxCapabilities/LinuxDuststreamingCapability");
 
 const stateAttrs = entities.state.attributes;
 
@@ -163,6 +164,16 @@ class DreameX40UltraValetudoRobot extends DreameGen4ValetudoRobot {
             dimensions: {
                 width: 672,
                 height: 504
+            }
+        }));
+
+        this.registerCapability(new LinuxDuststreamingCapability({
+            robot: this,
+            platform: LinuxDuststreamingCapability.PLATFORM.DREAME_MR813,
+            device: "/dev/video0",
+            dimensions: {
+                width: 640,
+                height: 480
             }
         }));
 
