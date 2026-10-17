@@ -288,7 +288,7 @@ class ValetudoRouter {
         this.router.post("/x40-control/tailscale/action", (req, res) => {
             const action = req.body?.action;
 
-            if (!["install", "up", "down"].includes(action)) {
+            if (!["install", "up", "down", "serve", "uninstall"].includes(action)) {
                 return res.status(400).json({
                     error: "Acción no válida. Usa install, up o down."
                 });
@@ -635,10 +635,174 @@ echo "Instalación terminada. HTTPS se activa cuando Tailscale está autorizado.
                         return;
                     }
 
+                    if (action === "uninstall") {
+                        const uninstallScript = String.raw`
+set -eu
+POSTBOOT="/data/_root_postboot.sh"
+BACKUP=""
+
+if [ -f "$POSTBOOT" ]; then
+    BACKUP="$POSTBOOT.before-tailscale-uninstall-$(date +%Y%m%d-%H%M%S)"
+    cp -p "$POSTBOOT" "$BACKUP"
+    TMP="$POSTBOOT.uninstall.$$"
+
+    if ! awk '
+        BEGIN {
+            inblock=0
+            depth=0
+            waiting=0
+            managed=0
+            serve=0
+            bad=0
+        }
+
+        /^# X40-Control Tailscale managed startup$/ {
+            if (inblock || managed++) {
+                bad=1
+                exit 2
+            }
+            inblock=1
+            waiting=1
+            depth=0
+            next
+        }
+
+        /^# X40-Control Tailscale Serve HTTPS startup$/ {
+            if (inblock || serve++) {
+                bad=1
+                exit 2
+            }
+            inblock=1
+            waiting=1
+            depth=0
+            next
+        }
+
+        inblock {
+            if (waiting) {
+                if ($0 !~ /^[[:space:]]*if([[:space:]]|$)/) {
+                    bad=1
+                    exit 2
+                }
+                waiting=0
+                depth=1
+                next
+            }
+
+            line = $0
+            opens = gsub(/(^|[[:space:];])if([[:space:]]|$)/, "&", line)
+            closes = gsub(/(^|[[:space:];])fi([[:space:]]|$)/, "&", line)
+            depth += opens - closes
+
+            if (depth < 0) {
+                bad=1
+                exit 2
+            }
+            if (depth == 0) inblock=0
+            next
+        }
+
+        { print }
+
+        END {
+            if (bad || inblock || managed != 1 || serve != 1) {
+                print "No se pudieron validar ambos bloques completos." > "/dev/stderr"
+                exit 2
+            }
+        }
+    ' "$POSTBOOT" > "$TMP"; then
+        rm -f "$TMP"
+        echo "No se pudieron retirar los bloques de forma segura; arranque intacto." >&2
+        exit 1
+    fi
+
+    if grep -q "X40-Control Tailscale" "$TMP"; then
+        rm -f "$TMP"
+        echo "Quedan marcadores de Tailscale; arranque intacto." >&2
+        exit 1
+    fi
+
+    if ! sh -n "$TMP"; then
+        rm -f "$TMP"
+        echo "La validación del arranque ha fallado; no se ha modificado." >&2
+        exit 1
+    fi
+
+    cat "$TMP" > "$POSTBOOT"
+    chmod 755 "$POSTBOOT"
+    rm -f "$TMP"
+fi
+
+CLI="/data/tailscale/current/tailscale"
+if [ -x "$CLI" ]; then
+    "$CLI" --socket=/data/tailscale/tailscaled.sock serve reset >/dev/null 2>&1 || true
+    "$CLI" --socket=/data/tailscale/tailscaled.sock down >/dev/null 2>&1 || true
+fi
+
+# Terminar únicamente el daemon de Tailscale, sin usar pkill -f.
+TAILSCALED_PATTERN='^/data/tailscale/current/tailscaled([[:space:]]|$)'
+
+for pid in $(pgrep -f "$TAILSCALED_PATTERN" 2>/dev/null || true); do
+    kill "$pid" 2>/dev/null || true
+done
+
+# Esperar a que el daemon termine antes de retirar sus binarios.
+attempt=0
+while pgrep -f "$TAILSCALED_PATTERN" >/dev/null 2>&1; do
+    if [ "$attempt" -ge 5 ]; then
+        echo "Tailscale sigue ejecutándose; no se han retirado los binarios." >&2
+        exit 1
+    fi
+    sleep 1
+    attempt=$((attempt + 1))
+done
+
+rm -f /data/tailscale/tailscaled.sock /data/tailscale/current
+for d in /data/tailscale/tailscale_*_arm64; do
+    [ -d "$d" ] && rm -rf "$d"
+done
+
+echo "Binarios de Tailscale retirados; claves y estado conservados."
+[ -n "$BACKUP" ] && echo "Copia de arranque: $BACKUP"
+`;
+                        return execFile(
+                            "/bin/sh",
+                            ["-c", uninstallScript],
+                            {timeout: 20000, maxBuffer: 64 * 1024},
+                            (uninstallError, uninstallStdout, uninstallStderr) => {
+                                if (uninstallError) {
+                                    return res.status(500).json({
+                                        error: (uninstallStderr || "").trim() || uninstallError.message
+                                    });
+                                }
+                                return res.json({message: (uninstallStdout || "").trim()});
+                            }
+                        );
+                    }
+
                     if (findError || !tailscalePath) {
                         return res.status(409).json({
                             error: "No se encuentra el ejecutable de Tailscale."
                         });
+                    }
+
+                    if (action === "serve") {
+                        return execFile(
+                            tailscalePath,
+                            ["--socket=/data/tailscale/tailscaled.sock", "serve", "--bg", "--yes", "80"],
+                            {timeout: 20000, maxBuffer: 64 * 1024},
+                            (serveError, serveStdout, serveStderr) => {
+                                if (serveError) {
+                                    return res.status(500).json({
+                                        error: (serveStderr || "").trim() || serveError.message
+                                    });
+                                }
+                                return res.json({
+                                    message: "Tailscale Serve HTTPS configurado.",
+                                    output: (serveStdout || "").trim()
+                                });
+                            }
+                        );
                     }
 
                     execFile(
@@ -1014,6 +1178,34 @@ echo "Instalación terminada. HTTPS se activa cuando Tailscale está autorizado.
             } else {
                 res.sendStatus(400);
             }
+        });
+
+        this.router.get("/config/duststreaming", (req, res) => {
+            res.json(this.config.get("duststreaming") || {enabled: false});
+        });
+
+        this.router.put("/config/duststreaming", this.validator, (req, res) => {
+            if (typeof req.body.enabled !== "boolean") {
+                return res.sendStatus(400);
+            }
+
+            const config = Object.assign(
+                {},
+                this.config.get("duststreaming") || {},
+                {enabled: req.body.enabled}
+            );
+
+            this.config.set("duststreaming", config);
+
+            if (req.body.enabled === false) {
+                const capability = this.robot.capabilities.DuststreamingCapability;
+
+                if (capability && typeof capability.stop === "function") {
+                    capability.stop();
+                }
+            }
+
+            res.sendStatus(200);
         });
 
         this.router.get("/config/customizations", (req, res) => {

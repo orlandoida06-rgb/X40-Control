@@ -78,6 +78,9 @@
             "implementationSpecificConfig": {}
         }
     },
+    "duststreaming": {
+        "enabled": false
+    },
     "oobe": {
         "welcomeDialogDismissed": false
     },

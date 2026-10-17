@@ -30,6 +30,7 @@ import {
     Hub as ConnectivityIcon,
     SystemUpdateAlt as UpdaterIcon,
     SettingsRemote as SettingsRemoteIcon,
+    Videocam as CameraIcon,
     GitHub as GithubIcon,
     Favorite as DonateIcon,
     MenuBook as DocsIcon,
@@ -160,6 +161,13 @@ const menuTree: Array<MenuEntry | MenuSubEntry | MenuSubheader> = [
             capabilities: [Capability.TotalStatistics],
             type: "allof"
         }
+    },
+    {
+        kind: "MenuEntry",
+        route: "/robot/camera",
+        title: "Cámara",
+        menuIcon: CameraIcon,
+        menuText: "Cámara"
     },
     {
         kind: "Subheader",

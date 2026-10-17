@@ -116,7 +116,7 @@ const HighResolutionMovementControls = () => {
             <InputModeToggle mode={inputMode} onChange={setInputMode} />
 
             <VirtualControllerProvider>
-                <Box sx={{ minHeight: 240, display: "flex", flexDirection: "column", alignItems: "center" }}>
+                <Box sx={{ minHeight: 0, display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
                     <MovementSampler enabled={controlsEnabled} sendMoveCommand={controllerSender} />
                     <ModeSwitchRestablecer mode={inputMode} />
                     <ControllerVisual mode={inputMode} enabled={controlsEnabled} />
@@ -170,7 +170,7 @@ const StandardMovementControls = () => {
             />
 
             <VirtualControllerProvider>
-                <Box sx={{ minHeight: 240, display: "flex", flexDirection: "column", alignItems: "center" }}>
+                <Box sx={{ minHeight: 0, display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
                     <MovementSampler enabled={controlsEnabled} sendMoveCommand={sendMoveCommand} />
                     <ModeSwitchRestablecer mode={inputMode} />
                     <ControllerVisual mode={inputMode} enabled={controlsEnabled} />
@@ -197,7 +197,7 @@ const HighResolutionManualControlInternal: React.FunctionComponent = (): React.R
                     ) : (
                         <>
                             {stateError && <Typography color="error">Error al cargar los controles manuales</Typography>}
-                            <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
+                            <Box sx={{ display: "flex", justifyContent: "center", mb: 1 }}>
                                 <HighResolutionControlToggle />
                             </Box>
                             <HighResolutionMovementControls />
@@ -225,7 +225,7 @@ const ManualControlInternal: React.FunctionComponent = (): React.ReactElement =>
                     ) : (
                         <>
                             {hasError && <Typography color="error">Error al cargar los controles manuales</Typography>}
-                            <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
+                            <Box sx={{ display: "flex", justifyContent: "center", mb: 1 }}>
                                 <StandardControlToggle />
                             </Box>
                             <StandardMovementControls />
@@ -253,9 +253,18 @@ const ManualControl = (): React.ReactElement => {
     }
 
     return (
-        <PaperContainer paperStyle={{ userSelect: "none" } as React.CSSProperties}>
+        <Box
+            sx={{
+                width: "100%",
+                userSelect: "none",
+                "& .MuiPaper-root": {
+                    boxShadow: "none",
+                    backgroundImage: "none",
+                },
+            }}
+        >
             {controlComponent}
-        </PaperContainer>
+        </Box>
     );
 };
 

@@ -89,6 +89,7 @@ const CAPABILITY_TYPE_TO_ROUTER_MAPPING = {
     [capabilities.CarpetSensorModeControlCapability.TYPE]: capabilityRouters.CarpetSensorModeControlCapabilityRouter,
     [capabilities.AutoEmptyDockAutoEmptyIntervalControlCapability.TYPE]: capabilityRouters.AutoEmptyDockAutoEmptyIntervalControlCapabilityRouter,
     [capabilities.ObstacleImagesCapability.TYPE]: capabilityRouters.ObstacleImagesCapabilityRouter,
+    [capabilities.DuststreamingCapability.TYPE]: capabilityRouters.DuststreamingCapabilityRouter,
     [capabilities.HighResolutionManualControlCapability.TYPE]: capabilityRouters.HighResolutionManualControlCapabilityRouter,
     [capabilities.MopExtensionControlCapability.TYPE]: capabilityRouters.SimpleToggleCapabilityRouter,
     [capabilities.CameraLightControlCapability.TYPE]: capabilityRouters.SimpleToggleCapabilityRouter,

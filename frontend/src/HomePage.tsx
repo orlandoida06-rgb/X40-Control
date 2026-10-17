@@ -27,6 +27,7 @@ import {
     Pause as PauseIcon,
     Stop as StopIcon,
     CleaningServices as CleaningIcon,
+    Videocam as CameraIcon,
 } from "@mui/icons-material";
 
 import LiveMapPage from "./map/LiveMapPage";
@@ -54,6 +55,7 @@ const glass = {
 
 const navItems = [
     {icon: <HomeIcon />, label: "Inicio", route: "/"},
+    {icon: <CameraIcon />, label: "Cámara", route: "/robot/camera"},
     {icon: <MapIcon />, label: "Mapa", route: "/options/map_management"},
     {
         icon: <RoomsIcon />,

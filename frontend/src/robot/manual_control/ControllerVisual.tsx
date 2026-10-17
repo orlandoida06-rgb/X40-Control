@@ -27,7 +27,7 @@ function JoystickInput({ enabled }: JoystickInputProps) {
 
     return (
         <Joystick
-            size={200}
+            size={120}
             move={handleJoystickInput}
             stop={handleJoystickInput}
             disabled={!enabled}
