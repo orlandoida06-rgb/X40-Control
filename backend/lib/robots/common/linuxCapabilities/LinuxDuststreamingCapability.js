@@ -58,8 +58,12 @@ class LinuxDuststreamingCapability extends DuststreamingCapability {
         }
     }
 
-    async shutdown() {
+    stop() {
         this.manager.stop();
+    }
+
+    async shutdown() {
+        this.stop();
     }
 }
 

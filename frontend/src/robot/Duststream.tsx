@@ -130,12 +130,6 @@ const Duststream = (): React.ReactElement => {
     const {data: configuration} = useDuststreamingConfigurationQuery();
     const configurationMutation = useDuststreamingConfigurationMutation();
 
-    React.useEffect(() => {
-        if (configuration && configuration.enabled === false &&
-            !configurationMutation.isPending) {
-            configurationMutation.mutate({enabled: true});
-        }
-    }, [configuration, configurationMutation.isPending, configurationMutation.mutate]);
 
 
 

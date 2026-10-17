@@ -1196,6 +1196,15 @@ echo "Binarios de Tailscale retirados; claves y estado conservados."
             );
 
             this.config.set("duststreaming", config);
+
+            if (req.body.enabled === false) {
+                const capability = this.robot.capabilities.DuststreamingCapability;
+
+                if (capability && typeof capability.stop === "function") {
+                    capability.stop();
+                }
+            }
+
             res.sendStatus(200);
         });
 
