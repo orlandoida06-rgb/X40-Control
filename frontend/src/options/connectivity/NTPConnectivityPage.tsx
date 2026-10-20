@@ -82,7 +82,9 @@ const NTPClientStatusComponent: React.FunctionComponent<{
                 return (
                     <>
                         <Typography variant="h5">Sincronización horaria correcta</Typography>
-                        <Typography>Desfase horario: {status.state.offset} ms</Typography>
+                        <Typography>
+                            Desfase respecto al servidor NTP: {status.state.offset?.toLocaleString("es-ES") ?? "No disponible"} ms
+                        </Typography>
                     </>
                 );
         }
@@ -113,7 +115,11 @@ const NTPClientStatusComponent: React.FunctionComponent<{
                     marginTop: "0.5rem"
                 }}
             >
-                Current robot time: {status.robotTime}
+                Hora del robot: {new Date(status.robotTime).toLocaleString("es-ES", {
+                    timeZone: "Europe/Madrid",
+                    dateStyle: "medium",
+                    timeStyle: "medium"
+                })} (Europe/Madrid)
             </Grid2>
         </Grid2>
     );
