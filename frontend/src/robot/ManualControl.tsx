@@ -117,7 +117,7 @@ const HighResolutionMovementControls = () => {
             <InputModeToggle mode={inputMode} onChange={setInputMode} />
 
             <VirtualControllerProvider>
-                <Box sx={{ minHeight: 240, display: "flex", flexDirection: "column", alignItems: "center" }}>
+                <Box sx={{ minHeight: { xs: 170, sm: 200 }, display: "flex", flexDirection: "column", alignItems: "center" }}>
                     <MovementSampler enabled={controlsEnabled} sendMoveCommand={controllerSender} />
                     <ModeSwitchRestablecer mode={inputMode} />
                     <ControllerVisual mode={inputMode} enabled={controlsEnabled} />
@@ -171,7 +171,7 @@ const StandardMovementControls = () => {
             />
 
             <VirtualControllerProvider>
-                <Box sx={{ minHeight: 240, display: "flex", flexDirection: "column", alignItems: "center" }}>
+                <Box sx={{ minHeight: { xs: 170, sm: 200 }, display: "flex", flexDirection: "column", alignItems: "center" }}>
                     <MovementSampler enabled={controlsEnabled} sendMoveCommand={sendMoveCommand} />
                     <ModeSwitchRestablecer mode={inputMode} />
                     <ControllerVisual mode={inputMode} enabled={controlsEnabled} />

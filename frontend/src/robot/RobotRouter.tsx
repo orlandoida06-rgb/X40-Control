@@ -10,12 +10,20 @@ import TotalStatistics from "./TotalStatistics";
 const CameraPage = (): React.ReactElement => (
     <Box
         sx={{
-            display: "flex",
-            flexDirection: "column",
+            display: "grid",
+            gridTemplateColumns: {
+                xs: "minmax(0, 1fr)",
+                md: "minmax(0, 1.6fr) minmax(320px, 1fr)",
+            },
+            alignItems: "start",
             gap: {xs: 1.5, md: 2},
             width: "100%",
             minWidth: 0,
             pb: 2,
+            "& > *": {
+                minWidth: 0,
+                width: "100%",
+            },
         }}
     >
         <Duststream />

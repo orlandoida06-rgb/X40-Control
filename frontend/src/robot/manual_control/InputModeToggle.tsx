@@ -20,7 +20,7 @@ export function InputModeToggle({ mode, onChange }: InputModeToggleProps) {
             exclusive
             onChange={handleChange}
             size="small"
-            sx={{ mb: 8 }}
+            sx={{ mb: { xs: 2, sm: 3 } }}
         >
             <ToggleButton value="joystick">Joystick</ToggleButton>
             <ToggleButton value="dpad">D-Pad</ToggleButton>
