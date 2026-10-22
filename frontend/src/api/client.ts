@@ -82,6 +82,8 @@ import {
     WifiStatus,
     ZoneActionRequestParameters,
     ZoneProperties,
+
+
 } from "./types";
 import { floorObject } from "./utils";
 import {preprocessMap} from "./mapUtils";
