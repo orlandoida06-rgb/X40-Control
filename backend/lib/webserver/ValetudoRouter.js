@@ -1178,7 +1178,7 @@ echo "Binarios de Tailscale retirados; claves y estado conservados."
             const manifestPath = "/data/ota/manifest.json";
             const targetPath = "/data/valetudo";
             const manifestUrl =
-                "https://raw.githubusercontent.com/orlandoida06-rgb/X40-Control/main/ota/manifest.json";
+                "https://raw.githubusercontent.com/orlandoida06-rgb/X40-Control/integration-ota-2026.10.12/ota/manifest.json";
 
             try {
                 if (!fs.existsSync(targetPath)) {
