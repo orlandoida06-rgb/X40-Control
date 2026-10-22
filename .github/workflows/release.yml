@@ -3,7 +3,7 @@ name: Release
 on:
   push:
     branches:
-      - main
+      - integration-ota-2026.10.12
 
 permissions:
   contents: write
@@ -291,4 +291,4 @@ jobs:
           fi
 
           git commit -m "chore: update OTA manifest to ${VERSION} [skip ci]"
-          git push origin HEAD:main
+          git push origin "HEAD:${GITHUB_REF_NAME}"
