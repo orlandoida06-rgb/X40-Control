@@ -1,16 +1,16 @@
 {
   "product": "X40Control",
-  "version": "2026.10.12.64",
+  "version": "2026.10.22.65",
   "channel": "stable",
   "asset": "valetudo",
-  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.10.12.64/valetudo",
-  "sha256": "eae92f5a800720aa837ec1ae495652a088188a2fb402f6283ab98aa87bc63ae5",
-  "size": 41707099,
-  "voices_url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.10.12.64/X40-Control-voices.tar.gz",
-  "voices_sha256": "d78ad48247d4985d4d51ec837f74c39c96222d40a43cc649f81fba5c2c7349d4",
-  "voices_size": 535518,
+  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.10.22.65/valetudo",
+  "sha256": "3ca78cd05426ff6e4d8ca04638fb22bcc9259a5214fa55305e961606a3a62b39",
+  "size": 41743100,
+  "voices_url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.10.22.65/X40-Control-voices.tar.gz",
+  "voices_sha256": "acd0d5c0e9c0b31c290076701623336293a0ab62ffc9cb7d9f546fb702185b06",
+  "voices_size": 535517,
   "requires_reboot": true,
   "changelog": [
-    "fix: quitar Historial del frontend"
+    "ci: lanzar release y OTA desde rama de integración"
   ]
 }
