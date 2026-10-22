@@ -62,7 +62,7 @@ const TailscaleConnectivityPage = (): React.ReactElement => {
         void refreshStatus();
     }, [refreshStatus]);
 
-    const executeAction = async (action: "install" | "up" | "down") => {
+    const executeAction = async (action: "install" | "up" | "down" | "serve" | "uninstall") => {
         setBusy(true);
         setError("");
         setMessage("");
@@ -248,6 +248,30 @@ const TailscaleConnectivityPage = (): React.ReactElement => {
                                                 onClick={() => void executeAction("down")}
                                             >
                                                 Desconectar
+                                            </Button>
+                                        </Grid2>
+                                        <Grid2>
+                                            <Button
+                                                variant="contained"
+                                                color="success"
+                                                disabled={busy || !status.running || !status.authenticated}
+                                                onClick={() => void executeAction("serve")}
+                                            >
+                                                Activar HTTPS
+                                            </Button>
+                                        </Grid2>
+                                        <Grid2>
+                                            <Button
+                                                variant="outlined"
+                                                color="error"
+                                                disabled={busy}
+                                                onClick={() => {
+                                                    if (window.confirm("¿Desinstalar Tailscale? Se conservarán las claves y el estado guardado.")) {
+                                                        void executeAction("uninstall");
+                                                    }
+                                                }}
+                                            >
+                                                Desinstalar Tailscale
                                             </Button>
                                         </Grid2>
                                     </>

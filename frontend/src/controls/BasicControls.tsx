@@ -177,7 +177,7 @@ const BasicControls = (): React.ReactElement => {
                                     },
                                 }}
                             >
-                                </Button>
+                            </Button>
                         </Grid2>
 
                         <Grid2 size={{xs: 6}}>
@@ -214,7 +214,7 @@ const BasicControls = (): React.ReactElement => {
                                     },
                                 }}
                             >
-                                </Button>
+                            </Button>
                         </Grid2>
 
                         <Grid2 size={{xs: 6}}>
@@ -251,7 +251,7 @@ const BasicControls = (): React.ReactElement => {
                                     },
                                 }}
                             >
-                                </Button>
+                            </Button>
                         </Grid2>
 
                         <Grid2 size={{xs: 6}}>
@@ -288,7 +288,7 @@ const BasicControls = (): React.ReactElement => {
                                     },
                                 }}
                             >
-                                </Button>
+                            </Button>
                         </Grid2>
                     </Grid2>
                 </Box>

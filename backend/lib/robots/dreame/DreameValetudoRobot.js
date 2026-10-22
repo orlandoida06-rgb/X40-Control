@@ -1,6 +1,6 @@
-const {playVoiceFile} = require("../../x40-control/X40ErrorVoicePlayer");
 const fs = require("fs");
 const Logger = require("../../Logger");
+const {playVoiceFile} = require("../../x40-control/X40ErrorVoicePlayer");
 
 const LinuxWifiScanCapability = require("../common/linuxCapabilities/LinuxWifiScanCapability");
 const miioCapabilities = require("../common/miioCapabilities");
@@ -174,7 +174,7 @@ class DreameValetudoRobot extends MiioValetudoRobot {
         Logger.info(
             `${this.constructor.name}: X40-Control habitación activa`,
             {
-                segmentId,
+                segmentId: segmentId,
                 roomName: roomName || null
             }
         );
@@ -189,7 +189,7 @@ class DreameValetudoRobot extends MiioValetudoRobot {
         if (!language) {
             Logger.warn(
                 `${this.constructor.name}: X40-Control idioma de voz no disponible`,
-                {segmentId, roomName}
+                {segmentId: segmentId, roomName: roomName}
             );
             return;
         }
@@ -200,9 +200,9 @@ class DreameValetudoRobot extends MiioValetudoRobot {
             Logger.warn(
                 `${this.constructor.name}: X40-Control no hay voz para la habitación`,
                 {
-                    segmentId,
-                    roomName,
-                    language
+                    segmentId: segmentId,
+                    roomName: roomName,
+                    language: language
                 }
             );
             return;
@@ -214,9 +214,9 @@ class DreameValetudoRobot extends MiioValetudoRobot {
             Logger.warn(
                 `${this.constructor.name}: X40-Control archivo de voz no existe`,
                 {
-                    segmentId,
-                    roomName,
-                    voicePath
+                    segmentId: segmentId,
+                    roomName: roomName,
+                    voicePath: voicePath
                 }
             );
             return;
@@ -225,9 +225,9 @@ class DreameValetudoRobot extends MiioValetudoRobot {
         Logger.info(
             `${this.constructor.name}: X40-Control reproduciendo voz de habitación`,
             {
-                segmentId,
-                roomName,
-                voicePath
+                segmentId: segmentId,
+                roomName: roomName,
+                voicePath: voicePath
             }
         );
 
@@ -845,7 +845,7 @@ DreameValetudoRobot.MAP_ERROR_CODE = (vendorErrorCode) => {
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.UNKNOWN;
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.UNKNOWN;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.CORE;
-            parameters.message = `Error interno ${vendorErrorCode}`; //"AVA_HEALTH_STATUS_TYPE_CARPET_WATEBOX_START" //TODO What does the dreame error string mean?
+            parameters.message = "Attempted to start mopping while on carpet";
             break;
         case "56":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.UNKNOWN;
@@ -1088,6 +1088,12 @@ DreameValetudoRobot.MAP_ERROR_CODE = (vendorErrorCode) => {
             parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.ERROR;
             parameters.subsystem = ValetudoRobotError.SUBSYSTEM.DOCK;
             parameters.message = "La bandeja de lavado de la base está llena de agua";
+            break;
+        case "120":
+            parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.PERMANENT;
+            parameters.severity.level = ValetudoRobotError.SEVERITY_LEVEL.ERROR;
+            parameters.subsystem = ValetudoRobotError.SUBSYSTEM.DOCK;
+            parameters.message = "Mop pads not in the dock. Attach failed.";
             break;
         case "121":
             parameters.severity.kind = ValetudoRobotError.SEVERITY_KIND.PERMANENT;

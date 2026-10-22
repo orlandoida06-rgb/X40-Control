@@ -1,6 +1,7 @@
 import {useCapabilitiesSupported} from "../CapabilitiesProvider";
 import {
     Capability,
+    useDuststreamingConfigurationQuery,
     useMapResetMutation,
     usePersistentMapMutation,
     usePersistentMapQuery,
@@ -15,6 +16,8 @@ import {
     Dashboard as SegmentEditIcon,
     Crop as CleanupCoverageIcon,
     Download as ValetudoMapDownloadIcon,
+    EditNote as MapAnnotationsIcon,
+    Videocam as SpectatorIcon,
     Map as MapIcon,
     Block as RestrictionIcon
 } from "@mui/icons-material";
@@ -357,15 +360,24 @@ const MapManagement = (): React.ReactElement => {
         mapRestablecerCapabilitySupported,
         mapSegmentEditCapabilitySupported,
         mapSegmentRenameCapabilitySupported,
-        combinedVirtualRestrictionsCapabilitySupported
+        combinedVirtualRestrictionsCapabilitySupported,
+        mapAnnotationsCapabilitySupported,
+        duststreamingCapabilitySupported
     ] = useCapabilitiesSupported(
         Capability.PersistentMapControl,
         Capability.MappingPass,
         Capability.MapReset,
         Capability.MapSegmentEdit,
         Capability.MapSegmentRename,
-        Capability.CombinedVirtualRestrictions
+        Capability.CombinedVirtualRestrictions,
+        Capability.MapAnnotations,
+        Capability.Duststreaming
     );
+
+    const {data: duststreamingConfiguration} = useDuststreamingConfigurationQuery({
+        enabled: duststreamingCapabilitySupported
+    });
+    const duststreamingEnabled = duststreamingConfiguration?.enabled === true;
 
     const openPage = (path: string) => {
         window.location.href = path;
@@ -374,23 +386,14 @@ const MapManagement = (): React.ReactElement => {
     const robotManagedItems: React.ReactNode[] = [];
 
     if (persistentMapControlCapabilitySupported) {
-        robotManagedItems.push(
-            <PersistentMapSwitchListItem key="persistentMap"/>
-        );
+        robotManagedItems.push(<PersistentMapSwitchListItem key="persistentMap"/>);
     }
-
     if (mappingPassCapabilitySupported) {
-        robotManagedItems.push(
-            <MappingPassButtonItem key="mappingPass"/>
-        );
+        robotManagedItems.push(<MappingPassButtonItem key="mappingPass"/>);
     }
-
     if (mapRestablecerCapabilitySupported) {
-        robotManagedItems.push(
-            <MapRestablecerButtonItem key="mapReset"/>
-        );
+        robotManagedItems.push(<MapRestablecerButtonItem key="mapReset"/>);
     }
-
     if (mapSegmentEditCapabilitySupported || mapSegmentRenameCapabilitySupported) {
         robotManagedItems.push(
             <MapActionCard
@@ -403,19 +406,32 @@ const MapManagement = (): React.ReactElement => {
             />
         );
     }
-
     if (combinedVirtualRestrictionsCapabilitySupported) {
         robotManagedItems.push(
             <MapActionCard
                 key="restrictions"
                 icon={<VirtualRestrictionsIcon/>}
                 title="Restricciones del mapa"
-                description="Crear, modificar y eliminar zonas restringidas, paredes virtuales y zonas sin fregado."
+                description="Crear y gestionar zonas restringidas y paredes virtuales."
                 actionLabel="Abrir"
                 onAction={() => openPage("/options/map_management/virtual_restrictions")}
             />
         );
     }
+    if (mapAnnotationsCapabilitySupported) {
+        robotManagedItems.push(
+            <MapActionCard
+                key="annotations"
+                icon={<MapAnnotationsIcon/>}
+                title="Anotaciones del mapa"
+                description="Crear y gestionar anotaciones del mapa."
+                actionLabel="Abrir"
+                onAction={() => openPage("/options/map_management/annotations")}
+            />
+        );
+    }
+
+    const spectatorAvailable = duststreamingCapabilitySupported && duststreamingEnabled;
 
     return (
         <PaperContainer>
@@ -470,6 +486,17 @@ const MapManagement = (): React.ReactElement => {
                                 actionLabel="Abrir"
                                 onAction={() => openPage("/options/map_management/robot_coverage")}
                             />
+
+                            {spectatorAvailable && (
+                                <MapActionCard
+                                    key="spectatorMap"
+                                    icon={<SpectatorIcon/>}
+                                    title="Spectator Map"
+                                    description="Visualiza la actividad de limpieza mediante Duststreaming."
+                                    actionLabel="Abrir"
+                                    onAction={() => openPage("/options/map_management/spectator")}
+                                />
+                            )}
 
                             <ValetudoMapDataExportButtonItem/>
                         </Stack>

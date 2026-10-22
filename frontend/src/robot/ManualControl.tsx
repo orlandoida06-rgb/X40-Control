@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
     Box,
     FormControlLabel,
-    Grid2,
     Skeleton,
     Switch,
     Typography,
@@ -17,13 +16,15 @@ import {
     useManualControlStateQuery,
     useHighResolutionManualControlStateQuery,
     useHighResolutionManualControlInteraction,
+    useDuststreamingPropertiesQuery,
+    useDuststreamingConfigurationQuery,
     ValetudoManualMovementVector,
     ManualControlInteraction,
     HighResolutionManualControlInteraction,
 } from "../api";
 import { useCapabilitiesSupported } from "../CapabilitiesProvider";
-import { FullHeightGrid } from "../components/FullHeightGrid";
 import PaperContainer from "../components/PaperContainer";
+import { DuststreamCanvas, DuststreamPlaceholder } from "./Duststream";
 import { VirtualControllerProvider, InputMode, MovementCommandSender, useVirtualController } from "./manual_control/VirtualController";
 import { MovementSampler } from "./manual_control/MovementSampler";
 import { InputModeToggle } from "./manual_control/InputModeToggle";
@@ -116,7 +117,7 @@ const HighResolutionMovementControls = () => {
             <InputModeToggle mode={inputMode} onChange={setInputMode} />
 
             <VirtualControllerProvider>
-                <Box sx={{ minHeight: 240, display: "flex", flexDirection: "column", alignItems: "center" }}>
+                <Box sx={{ minHeight: { xs: 170, sm: 200 }, display: "flex", flexDirection: "column", alignItems: "center" }}>
                     <MovementSampler enabled={controlsEnabled} sendMoveCommand={controllerSender} />
                     <ModeSwitchRestablecer mode={inputMode} />
                     <ControllerVisual mode={inputMode} enabled={controlsEnabled} />
@@ -170,7 +171,7 @@ const StandardMovementControls = () => {
             />
 
             <VirtualControllerProvider>
-                <Box sx={{ minHeight: 240, display: "flex", flexDirection: "column", alignItems: "center" }}>
+                <Box sx={{ minHeight: { xs: 170, sm: 200 }, display: "flex", flexDirection: "column", alignItems: "center" }}>
                     <MovementSampler enabled={controlsEnabled} sendMoveCommand={sendMoveCommand} />
                     <ModeSwitchRestablecer mode={inputMode} />
                     <ControllerVisual mode={inputMode} enabled={controlsEnabled} />
@@ -189,8 +190,8 @@ const HighResolutionManualControlInternal: React.FunctionComponent = (): React.R
     const { isPending: stateLoading, isError: stateError } = useHighResolutionManualControlStateQuery();
 
     return (
-        <FullHeightGrid container direction="column">
-            <Grid2 flexGrow={1}>
+        <Box sx={{ display: "flex", flexDirection: "column", width: "100%" }}>
+            <Box sx={{ flexGrow: 1, minWidth: 0 }}>
                 <Box>
                     {stateLoading ? (
                         <Skeleton height={"12rem"} />
@@ -204,8 +205,9 @@ const HighResolutionManualControlInternal: React.FunctionComponent = (): React.R
                         </>
                     )}
                 </Box>
-            </Grid2>
-        </FullHeightGrid>
+            </Box>
+        </Box>
+
     );
 };
 
@@ -217,8 +219,8 @@ const ManualControlInternal: React.FunctionComponent = (): React.ReactElement =>
     const hasError = stateError || propertiesError;
 
     return (
-        <FullHeightGrid container direction="column">
-            <Grid2 flexGrow={1}>
+        <Box sx={{ display: "flex", flexDirection: "column", width: "100%" }}>
+            <Box sx={{ flexGrow: 1, minWidth: 0 }}>
                 <Box>
                     {loading ? (
                         <Skeleton height={"12rem"} />
@@ -232,16 +234,22 @@ const ManualControlInternal: React.FunctionComponent = (): React.ReactElement =>
                         </>
                     )}
                 </Box>
-            </Grid2>
-        </FullHeightGrid>
+            </Box>
+        </Box>
+
     );
 };
 
-const ManualControl = (): React.ReactElement => {
+const ManualControl = ({showCameraPreview = true}: {showCameraPreview?: boolean}): React.ReactElement => {
     const [highResSupported, standardSupported] = useCapabilitiesSupported(
         Capability.HighResolutionManualControl,
         Capability.ManualControl
     );
+
+    const {data: cameraProperties} = useDuststreamingPropertiesQuery();
+    const {data: cameraConfiguration} = useDuststreamingConfigurationQuery();
+
+    const cameraEnabled = cameraConfiguration?.enabled === true;
 
     let controlComponent;
     if (highResSupported) {
@@ -253,8 +261,44 @@ const ManualControl = (): React.ReactElement => {
     }
 
     return (
-        <PaperContainer paperStyle={{ userSelect: "none" } as React.CSSProperties}>
-            {controlComponent}
+        <PaperContainer
+            paperStyle={{userSelect: "none"} as React.CSSProperties}
+            containerSx={{
+                display: "flex",
+                flexDirection: "column",
+                flex: "0 1 auto",
+                maxHeight: "100%",
+                minHeight: 0,
+            }}
+            paperSx={{
+                display: "flex",
+                flexDirection: "column",
+                flex: "0 1 auto",
+                maxHeight: "100%",
+                minHeight: 0,
+                overflow: "hidden",
+            }}
+        >
+            {showCameraPreview && cameraEnabled && cameraProperties && (
+                <Box sx={{
+                    position: "relative",
+                    width: "100%",
+                    aspectRatio: `${cameraProperties.width} / ${cameraProperties.height}`,
+                    mx: "auto",
+                    mb: 2,
+                    flex: "0 1 auto",
+                    minHeight: 0,
+                }}>
+                    {cameraProperties.duststreamerInstalled ? (
+                        <DuststreamCanvas dimensions={cameraProperties}/>
+                    ) : (
+                        <DuststreamPlaceholder dimensions={cameraProperties}/>
+                    )}
+                </Box>
+            )}
+            <Box sx={{flexShrink: 0}}>
+                {controlComponent}
+            </Box>
         </PaperContainer>
     );
 };

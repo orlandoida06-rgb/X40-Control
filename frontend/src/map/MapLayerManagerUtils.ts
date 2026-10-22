@@ -146,6 +146,54 @@ const parquetPixelPatternHandler: PixelPatternHandler = (x, y) => {
 };
 
 /*
+ * . . . . . . . .
+ * . . X . . . X .
+ * . . . . . . . .
+ * X . . . X . . .
+ */
+const carpetLowPilePixelPatternHandler: PixelPatternHandler = (x, y) => {
+    return (x % 4 === 0 && y % 4 === 0) || (x % 4 === 2 && y % 4 === 2);
+};
+
+/*
+ * X X . . X X . .
+ * . . X X . . X X
+ * X X . . X X . .
+ * . . X X . . X X
+ */
+const carpetPixelPatternHandler: PixelPatternHandler = (x, y) => {
+    return (Math.floor(x / 2) + y) % 2 === 0;
+};
+
+/*
+ * \ . . . . . / .
+ * . \ . . . . . /
+ * . . . - - . . .
+ * . . . . . . . .
+ * . . / . . . \ .
+ * . / . . . \ . .
+ * . . . . . . . .
+ * . . . - - . . .
+ */
+const carpetHighPilePixelPatternHandler: PixelPatternHandler = (x, y) => {
+    const pattern = [
+        [1, 0, 0, 0, 0, 0, 1, 0],
+        [0, 1, 0, 0, 0, 0, 0, 1],
+        [0, 0, 0, 1, 1, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 1, 0, 0, 0, 1, 0],
+        [0, 1, 0, 0, 0, 1, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 1, 1, 0, 0, 0],
+    ];
+
+    const localX = x % 8;
+    const localY = y % 8;
+
+    return pattern[localY][localX] === 1;
+};
+
+/*
  * ? ? ? ? ?
  * ? ? ? ? ?
  * ? ? ? ? ?
@@ -199,6 +247,9 @@ const materialToPixelPatternHandler: {[key in RawMapLayerMaterial]: PixelPattern
     [RawMapLayerMaterial.Wood]: chevronPixelPatternHandler,
     [RawMapLayerMaterial.WoodHorizontal]: createPlankPixelPatternHandler(true),
     [RawMapLayerMaterial.WoodVertical]: createPlankPixelPatternHandler(false),
+    [RawMapLayerMaterial.Carpet]: carpetPixelPatternHandler,
+    [RawMapLayerMaterial.CarpetLow]: carpetLowPilePixelPatternHandler,
+    [RawMapLayerMaterial.CarpetHigh]: carpetHighPilePixelPatternHandler,
 };
 
 export function PROCESS_LAYERS(layers: Array<RawMapLayer>, pixelSize: number, paletteMode: PaletteMode, selectedSegmentIds: string[]) {
@@ -297,62 +348,62 @@ export function PROCESS_LAYERS(layers: Array<RawMapLayer>, pixelSize: number, pa
 
             let pixelColor = color;
 
-if (layer.type === "wall") {
-    let nearbySegmentId = 0;
-    let nearbyCount = 0;
+            if (layer.type === "wall") {
+                let nearbySegmentId = 0;
+                let nearbyCount = 0;
 
-    for (let dy = -4; dy <= 4; dy++) {
-        for (let dx = -4; dx <= 4; dx++) {
-            if (dx === 0 && dy === 0) {
-                continue;
-            }
+                for (let dy = -4; dy <= 4; dy++) {
+                    for (let dx = -4; dx <= 4; dx++) {
+                        if (dx === 0 && dy === 0) {
+                            continue;
+                        }
 
-            const nx = pixelX + dx;
-            const ny = pixelY + dy;
+                        const nx = pixelX + dx;
+                        const ny = pixelY + dy;
 
-            if (
-                nx < dimensions.x.min ||
+                        if (
+                            nx < dimensions.x.min ||
                 nx > dimensions.x.max ||
                 ny < dimensions.y.min ||
                 ny > dimensions.y.max
-            ) {
-                continue;
-            }
+                        ) {
+                            continue;
+                        }
 
-            const neighborOffset =
+                        const neighborOffset =
                 (nx - dimensions.x.min) +
                 ((ny - dimensions.y.min) * width);
 
-            const neighborSegmentId = segmentLookupData[neighborOffset];
+                        const neighborSegmentId = segmentLookupData[neighborOffset];
 
-            if (neighborSegmentId > 0) {
-                if (nearbySegmentId === 0) {
-                    nearbySegmentId = neighborSegmentId;
+                        if (neighborSegmentId > 0) {
+                            if (nearbySegmentId === 0) {
+                                nearbySegmentId = neighborSegmentId;
+                            }
+
+                            if (nearbySegmentId === neighborSegmentId) {
+                                nearbyCount++;
+                            }
+                        }
+                    }
                 }
 
-                if (nearbySegmentId === neighborSegmentId) {
-                    nearbyCount++;
+                if (nearbySegmentId > 0 && nearbyCount >= 12) {
+                    const segmentId = segmentLookupIdMapping.get(nearbySegmentId);
+
+                    if (segmentId) {
+                        const colorId = colorFinder.getColor(segmentId);
+
+                        pixelColor = colors.segments[colorId];
+                    }
                 }
+            } else if (layer.type === "segment" && layer.metaData.segmentId === "2") {
+                pixelColor = color;
+            } else {
+                pixelColor = pixelPatternHandler(pixelX, pixelY) ? accentColor : color;
             }
-        }
-    }
 
-    if (nearbySegmentId > 0 && nearbyCount >= 12) {
-        const segmentId = segmentLookupIdMapping.get(nearbySegmentId);
-
-        if (segmentId) {
-            const colorId = colorFinder.getColor(segmentId);
-
-            pixelColor = colors.segments[colorId];
-        }
-    }
-} else if (layer.type === "segment" && layer.metaData.segmentId === "2") {
-    pixelColor = color;
-} else {
-    pixelColor = pixelPatternHandler(pixelX, pixelY) ? accentColor : color;
-}
-
-pixelData[imgDataOffset] = pixelColor.r;
+            pixelData[imgDataOffset] = pixelColor.r;
             pixelData[imgDataOffset + 1] = pixelColor.g;
             pixelData[imgDataOffset + 2] = pixelColor.b;
             pixelData[imgDataOffset + 3] = 255;

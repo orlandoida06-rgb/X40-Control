@@ -8,6 +8,7 @@ import {ListMenu} from "../components/list_menu/ListMenu";
 import PaperContainer from "../components/PaperContainer";
 import {
     UpdaterConfiguration,
+    Capability,
     useRestoreDefaultConfigurationMutation,
     useX40ControlRebootMutation,
     useUpdaterConfigurationMutation,
@@ -15,10 +16,12 @@ import {
     useValetudoCustomizationsMutation,
     useValetudoCustomizationsQuery
 } from "../api";
+import {useCapabilitiesSupported} from "../CapabilitiesProvider";
 import {ButtonListMenuItem} from "../components/list_menu/ButtonListMenuItem";
 import {SelectListMenuItem, SelectListMenuItemOption} from "../components/list_menu/SelectListMenuItem";
 import {SpacerListMenuItem} from "../components/list_menu/SpacerListMenuItem";
 import { TextEditModalListMenuItem } from "../components/list_menu/TextEditModalListMenuItem";
+import { DuststreamingListMenuItem } from "../components/list_menu/DuststreamingListMenuItem";
 import { ActivationListMenuItem } from "./ValetudoActivation";
 import {isAprilFools} from "../utils";
 
@@ -160,6 +163,10 @@ const UpdateProviderSelectListMenuItem = (): React.ReactElement => {
 };
 
 const ValetudoOptions = (): React.ReactElement => {
+    const [duststreamingCapabilitySupported] = useCapabilitiesSupported(
+        Capability.Duststreaming,
+    );
+
     const listItems = React.useMemo(() => {
         const items = [
             <RobotRebootButtonListMenuItem key={"robotRebootAction"}/>,
@@ -169,15 +176,22 @@ const ValetudoOptions = (): React.ReactElement => {
             <UpdateProviderSelectListMenuItem key={"updateProviderSelect"}/>,
         ];
 
+        if (duststreamingCapabilitySupported) {
+            items.push(
+                <SpacerListMenuItem key={"spacer1"}/>,
+                <DuststreamingListMenuItem key={"duststreaming"}/>
+            );
+        }
+
         if (isAprilFools) {
             items.unshift(
                 <ActivationListMenuItem key={"activation"}/>,
-                <SpacerListMenuItem key={"spacer1"}/>
+                <SpacerListMenuItem key={"spacer2"}/>
             );
         }
 
         return items;
-    }, []);
+    }, [duststreamingCapabilitySupported]);
 
     return (
         <PaperContainer>

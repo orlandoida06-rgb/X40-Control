@@ -5,7 +5,7 @@ order: 10
 ---
 # Dreame rooting and installation
 
-Please check the [supported robots](https://valetudo.cloud/pages/general/supported-robots/) page to find out which method applies to your model of robot.
+Please check the [supported robots](/pages/general/supported-robots/) page to find out which method applies to your model of robot.
 
 Also note that all rooting guides assume a factory-new robot that has never been connected to the vendor cloud.<br/>
 If you've used any vendor apps before, make sure to do a full factory-reset before starting with the rooting procedure.
@@ -33,7 +33,7 @@ a login shell on the UART accessible on the debug connector.
 The root password is calculated from the serial number that can be found on a sticker on the robot and the debug
 connector also provides access to USB-OTG-functionality. And that's **almost** it.
 
-**Almost**, because on some p-dreames (check the [supported robots](https://valetudo.cloud/pages/general/supported-robots/) page for more info), Dreame introduced a secure boot scheme 
+**Almost**, because on some p-dreames (check the [supported robots](/pages/general/supported-robots/) page for more info), Dreame introduced a secure boot scheme
 with a key burned into the SoC that then verifies the signature of the U-Boot bootloader, which in turn verifies the signature of the rootfs etc.
 
 On these robots, you **MUST** defeat the secure boot mechanism before making any modifications to the filesystem **or else you will brick your robot**.
@@ -201,7 +201,7 @@ If you see that MOTD, the rooting procedure was successful.
 
 You now have a rooted Dreame vacuum robot running Valetudo.
 
-Now continue with the [getting started guide](https://valetudo.cloud/pages/general/getting-started/#joining_wifi).
+Now continue with the [getting started guide](/pages/general/getting-started/#joining_wifi).
 
 </div>
 
@@ -356,18 +356,18 @@ To verify that, open a new terminal and run `fastboot devices`.
 If you see your robot, continue with `fastboot getvar dustversion`
 
 ```
-root@T420:/home/hypfer# fastboot devices 
-Android Fastboot        fastboot 
-root@T420:/home/hypfer# fastboot getvar dustversion 
-dustversion: 2024.12.00 
-Finished. Total time: 0.003s 
+root@T420:/home/hypfer# fastboot devices
+Android Fastboot        fastboot
+root@T420:/home/hypfer# fastboot getvar dustversion
+dustversion: 2024.12.00
+Finished. Total time: 0.003s
 ```
 
 If everything is fine so far, next step is to collect the config value:
 
 ```
-root@T420:/home/hypfer# fastboot getvar config 
-config: 836064ae31f4806c844f708ab8398367 
+root@T420:/home/hypfer# fastboot getvar config
+config: 836064ae31f4806c844f708ab8398367
 Finished. Total time: 0.215s
 ```
 
@@ -390,24 +390,24 @@ This will create a file named `dustx100.bin` in the current directory.
 Ensure that it is about 400MB in size using `du -h dustx100.bin`.
 
 ```
-root@T420:/home/hypfer# fastboot get_staged dustx100.bin 
-Uploading 'dustx100.bin'                           OKAY [ 37.898s] 
-Finished. Total time: 37.898s 
-root@T420:/home/hypfer# du -h dustx100.bin  
-400M    dustx100.bin 
+root@T420:/home/hypfer# fastboot get_staged dustx100.bin
+Uploading 'dustx100.bin'                           OKAY [ 37.898s]
+Finished. Total time: 37.898s
+root@T420:/home/hypfer# du -h dustx100.bin
+400M    dustx100.bin
 ```
 
 If it is, continue to the next step with `fastboot oem stage1` and `fastboot get_staged dustx101.bin`
 
 ```
-root@T420:/home/hypfer# fastboot oem stage1 
-                                                   OKAY [  0.000s] 
-Finished. Total time: 0.000s 
-root@T420:/home/hypfer# fastboot get_staged dustx101.bin 
-Uploading 'dustx101.bin'                           OKAY [ 38.173s] 
-Finished. Total time: 38.173s 
-root@T420:/home/hypfer# du -h dustx101.bin  
-399M    dustx101.bin 
+root@T420:/home/hypfer# fastboot oem stage1
+                                                   OKAY [  0.000s]
+Finished. Total time: 0.000s
+root@T420:/home/hypfer# fastboot get_staged dustx101.bin
+Uploading 'dustx101.bin'                           OKAY [ 38.173s]
+Finished. Total time: 38.173s
+root@T420:/home/hypfer# du -h dustx101.bin
+399M    dustx101.bin
 ```
 
 Once done, again check the filesize using `du -h dustx101.bin`.<br/>
@@ -416,14 +416,14 @@ As you can see in the example, it being only 399MB is okay. It should be _around
 Then, finally, run `fastboot oem stage2` and `fastboot get_staged dustx102.bin`
 
 ```
-root@T420:/home/hypfer# fastboot oem stage2 
-                                                   OKAY [  0.000s] 
-Finished. Total time: 0.000s 
-root@T420:/home/hypfer# fastboot get_staged dustx102.bin 
-Uploading 'dustx102.bin'                           OKAY [ 37.992s] 
-Finished. Total time: 37.992s 
-root@T420:/home/hypfer# du -h dustx102.bin  
-399M    dustx102.bin 
+root@T420:/home/hypfer# fastboot oem stage2
+                                                   OKAY [  0.000s]
+Finished. Total time: 0.000s
+root@T420:/home/hypfer# fastboot get_staged dustx102.bin
+Uploading 'dustx102.bin'                           OKAY [ 37.992s]
+Finished. Total time: 37.992s
+root@T420:/home/hypfer# du -h dustx102.bin
+399M    dustx102.bin
 ```
 
 Same check for being ~400MB in size applies here as well.
@@ -431,11 +431,11 @@ Same check for being ~400MB in size applies here as well.
 With that done, zip up everything and store the file in a safe place
 
 ```
-root@T420:/home/hypfer# zip dreame_rxxxx_samples.zip dustx100.bin dustx101.bin dustx102.bin  
-  adding: dustx100.bin (deflated 0%) 
-  adding: dustx101.bin (deflated 0%) 
-  adding: dustx102.bin (deflated 0%) 
-root@T420:/home/hypfer# du -h dreame_rxxxx_samples.zip  
+root@T420:/home/hypfer# zip dreame_rxxxx_samples.zip dustx100.bin dustx101.bin dustx102.bin
+  adding: dustx100.bin (deflated 0%)
+  adding: dustx101.bin (deflated 0%)
+  adding: dustx102.bin (deflated 0%)
+root@T420:/home/hypfer# du -h dreame_rxxxx_samples.zip
 1.2G    dreame_rxxxx_samples.zip
 ```
 
@@ -549,7 +549,7 @@ Finally, run `fastboot reboot`. If it boots up normally, you have successfully r
 
 With the rooted firmware installed, we finish the procedure by installing Valetudo to it.
 
-For that, first, check the [Supported Robots](https://valetudo.cloud/pages/general/supported-robots/) page and look up which `Valetudo Binary` is the right one for your robot.
+For that, first, check the [Supported Robots](/pages/general/supported-robots/) page and look up which `Valetudo Binary` is the right one for your robot.
 
 Once you know that, download the latest matching Valetudo binary to your laptop:
 `https://github.com/Hypfer/Valetudo/releases/latest/download/valetudo-{armv7,armv7-lowmem,aarch64}`
@@ -614,6 +614,6 @@ chmod +x /data/_root_postboot.sh
 reboot
 ```
 
-Once the robot has rebooted, you can continue with the [getting started guide](https://valetudo.cloud/pages/general/getting-started/#joining_wifi).
+Once the robot has rebooted, you can continue with the [getting started guide](/pages/general/getting-started/#joining_wifi).
 
 </div>

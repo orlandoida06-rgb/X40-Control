@@ -49,7 +49,9 @@ export enum Capability {
     WifiScan = "WifiScanCapability",
     ZoneCleaning = "ZoneCleaningCapability",
     Quirks = "QuirksCapability",
-    ObstacleImages = "ObstacleImagesCapability"
+    ObstacleImages = "ObstacleImagesCapability",
+    MapAnnotations = "MapAnnotationsCapability",
+    Duststreaming = "DuststreamingCapability",
 }
 
 export type Point = {
@@ -165,7 +167,10 @@ export enum MapSegmentMaterial {
     Tile = "tile",
     Wood = "wood",
     WoodHorizontal = "wood_horizontal",
-    WoodVertical = "wood_vertical"
+    WoodVertical = "wood_vertical",
+    Carpet = "carpet",
+    CarpetLow = "carpet_low",
+    CarpetHigh = "carpet_high"
 }
 
 
@@ -378,6 +383,10 @@ export interface NTPClientConfiguration {
     port: number;
     interval: number;
     timeout: number;
+}
+
+export interface DuststreamingConfiguration {
+    enabled: boolean;
 }
 
 export interface ValetudoEvent {
@@ -636,6 +645,12 @@ export interface ObstacleImagesProperties {
     }
 }
 
+export interface DuststreamingProperties {
+    width: number,
+    height: number,
+    duststreamerInstalled: boolean
+}
+
 export type MopDockMopWashTemperature = "cold" | "warm" | "hot" | "scalding" | "boiling";
 
 export interface MopDockMopWashTemperaturePayload {
@@ -644,6 +659,22 @@ export interface MopDockMopWashTemperaturePayload {
 
 export interface MopDockMopWashTemperatureProperties {
     supportedTemperatures: Array<MopDockMopWashTemperature>;
+}
+
+export enum ValetudoMapAnnotationType {
+    Threshold = "threshold",
+    Curtain = "curtain",
+
+    Ramp = "ramp",
+}
+
+export interface ValetudoMapAnnotation {
+    type: ValetudoMapAnnotationType,
+    points: Array<Point>
+}
+
+export interface MapAnnotationsProperties {
+    supportedAnnotationTypes: Array<ValetudoMapAnnotationType>
 }
 
 

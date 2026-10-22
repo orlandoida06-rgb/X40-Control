@@ -5,16 +5,15 @@ export const ActionButton = styled(Fab)(({theme}) => {
 
     return {
         pointerEvents: "auto",
-        width: 48,
-        height: 48,
-        minHeight: 48,
+        backgroundColor: theme.palette.background.paper,
         background: dark ?
             "rgba(18, 25, 34, 0.88)" :
             "rgba(255, 255, 255, 0.92)",
         color: theme.palette.text.primary,
-        border: dark ?
-            "1px solid rgba(255, 255, 255, 0.12)" :
-            "1px solid rgba(0, 0, 0, 0.10)",
+        border: `1px solid ${theme.palette.divider}`,
+        width: 48,
+        height: 48,
+        minHeight: 48,
         boxShadow: dark ?
             "0 8px 28px rgba(0, 0, 0, 0.42)" :
             "0 8px 28px rgba(0, 0, 0, 0.18)",
@@ -24,21 +23,25 @@ export const ActionButton = styled(Fab)(({theme}) => {
             "transform 160ms ease, box-shadow 160ms ease, background 160ms ease",
         fontSize: "1.25rem",
         fontWeight: 400,
-
-        "&:hover": {
-            background: dark ?
-                "rgba(30, 40, 52, 0.94)" :
-                emphasize(theme.palette.background.paper, 0.08),
-            transform: "scale(1.06)",
-            boxShadow: dark ?
-                "0 10px 34px rgba(0, 0, 0, 0.52)" :
-                "0 10px 34px rgba(0, 0, 0, 0.22)",
+        "@media (hover: hover)": {
+            "&:hover": {
+                background: dark ?
+                    "rgba(30, 40, 52, 0.94)" :
+                    emphasize(theme.palette.background.paper, 0.08),
+                transform: "scale(1.06)",
+                boxShadow: dark ?
+                    "0 10px 34px rgba(0, 0, 0, 0.52)" :
+                    "0 10px 34px rgba(0, 0, 0, 0.22)",
+            },
         },
-
+        "@media (hover: none)": {
+            "&:hover": {
+                backgroundColor: theme.palette.background.paper,
+            },
+        },
         "&:active": {
             transform: "scale(0.94)",
         },
-
         "@media (max-width: 768px)": {
             width: 44,
             height: 44,

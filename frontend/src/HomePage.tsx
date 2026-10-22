@@ -11,6 +11,7 @@ import {
 import {
     Home as HomeIcon,
     Map as MapIcon,
+    Videocam as CameraIcon,
     GridView as RoomsIcon,
     CropFree as ZonesIcon,
     AccessTime as ScheduleIcon,
@@ -55,6 +56,7 @@ const glass = {
 const navItems = [
     {icon: <HomeIcon />, label: "Inicio", route: "/"},
     {icon: <MapIcon />, label: "Mapa", route: "/options/map_management"},
+    {icon: <CameraIcon />, label: "Cámara", route: "/robot/camera"},
     {
         icon: <RoomsIcon />,
         label: "Habitaciones",
@@ -629,8 +631,8 @@ const HomePage: React.FunctionComponent<{
                 position: "relative",
                 width: "100%",
                 height: "100vh",
-                    maxHeight: "100vh",
-                    overflow: "hidden",
+                maxHeight: "100vh",
+                overflow: "hidden",
                 background:
                     "radial-gradient(circle at 58% 40%, #142438 0%, #09121e 48%, #050b13 100%)",
                 color: "#fff",
@@ -712,7 +714,7 @@ const HomePage: React.FunctionComponent<{
                     ))}
                 </Box>
 
-        </Box>
+            </Box>
 
             {/* ======================================================
                 CONTENIDO PRINCIPAL
@@ -880,15 +882,15 @@ const HomePage: React.FunctionComponent<{
                             />
 
                             <Box>
-                                  <Typography
-                                      sx={{
-                                          fontSize: 13,
-                                          fontWeight: 700,
-                                          color: "#e7eef8",
-                                      }}
-                                  >
+                                <Typography
+                                    sx={{
+                                        fontSize: 13,
+                                        fontWeight: 700,
+                                        color: "#e7eef8",
+                                    }}
+                                >
                                       Sin avisos nuevos
-                                  </Typography>
+                                </Typography>
 
                                 <Typography
                                     sx={{
@@ -1127,7 +1129,7 @@ const HomePage: React.FunctionComponent<{
                         )}
                     </Paper>
 
-                    
+
                 </Box>
 
                 {/* CONTROLES INFERIORES */}

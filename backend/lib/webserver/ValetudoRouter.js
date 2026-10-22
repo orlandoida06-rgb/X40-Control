@@ -5,6 +5,7 @@ const path = require("path");
 const RateLimit = require("express-rate-limit");
 const {execFile} = require("child_process");
 
+const capabilities = require("../core/capabilities");
 const Logger = require("../Logger");
 const Tools = require("../utils/Tools");
 const {getVoicePath, isX40ControlVoice, getRoomVoicePath} = require("../voice/X40ControlVoicePack");
@@ -288,7 +289,7 @@ class ValetudoRouter {
         this.router.post("/x40-control/tailscale/action", (req, res) => {
             const action = req.body?.action;
 
-            if (!["install", "up", "down"].includes(action)) {
+            if (!["install", "up", "down", "serve", "uninstall"].includes(action)) {
                 return res.status(400).json({
                     error: "Acción no válida. Usa install, up o down."
                 });
@@ -635,10 +636,125 @@ echo "Instalación terminada. HTTPS se activa cuando Tailscale está autorizado.
                         return;
                     }
 
+                    if (action === "uninstall") {
+                        const uninstallScript = String.raw`
+set -eu
+POSTBOOT="/data/_root_postboot.sh"
+BACKUP=""
+
+if [ -f "$POSTBOOT" ]; then
+    BACKUP="$POSTBOOT.before-tailscale-uninstall-$(date +%Y%m%d-%H%M%S)"
+    cp -p "$POSTBOOT" "$BACKUP"
+    TMP="$POSTBOOT.uninstall.$$"
+
+    if ! python3 - "$POSTBOOT" "$TMP" <<'PYREMOVE'
+import sys
+from pathlib import Path
+
+src, dst = map(Path, sys.argv[1:])
+lines = src.read_text().splitlines(keepends=True)
+markers = {
+    "# X40-Control Tailscale managed startup",
+    "# X40-Control Tailscale Serve HTTPS startup",
+}
+out = []
+found = set()
+skip = False
+
+for line in lines:
+    value = line.rstrip("\r\n")
+
+    if not skip and value in markers:
+        skip = True
+        found.add(value)
+        continue
+
+    if skip:
+        if value == "fi":
+            skip = False
+        continue
+
+    out.append(line)
+
+if skip or found != markers:
+    sys.exit("No se identificaron ambos bloques completos; arranque intacto.")
+
+dst.write_text("".join(out))
+PYREMOVE
+    then
+        rm -f "$TMP"
+        echo "No se pudo identificar el arranque; no se ha modificado." >&2
+        exit 1
+    fi
+
+    if ! sh -n "$TMP"; then
+        rm -f "$TMP"
+        echo "La validación del arranque ha fallado; no se ha modificado." >&2
+        exit 1
+    fi
+
+    cat "$TMP" > "$POSTBOOT"
+    chmod 755 "$POSTBOOT"
+    rm -f "$TMP"
+fi
+
+CLI="/data/tailscale/current/tailscale"
+if [ -x "$CLI" ]; then
+    "$CLI" --socket=/data/tailscale/tailscaled.sock serve reset >/dev/null 2>&1 || true
+    "$CLI" --socket=/data/tailscale/tailscaled.sock down >/dev/null 2>&1 || true
+fi
+
+# Terminar únicamente el daemon de Tailscale, sin usar pkill -f.
+for pid in $(pgrep -f '^/data/tailscale/current/tailscaled([[:space:]]|$)' 2>/dev/null || true); do
+    kill "$pid" 2>/dev/null || true
+done
+
+rm -f /data/tailscale/tailscaled.sock /data/tailscale/current
+for d in /data/tailscale/tailscale_*_arm64; do
+    [ -d "$d" ] && rm -rf "$d"
+done
+
+echo "Binarios de Tailscale retirados; claves y estado conservados."
+[ -n "$BACKUP" ] && echo "Copia de arranque: $BACKUP"
+`;
+                        return execFile(
+                            "/bin/sh",
+                            ["-c", uninstallScript],
+                            {timeout: 20000, maxBuffer: 64 * 1024},
+                            (uninstallError, uninstallStdout, uninstallStderr) => {
+                                if (uninstallError) {
+                                    return res.status(500).json({
+                                        error: (uninstallStderr || "").trim() || uninstallError.message
+                                    });
+                                }
+                                return res.json({message: (uninstallStdout || "").trim()});
+                            }
+                        );
+                    }
+
                     if (findError || !tailscalePath) {
                         return res.status(409).json({
                             error: "No se encuentra el ejecutable de Tailscale."
                         });
+                    }
+
+                    if (action === "serve") {
+                        return execFile(
+                            tailscalePath,
+                            ["--socket=/data/tailscale/tailscaled.sock", "serve", "--bg", "--yes", "80"],
+                            {timeout: 20000, maxBuffer: 64 * 1024},
+                            (serveError, serveStdout, serveStderr) => {
+                                if (serveError) {
+                                    return res.status(500).json({
+                                        error: (serveStderr || "").trim() || serveError.message
+                                    });
+                                }
+                                return res.json({
+                                    message: "Tailscale Serve HTTPS configurado.",
+                                    output: (serveStdout || "").trim()
+                                });
+                            }
+                        );
                     }
 
                     execFile(
@@ -1034,6 +1150,30 @@ echo "Instalación terminada. HTTPS se activa cuando Tailscale está autorizado.
             }
         });
 
+        this.router.get("/config/duststreaming", (req, res) => {
+            res.json(this.config.get("duststreaming"));
+        });
+
+        this.router.put("/config/duststreaming", this.validator, async (req, res) => {
+            if (typeof req.body.enabled === "boolean") {
+                this.config.set(
+                    "duststreaming",
+                    Object.assign({}, this.config.get("duststreaming"), {enabled: req.body.enabled})
+                );
+
+                if (req.body.enabled === false) {
+                    const capability = this.robot.capabilities[capabilities.DuststreamingCapability.TYPE];
+
+                    if (capability) {
+                        await capability.selfDestruct();
+                    }
+                }
+
+                res.sendStatus(200);
+            } else {
+                res.sendStatus(400);
+            }
+        });
         this.router.get("/x40-control/ota", (req, res) => {
             const manifestPath = "/data/ota/manifest.json";
             const targetPath = "/data/valetudo";

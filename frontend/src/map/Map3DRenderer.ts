@@ -1109,6 +1109,7 @@ export default class Map3DRenderer {
 
             ctx.beginPath();
 
+            // @ts-ignore - roundRect puede no estar disponible en algunos tipos DOM
             ctx.roundRect(
                 point.x -
                     metrics.width / 2 -

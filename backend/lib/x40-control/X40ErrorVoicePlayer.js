@@ -100,7 +100,7 @@ function enqueueVoiceFile(file) {
         return;
     }
 
-    voiceQueue.push({file});
+    voiceQueue.push({file: file});
 
     Logger.info(
         `[X40Control] Voz añadida a cola: ${file}, cola=${voiceQueue.length}`
@@ -126,6 +126,6 @@ function playVoiceFile(file) {
 }
 
 module.exports = {
-    playVoice,
-    playVoiceFile
+    playVoice: playVoice,
+    playVoiceFile: playVoiceFile
 };

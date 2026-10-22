@@ -195,7 +195,17 @@ class MSmartDummycloud {
             Logger.debug(`Handling part get for: ${req.body.mapPart}`);
             Logger.debug(req.body);
 
-            res.status(200).json({ "data": {} });
+            let data = {};
+            if (req.body.mapPart === "semantic_node_config") {
+                data = {
+                    uploadDataPeriodInSeconds: {
+                        highFrequency: 2,
+                        lowFrequency:  60
+                    }
+                };
+            }
+
+            res.status(200).json({ data: data });
         });
 
         app.post("/v1/dev2pro/m7/map/list/:part", (req, res) => {
@@ -261,7 +271,7 @@ class MSmartDummycloud {
         /*
             This is used to ask the cloud for a URL to a voice pack by id
             I think it also regularly checks for updates to voicepacks? Not sure.
-            
+
             Reference reply for request
             {
               "sn8": "750Y000R",
@@ -296,7 +306,7 @@ class MSmartDummycloud {
         /*
             Always respond with "no update available".
             For reference, example reply for an available update:
-            
+
             {
                "code":"0",
                "msg":"OK",
@@ -315,10 +325,10 @@ class MSmartDummycloud {
                   "maxModuleVersion":9999,
                   "releaseMode":0,
                   "whitelistDeviceIds":[
-                     
+
                   ],
                   "historicalVersions":[
-                     
+
                   ],
                   "lastOperator":"lixin224",
                   "updateTime":"2025-05-23 19:25:48"
@@ -408,7 +418,7 @@ class MSmartDummycloud {
         /*
             This seems to be used by the firmware to pull a temporary AES encryption key on boot to.. maybe encrypt pictures with?
             The response itself, even though sent via HTTPS, is a json containing base64, which is the requested key + IV AES encrypted with a static one
-            
+
             Persistent might mean image uploads perhaps? Compared with its RTC sibling
          */
         app.post("/v3/dev2pro/enc/persistent/key", (req, res) => {
@@ -500,6 +510,39 @@ class MSmartDummycloud {
             // This is cleaner than giving it a default log file to upload, as that will then go through all the trouble for no reason
             // See also iot_node OnErrorUploadLog
             res.status(200).json({});
+        });
+
+        //
+        app.post("/sts/files/device-diagnoses", (req, res) => {
+            /*
+                Request payloads observed on J15 Max Ultra FW 558
+
+                body: {
+                    fileName: 'imu_0_.bin',
+                    deviceId: '1887747012869656578aaaaa',
+                    uploadContentType: 'application/octet-stream',
+                    type: 'IMU'
+                }
+                body: {
+                    fileName: 'rects_4_1208764885.bin',
+                    deviceId: '1887747012869656578aaaaa',
+                    uploadContentType: 'application/octet-stream',
+                    type: 'DETECT'
+                }
+                body: {
+                    fileName: 'finish.bin',
+                    deviceId: '1887747012869656578aaaaa',
+                    uploadContentType: 'application/octet-stream',
+                    type: 'IMU'
+                }
+             */
+            res.status(200).json({
+                errorCode: "0",
+                data: {
+                    url: `https://${req.hostname}/_valetudo/fileUpload?ts=${Date.now()}`
+                },
+                nonce: crypto.randomUUID()
+            });
         });
 
         app.all("*splat", (req, res) => {

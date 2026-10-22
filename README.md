@@ -91,9 +91,13 @@ Entre ellas se encuentran:
 
 Actualmente desarrollado y probado para:
 
+## Stars
+
+[<img src="assets/misc/star-history.svg" alt="Stars">](https://en.wikipedia.org/wiki/Lists_of_stars)
+
 - **Dreame X40 Ultra**
 - Arquitectura **ARM64 / aarch64**
-- Valetudo **2026.05.0**
+- Valetudo **2026.08.0 (integración en pruebas)**
 
 ## 🚀 Instalación
 

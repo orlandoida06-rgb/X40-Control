@@ -12,7 +12,9 @@ import styles from "./PaperContainer.module.css";
 
 const PaperContainer = (props: {
     containerStyle?: React.CSSProperties,
+    containerSx?: object,
     paperStyle?: React.CSSProperties,
+    paperSx?: object,
     paperBoxShadow?: number,
     children?: React.ReactNode,
     showBackButton?: boolean
@@ -27,11 +29,12 @@ const PaperContainer = (props: {
         <Container
             className={styles.paperContainerContainer}
             style={props.containerStyle}
+            sx={props.containerSx}
         >
             <Paper
                 className={styles.paperContainerPaper}
                 style={props.paperStyle}
-                sx={{boxShadow: props.paperBoxShadow}}
+                sx={{ boxShadow: props.paperBoxShadow, ...props.paperSx }}
             >
                 {showBackButton && (
                     <Stack
