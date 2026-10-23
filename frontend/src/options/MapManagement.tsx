@@ -1,4 +1,5 @@
 import {useCapabilitiesSupported} from "../CapabilitiesProvider";
+import {useNavigate} from "react-router-dom";
 import {
     Capability,
     useDuststreamingConfigurationQuery,
@@ -354,6 +355,7 @@ const ValetudoMapDataExportButtonItem = (): React.ReactElement => {
 };
 
 const MapManagement = (): React.ReactElement => {
+    const navigate = useNavigate();
     const [
         persistentMapControlCapabilitySupported,
         mappingPassCapabilitySupported,
@@ -380,7 +382,7 @@ const MapManagement = (): React.ReactElement => {
     const duststreamingEnabled = duststreamingConfiguration?.enabled === true;
 
     const openPage = (path: string) => {
-        window.location.href = path;
+        navigate(path);
     };
 
     const robotManagedItems: React.ReactNode[] = [];

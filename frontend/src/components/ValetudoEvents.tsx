@@ -1,4 +1,5 @@
 import React from "react";
+import {useNavigate} from "react-router-dom";
 import {
     Alert,
     Badge,
@@ -24,6 +25,7 @@ import ReloadableCard from "./ReloadableCard";
 import styles from "./ValetudoEvents.module.css";
 
 const ValetudoEvents = (): React.ReactElement => {
+    const navigate = useNavigate();
     const {
         data: eventData,
         isFetching: eventDataFetching,
@@ -175,7 +177,7 @@ const ValetudoEvents = (): React.ReactElement => {
                                     sx={{mt: 1}}
                                     onClick={() => {
                                         handleCerrar();
-                                        window.location.href = "/options/robot/ota";
+                                        navigate("/options/robot/ota");
                                     }}
                                 >
                                     Actualizar
