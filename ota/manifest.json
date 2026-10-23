@@ -1,16 +1,16 @@
 {
   "product": "X40Control",
-  "version": "2026.10.22.66",
+  "version": "2026.10.23.67",
   "channel": "stable",
   "asset": "valetudo",
-  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.10.22.66/valetudo",
-  "sha256": "4740cfad32bf518a0c96200a7bdf762993a00f9c05cd536ac88e920ba848250d",
-  "size": 41743128,
-  "voices_url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.10.22.66/X40-Control-voices.tar.gz",
-  "voices_sha256": "6edae9e5d205ae52caded8fb2f29cb6eb4aaee5242c5988fa35b7ae5dc4e4803",
+  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.10.23.67/valetudo",
+  "sha256": "c6ada0fb6e851ce103dc246219cecd977d6c62795ce56d422ae154d6a486c618",
+  "size": 41743006,
+  "voices_url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.10.23.67/X40-Control-voices.tar.gz",
+  "voices_sha256": "fc3818e091e3790d7f20f88fe59d21ecdfe7eb0507c8a682fb7d23c980590ff2",
   "voices_size": 535520,
   "requires_reboot": true,
   "changelog": [
-    "fix: consultar manifest OTA de la rama de integración"
+    "fix: refresh map after saving virtual restrictions"
   ]
 }
