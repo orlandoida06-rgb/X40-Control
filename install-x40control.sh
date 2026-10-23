@@ -1,243 +1,163 @@
 #!/bin/bash
-set -e
+set -Eeuo pipefail
 
 ROBOT="${1:-192.168.1.33}"
 KEY="${2:-$HOME/Documents/j69495894cbde7.id_rsa}"
+ROOT="$(cd "$(dirname "$0")" && pwd)"
+BIN="$ROOT/build/aarch64/valetudo"
+BACKUP="/data/x40-control-backup"
+SSH=(ssh -i "$KEY" -o ConnectTimeout=10)
 
-BIN="$(pwd)/build/aarch64/valetudo"
-OTA_SCRIPT="$(pwd)/ota/update.sh"
-REMOTE="/data/valetudo"
-NEW="/data/valetudo.new"
+fail() {
+    echo "[ERROR] $*" >&2
+    exit 1
+}
 
-BACKUP_DIR="/data/x40-control-backup"
-BACKUP_VALETUDO="$BACKUP_DIR/valetudo.original"
-BACKUP_POSTBOOT="$BACKUP_DIR/_root_postboot.sh.original"
+echo "===== INSTALADOR SEGURO X40-CONTROL ====="
 
-SSH="ssh -i $KEY"
-RELEASE_API="https://api.github.com/repos/orlandoida06-rgb/X40-Control/releases/latest"
+[[ -f "$BIN" ]] || fail "No existe el binario: $BIN"
+[[ -x "$BIN" ]] || fail "El binario no tiene permiso de ejecución"
+[[ -f "$KEY" ]] || fail "No existe la clave SSH: $KEY"
+command -v sha256sum >/dev/null || fail "Falta sha256sum"
+command -v file >/dev/null || fail "Falta file"
 
-echo "========================================"
-echo "     INSTALADOR X40-CONTROL"
-echo "========================================"
-echo
+file "$BIN" | grep -q 'ARM aarch64' ||
+    fail "El binario local no es AArch64"
 
-echo "[1/6] Comprobando arquitectura del robot..."
+LOCAL_SHA="$(sha256sum "$BIN" | awk '{print $1}')"
+echo "SHA256 local: $LOCAL_SHA"
 
-$SSH root@"$ROBOT" "echo '[OK] SSH'"
+"${SSH[@]}" "root@$ROBOT" '
+    set -eu
+    test "$(uname -m)" = aarch64
+    test -s /data/valetudo
+    test -f /data/_root_postboot.sh
+    test -f /data/valetudo_config.json
+    test -s /data/x40-control-backup/valetudo.original
+    test -f /data/x40-control-backup/_root_postboot.sh.original
+' || fail "No se puede conectar o faltan archivos originales necesarios"
 
-ARCH=$($SSH root@"$ROBOT" "uname -m")
+echo "[1/4] Preparando copia para rollback..."
 
-case "$ARCH" in
-    aarch64)
-        ASSET="valetudo-aarch64"
-        ;;
-    armv7l|armv7)
-        ASSET="valetudo-armv7"
-        ;;
-    *)
-        echo "[ERROR] Arquitectura no soportada: $ARCH"
-        exit 1
-        ;;
-esac
+"${SSH[@]}" "root@$ROBOT" '
+    set -eu
+    B=/data/x40-control-backup
+    cp -p /data/valetudo "$B/valetudo.before-last-install"
+    test -s "$B/valetudo.before-last-install"
+    chmod 755 "$B/valetudo.before-last-install"
+    sha256sum "$B/valetudo.before-last-install"
+'
 
-echo "[OK] Arquitectura: $ARCH"
-echo "[OK] Asset: $ASSET"
-echo
+echo "[2/4] Copiando y verificando el binario..."
 
-echo "[2/6] Preparando binario..."
+"${SSH[@]}" "root@$ROBOT" 'rm -f /data/valetudo.new'
+cat "$BIN" | "${SSH[@]}" "root@$ROBOT" 'cat > /data/valetudo.new'
+"${SSH[@]}" "root@$ROBOT" 'chmod 755 /data/valetudo.new'
 
-if [ ! -f "$BIN" ]; then
-    echo "[INFO] Binario local no encontrado."
-    echo "[INFO] Consultando el último Release de X40-Control..."
+REMOTE_SHA="$("${SSH[@]}" "root@$ROBOT" \
+    "sha256sum /data/valetudo.new | cut -d ' ' -f 1")"
 
-    mkdir -p "$(dirname "$BIN")"
+[[ "$LOCAL_SHA" = "$REMOTE_SHA" ]] ||
+    fail "El SHA256 del binario copiado no coincide"
 
-    RELEASE_JSON=$(curl -fsSL "$RELEASE_API")
+echo "[3/4] Instalando Valetudo..."
 
-    RELEASE_TAG=$(
-        printf '%s\n' "$RELEASE_JSON" |
-        sed -n 's#.*"tag_name": *"\([^"]*\)".*#\1#p' |
-        head -n 1
-    )
+"${SSH[@]}" "root@$ROBOT" '
+    set -eu
+    mv /data/valetudo.new /data/valetudo
+    chmod 755 /data/valetudo
 
-    RELEASE_URL=$(
-        printf '%s\n' "$RELEASE_JSON" |
-        sed -n "s#.*\"browser_download_url\": *\"\([^\"]*/$ASSET\)\"[,]*#\1#p" |
-        head -n 1
-    )
+    PID=$(ps | grep "[ /]data/valetudo" | grep -v grep |
+        awk "{print \$1}" | head -n 1 || true)
 
-    if [ -z "$RELEASE_TAG" ] || [ -z "$RELEASE_URL" ]; then
-        echo "[ERROR] No se encontró $ASSET en el último Release"
-        echo "[ERROR] Release detectado: ${RELEASE_TAG:-desconocido}"
-        exit 1
+    if [ -n "$PID" ]; then
+        kill "$PID" 2>/dev/null || true
+        sleep 2
     fi
 
-    echo "[OK] Último Release: $RELEASE_TAG"
-    echo "[INFO] Descargando:"
-    echo "       $RELEASE_URL"
+    nohup sh -c \
+        "VALETUDO_CONFIG_PATH=/data/valetudo_config.json /data/valetudo >/tmp/x40control-install.log 2>&1" \
+        >/dev/null 2>&1 &
+'
 
-    curl -fL \
-        --progress-bar \
-        "$RELEASE_URL" \
-        -o "$BIN"
+echo "[4/4] Comprobando servicio HTTP..."
 
-    chmod 755 "$BIN"
-
-    echo "[OK] Binario descargado"
-else
-    echo "[OK] Binario local encontrado"
-fi
-
-echo
-echo "[3/6] Guardando instalación original..."
-
-$SSH root@"$ROBOT" "
-set -e
-
-if [ ! -f /data/valetudo ]; then
-    echo '[ERROR] No existe /data/valetudo'
-    exit 1
-fi
-
-if [ ! -f /data/_root_postboot.sh ]; then
-    echo '[ERROR] No existe /data/_root_postboot.sh'
-    exit 1
-fi
-
-mkdir -p '$BACKUP_DIR'
-
-if [ ! -f '$BACKUP_VALETUDO' ]; then
-    cp /data/valetudo '$BACKUP_VALETUDO'
-    chmod 755 '$BACKUP_VALETUDO'
-    echo '[OK] Valetudo original guardado'
-else
-    echo '[OK] Backup de Valetudo ya existe; no se sobrescribe'
-fi
-
-if [ ! -f '$BACKUP_POSTBOOT' ]; then
-    cp /data/_root_postboot.sh '$BACKUP_POSTBOOT'
-    chmod 755 '$BACKUP_POSTBOOT'
-    echo '[OK] Postboot original guardado'
-else
-    echo '[OK] Backup de postboot ya existe; no se sobrescribe'
-fi
-"
-
-echo "[OK] Backup protegido en $BACKUP_DIR"
-echo
-
-echo "[3/6] Configurando arranque X40-Control..."
-
-$SSH root@"$ROBOT" "
-set -e
-
-sed -i 's#^if \[\[ -f /data/.*#if [[ -f /data/valetudo ]]; then#' /data/_root_postboot.sh
-sed -i 's#^        VALETUDO_CONFIG_PATH=.*#        VALETUDO_CONFIG_PATH=/data/valetudo_config.json /data/valetudo > /dev/null 2>\&1 \&#' /data/_root_postboot.sh
-"
-
-echo "[OK] Postboot configurado para X40-Control"
-echo
-
-echo "[4/6] Copiando binario..."
-
-cat "$BIN" | $SSH root@"$ROBOT" "cat > '$NEW'"
-$SSH root@"$ROBOT" "chmod 755 '$NEW'"
-
-echo "[OK] Binario copiado"
-echo
-
-echo "[4b/6] Instalando instalador OTA..."
-
-if [ ! -f "$OTA_SCRIPT" ]; then
-    echo "[ERROR] No existe $OTA_SCRIPT"
-    exit 1
-fi
-
-cat "$OTA_SCRIPT" | $SSH root@"$ROBOT" "cat > /data/ota/update.sh"
-$SSH root@"$ROBOT" "chmod 755 /data/ota/update.sh"
-
-echo "[OK] /data/ota/update.sh instalado"
-echo
-
-echo "[5/6] Instalando y lanzando..."
-
-$SSH root@"$ROBOT" "
-set -e
-
-mv '$NEW' '$REMOTE'
-chmod 755 '$REMOTE'
-
-PID=\$(ps | grep '/data/valetudo' | grep -v grep | grep -v x40control-install | awk '{print \$1}' | head -n 1)
-
-if [ -n \"\$PID\" ]; then
-    kill \"\$PID\" 2>/dev/null || true
-    sleep 2
-fi
-
-nohup sh -c \"VALETUDO_CONFIG_PATH=/data/valetudo_config.json /data/valetudo >/tmp/x40control-install.log 2>&1\" >/dev/null 2>&1 &
-"
-
-echo "[OK] Binario instalado"
-echo "[OK] Proceso lanzado"
-echo
-
-echo "[6/6] Verificando..."
-
-PROCESS_OK=0
 HTTP_OK=0
-
-for i in $(seq 1 15); do
-
-    if $SSH root@"$ROBOT" \
-        "ps | grep '/data/valetudo' | grep -v grep >/dev/null 2>&1"; then
-        PROCESS_OK=1
-    fi
-
-    if $SSH root@"$ROBOT" \
-        "curl -fsS --max-time 2 -I http://127.0.0.1 >/dev/null 2>&1"; then
+for i in $(seq 1 20); do
+    if "${SSH[@]}" "root@$ROBOT" '
+        if command -v curl >/dev/null 2>&1; then
+            curl -sS --max-time 3 -o /dev/null http://127.0.0.1
+        elif command -v wget >/dev/null 2>&1; then
+            wget -q -T 3 -O /dev/null http://127.0.0.1
+        else
+            exit 127
+        fi
+    ' >/dev/null 2>&1; then
         HTTP_OK=1
         break
     fi
-
-    echo "  Esperando web... $i/15"
     sleep 2
 done
 
-if [ "$PROCESS_OK" -eq 1 ]; then
-    echo "[OK] Proceso funcionando"
-else
-    echo "[ERROR] El proceso no está funcionando"
+if [[ "$HTTP_OK" -ne 1 ]]; then
+    echo "[ERROR] Valetudo no responde. Iniciando rollback..."
+
+    "${SSH[@]}" "root@$ROBOT" '
+        set -eu
+        B=/data/x40-control-backup
+        test -s "$B/valetudo.before-last-install"
+        cp -p "$B/valetudo.before-last-install" /data/valetudo
+        chmod 755 /data/valetudo
+
+        PID=$(ps | grep "[ /]data/valetudo" | grep -v grep |
+            awk "{print \$1}" | head -n 1 || true)
+
+        if [ -n "$PID" ]; then
+            kill "$PID" 2>/dev/null || true
+            sleep 2
+        fi
+
+        nohup sh -c \
+            "VALETUDO_CONFIG_PATH=/data/valetudo_config.json /data/valetudo >/tmp/x40control-rollback.log 2>&1" \
+            >/dev/null 2>&1 &
+    ' || {
+        echo "[CRÍTICO] Falló el rollback automático."
+        echo "[CRÍTICO] No reinicies el robot; será necesaria una recuperación manual."
+        exit 2
+    }
+
+    echo "[ROLLBACK] Comprobando HTTP del binario restaurado..."
+    ROLLBACK_HTTP_OK=0
+    for i in $(seq 1 20); do
+        if "${SSH[@]}" "root@$ROBOT" '
+            if command -v curl >/dev/null 2>&1; then
+                curl -sS --max-time 3 -o /dev/null http://127.0.0.1
+            elif command -v wget >/dev/null 2>&1; then
+                wget -q -T 3 -O /dev/null http://127.0.0.1
+            else
+                exit 127
+            fi
+        ' >/dev/null 2>&1; then
+            ROLLBACK_HTTP_OK=1
+            break
+        fi
+        sleep 2
+    done
+
+    if [[ "$ROLLBACK_HTTP_OK" -eq 1 ]]; then
+        echo "[ROLLBACK OK] Binario anterior restaurado y HTTP responde."
+    else
+        echo "[CRÍTICO] El binario anterior se restauró, pero HTTP no responde."
+        echo "[CRÍTICO] No reinicies el robot; revisa /tmp/x40control-rollback.log."
+        exit 2
+    fi
     exit 1
 fi
 
-if [ "$HTTP_OK" -eq 1 ]; then
-    echo "[OK] Web respondiendo"
-else
-    echo "[ERROR] La web no responde después de 30 segundos"
-    echo
-    echo "===== LOG DEL ROBOT ====="
-    $SSH root@"$ROBOT" "cat /tmp/x40control-install.log 2>/dev/null || true"
-    exit 1
-fi
-
 echo
-echo "========================================"
-echo "     INSTALACIÓN COMPLETADA"
-echo "========================================"
-echo
-echo "Robot: $ROBOT"
-echo "Web:   http://$ROBOT"
-echo
-echo "Backup original:"
-echo "  $BACKUP_DIR"
-echo
-echo "Para restaurar:"
-echo "  ./uninstall-x40control.sh $ROBOT \"$KEY\""
-echo
-
-echo "[INFO] Reiniciando el robot..."
-echo
-
-$SSH root@"$ROBOT" "reboot" || true
-
-echo "[OK] Reinicio solicitado"
+echo "===== INSTALACIÓN DEL BINARIO COMPLETADA ====="
+echo "Robot: http://$ROBOT"
+echo "SHA256: $LOCAL_SHA"
+echo "Backup: $BACKUP/valetudo.before-last-install"
+echo "El actualizador OTA y postboot no se han modificado."
+echo "No se ha reiniciado el robot."
