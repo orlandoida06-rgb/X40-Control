@@ -1359,7 +1359,7 @@ export const useCombinedVirtualRestrictionsMutation = (
 
     return useMutation({
         mutationFn: (parameters: CombinedVirtualRestrictionsUpdateRequestParameters) => {
-            return sendCombinedVirtualRestrictionsUpdate(parameters).then(fetchStateAttributes); //TODO: this should actually refetch the map
+            return sendCombinedVirtualRestrictionsUpdate(parameters).then(fetchStateAttributes);
         },
         onError: useOnCommandError(Capability.CombinedVirtualRestrictions),
         ...options,
@@ -1367,6 +1367,7 @@ export const useCombinedVirtualRestrictionsMutation = (
             queryClient.setQueryData<RobotAttribute[]>([QueryKey.Attributes], data, {
                 updatedAt: Date.now(),
             });
+            await queryClient.invalidateQueries({ queryKey: [QueryKey.Map] });
             await options?.onSuccess?.(data, ...args);
         },
     });
