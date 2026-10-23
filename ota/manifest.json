@@ -1,16 +1,16 @@
 {
   "product": "X40Control",
-  "version": "2026.10.23.67",
+  "version": "2026.10.23.68",
   "channel": "stable",
   "asset": "valetudo",
-  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.10.23.67/valetudo",
-  "sha256": "c6ada0fb6e851ce103dc246219cecd977d6c62795ce56d422ae154d6a486c618",
-  "size": 41743006,
-  "voices_url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.10.23.67/X40-Control-voices.tar.gz",
-  "voices_sha256": "fc3818e091e3790d7f20f88fe59d21ecdfe7eb0507c8a682fb7d23c980590ff2",
-  "voices_size": 535520,
+  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.10.23.68/valetudo",
+  "sha256": "772abdaa4c772de0780caab281d0d16f4e5671a871b18e0d3d17a4a53500f34d",
+  "size": 41742975,
+  "voices_url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.10.23.68/X40-Control-voices.tar.gz",
+  "voices_sha256": "83ccf64b2b6b1a362b74957387436b69ce06057f0a02220f249dc7268bb68034",
+  "voices_size": 535504,
   "requires_reboot": true,
   "changelog": [
-    "fix: refresh map after saving virtual restrictions"
+    "fix: preserve hash router navigation in map and OTA actions"
   ]
 }
