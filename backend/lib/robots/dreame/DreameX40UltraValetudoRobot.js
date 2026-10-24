@@ -61,6 +61,13 @@ class DreameX40UltraValetudoRobot extends DreameGen4ValetudoRobot {
         }));
 
 
+        this.registerCapability(new (require("../common/linuxCapabilities").LinuxDuststreamingCapability)({
+            robot: this,
+            platform: "dreame_mr813",
+            device: "/dev/video0",
+            dimensions: {width: 640, height: 480}
+        }));
+
         const quirkFactory = new DreameQuirkFactory({
             robot: this
         });

@@ -1,0 +1,47 @@
+const NotImplementedError = require("../NotImplementedError");
+const Capability = require("./Capability");
+
+/**
+ * @template {import("../ValetudoRobot")} T
+ * @extends Capability<T>
+ */
+class DuststreamingCapability extends Capability {
+    /**
+     * @param {{
+     *     robot: T,
+     *     dimensions: {width: number, height: number}
+     * }} options
+     */
+    constructor(options) {
+        super(options);
+        this.dimensions = options.dimensions;
+    }
+
+    isDuststreamerInstalled() {
+        throw new NotImplementedError();
+    }
+
+    register(subscriber) {
+        throw new NotImplementedError();
+    }
+
+    async selfDestruct() {
+        throw new NotImplementedError();
+    }
+
+    getProperties() {
+        return {
+            width: this.dimensions.width,
+            height: this.dimensions.height,
+            duststreamerInstalled: this.isDuststreamerInstalled()
+        };
+    }
+
+    getType() {
+        return DuststreamingCapability.TYPE;
+    }
+}
+
+DuststreamingCapability.TYPE = "DuststreamingCapability";
+
+module.exports = DuststreamingCapability;

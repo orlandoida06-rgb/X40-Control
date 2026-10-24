@@ -89,5 +89,8 @@
     "_version": "",
     "x40Control": {
         "roomVoices": {}
+    },
+    "duststreaming": {
+        "enabled": false
     }
 }
