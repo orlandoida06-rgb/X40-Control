@@ -1,16 +1,16 @@
 {
   "product": "X40Control",
-  "version": "2026.10.12.64",
+  "version": "2026.10.24.70",
   "channel": "stable",
   "asset": "valetudo",
-  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.10.12.64/valetudo",
-  "sha256": "eae92f5a800720aa837ec1ae495652a088188a2fb402f6283ab98aa87bc63ae5",
-  "size": 41707099,
-  "voices_url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.10.12.64/X40-Control-voices.tar.gz",
-  "voices_sha256": "d78ad48247d4985d4d51ec837f74c39c96222d40a43cc649f81fba5c2c7349d4",
-  "voices_size": 535518,
+  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.10.24.70/valetudo",
+  "sha256": "78e9e56652538ce771fae47b959f41db208880a3d050dd5eb26590436af47887",
+  "size": 41727173,
+  "voices_url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.10.24.70/X40-Control-voices.tar.gz",
+  "voices_sha256": "959c959f21807c3e6d6f6cdaec61205030b0476ddddd820eeab45688bfdd914e",
+  "voices_size": 535517,
   "requires_reboot": true,
   "changelog": [
-    "fix: quitar Historial del frontend"
+    "merge: Duststreamer camera support for Dreame X40"
   ]
 }
