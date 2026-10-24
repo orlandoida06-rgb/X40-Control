@@ -1034,6 +1034,35 @@ echo "Instalación terminada. HTTPS se activa cuando Tailscale está autorizado.
             }
         });
 
+        this.router.get("/config/duststreaming", (req, res) => {
+            res.json(this.config.get("duststreaming"));
+        });
+
+        this.router.put("/config/duststreaming", this.validator, async (req, res) => {
+            if (typeof req.body.enabled !== "boolean") {
+                return res.sendStatus(400);
+            }
+
+            this.config.set(
+                "duststreaming",
+                Object.assign({}, this.config.get("duststreaming"), {
+                    enabled: req.body.enabled
+                })
+            );
+
+            if (req.body.enabled === false) {
+                const capability = this.robot.capabilities[
+                    require("../core/capabilities/DuststreamingCapability").TYPE
+                ];
+
+                if (capability) {
+                    await capability.shutdown();
+                }
+            }
+
+            res.sendStatus(200);
+        });
+
         this.router.get("/x40-control/ota", (req, res) => {
             const manifestPath = "/data/ota/manifest.json";
             const targetPath = "/data/valetudo";

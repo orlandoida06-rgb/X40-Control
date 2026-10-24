@@ -21,6 +21,8 @@ import {
     ConsumableProperties,
     ConsumableState,
     DoNotDisturbConfiguration,
+    DuststreamingConfiguration,
+    DuststreamingProperties,
     HighResolutionManualControlInteraction,
     HTTPBasicAuthConfiguration,
     LogLevelResponse,
@@ -1453,4 +1455,23 @@ export const playX40ControlRoomVoice = async (
         segmentId: segmentId,
         roomName: roomName
     });
+};
+
+export const fetchDuststreamingConfiguration = async (): Promise<DuststreamingConfiguration> => {
+    return valetudoAPI
+        .get<DuststreamingConfiguration>("/config/duststreaming")
+        .then(({data}) => data);
+};
+
+export const sendDuststreamingConfiguration = async (enabled: boolean): Promise<void> => {
+    const response = await valetudoAPI.put("/config/duststreaming", {enabled: enabled});
+    if (response.status !== 200) {
+        throw new Error("Could not update Duststreaming configuration");
+    }
+};
+
+export const fetchDuststreamingProperties = async (): Promise<DuststreamingProperties> => {
+    return valetudoAPI
+        .get<DuststreamingProperties>(`/robot/capabilities/${Capability.Duststreaming}`)
+        .then(({data}) => data);
 };

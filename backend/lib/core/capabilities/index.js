@@ -1,4 +1,5 @@
 module.exports = {
+    DuststreamingCapability: require("./DuststreamingCapability"),
     AutoEmptyDockAutoEmptyDurationControlCapability: require("./AutoEmptyDockAutoEmptyDurationControlCapability"),
     AutoEmptyDockAutoEmptyIntervalControlCapability: require("./AutoEmptyDockAutoEmptyIntervalControlCapability"),
     AutoEmptyDockManualTriggerCapability: require("./AutoEmptyDockManualTriggerCapability"),

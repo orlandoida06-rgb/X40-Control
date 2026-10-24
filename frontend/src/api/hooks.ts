@@ -109,6 +109,9 @@ import {
     sendUpdaterConfiguration,
     fetchValetudoCustomizations,
     sendValetudoCustomizations,
+    fetchDuststreamingConfiguration,
+    sendDuststreamingConfiguration,
+    fetchDuststreamingProperties,
     fetchConsumableProperties,
     sendTimerAction,
     fetchPetObstacleAvoidanceControlState,
@@ -250,6 +253,7 @@ enum QueryKey {
     Quirks = "quirks",
     RobotProperties = "robot_properties",
     ValetudoCustomizations = "valetudo_customizations",
+    Duststreaming = "duststreaming",
     CollisionAvoidantNavigation = "collision_avoidant_navigation",
     CarpetSensorMode = "carpet_sensor_mode",
     CarpetSensorModeProperties = "carpet_sensor_mode_properties",
@@ -1874,5 +1878,29 @@ export const useSetX40ControlRoomVoiceMutation = () => {
                 queryKey: ["X40ControlRoomVoices"]
             });
         }
+    });
+};
+
+export const useDuststreamingConfigurationQuery = () => {
+    return useQuery({
+        queryKey: [QueryKey.Duststreaming],
+        queryFn: fetchDuststreamingConfiguration,
+        staleTime: Infinity,
+    });
+};
+
+export const useDuststreamingPropertiesQuery = () => {
+    return useQuery({
+        queryKey: [QueryKey.Duststreaming, "properties"],
+        queryFn: fetchDuststreamingProperties,
+    });
+};
+
+export const useDuststreamingConfigurationMutation = () => {
+    return useValetudoFetchingMutation({
+        queryKey: [QueryKey.Duststreaming],
+        mutationFn: (enabled: boolean) =>
+            sendDuststreamingConfiguration(enabled).then(fetchDuststreamingConfiguration),
+        onError: useOnSettingsChangeError("Duststreaming"),
     });
 };

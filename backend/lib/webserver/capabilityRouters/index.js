@@ -1,4 +1,5 @@
 module.exports = {
+    DuststreamingCapabilityRouter: require("./DuststreamingCapabilityRouter"),
     AutoEmptyDockAutoEmptyDurationControlCapabilityRouter: require("./AutoEmptyDockAutoEmptyDurationControlCapabilityRouter"),
     AutoEmptyDockAutoEmptyIntervalControlCapabilityRouter: require("./AutoEmptyDockAutoEmptyIntervalControlCapabilityRouter"),
     AutoEmptyDockManualTriggerCapabilityRouter: require("./AutoEmptyDockManualTriggerCapabilityRouter"),
