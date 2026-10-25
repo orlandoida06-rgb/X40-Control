@@ -1,19 +1,19 @@
 {
   "product": "X40Control",
-  "version": "2026.10.25.71",
+  "version": "2026.10.25.72",
   "channel": "stable",
   "asset": "valetudo",
-  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.10.25.71/valetudo",
-  "sha256": "4248b08a51d696d88c038a271dbd52a8701aaede1099492d109e7f38bf2b4ba0",
-  "size": 41743679,
-  "voices_url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.10.25.71/X40-Control-voices.tar.gz",
-  "voices_sha256": "11900ce97755373d711dd89a71b4aa8ca9029268b6b604df609edc2fdcfc0cf2",
-  "voices_size": 535520,
-  "duststreamer_url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.10.25.71/duststreamer",
+  "url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.10.25.72/valetudo",
+  "sha256": "c0935d5151c1c33291912a054798d340119297e87ca356f87e140ef7414b625b",
+  "size": 41743862,
+  "voices_url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.10.25.72/X40-Control-voices.tar.gz",
+  "voices_sha256": "eecef2d7f71494758953bff96537592b7df5080075db1f7f72f84cecc0063693",
+  "voices_size": 535517,
+  "duststreamer_url": "https://github.com/orlandoida06-rgb/X40-Control/releases/download/ota-2026.10.25.72/duststreamer",
   "duststreamer_sha256": "c261ed4687072774113a1d175c8daed14091cab615170d7473544ebcdd983b2b",
   "duststreamer_size": 3097916,
   "requires_reboot": true,
   "changelog": [
-    "feat: integrate Duststreamer into OTA updates"
+    "fix: enable X40 Ultra camera streaming automatically"
   ]
 }
