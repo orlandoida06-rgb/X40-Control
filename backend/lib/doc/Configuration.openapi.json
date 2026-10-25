@@ -129,6 +129,9 @@
                     "20"
                   ]
                 }
+              },
+              "duststreamingAutoEnabled": {
+                "type": "boolean"
               }
             }
           }

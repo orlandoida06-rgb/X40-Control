@@ -178,6 +178,25 @@ class DreameX40UltraValetudoRobot extends DreameGen4ValetudoRobot {
             }
         }));
 
+        // Enable Duststreaming once on the X40 Ultra, preserving later user changes.
+        const x40ControlConfig = this.config.get("x40Control") ?? {};
+
+        if (x40ControlConfig.duststreamingAutoEnabled !== true) {
+            const duststreamingConfig = this.config.get("duststreaming") ?? {};
+
+            this.config.set(
+                "duststreaming",
+                Object.assign({}, duststreamingConfig, {enabled: true})
+            );
+
+            this.config.set(
+                "x40Control",
+                Object.assign({}, x40ControlConfig, {duststreamingAutoEnabled: true})
+            );
+
+            Logger.info("Enabled Duststreaming automatically for the Dreame X40 Ultra");
+        }
+
         this.registerCapability(new capabilities.DreameMapSegmentMaterialControlCapability({
             robot: this,
             miot_actions: {

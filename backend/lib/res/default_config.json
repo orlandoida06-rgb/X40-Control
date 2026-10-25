@@ -91,6 +91,7 @@
     },
     "_version": "",
     "x40Control": {
-        "roomVoices": {}
+        "roomVoices": {},
+        "duststreamingAutoEnabled": false
     }
 }
