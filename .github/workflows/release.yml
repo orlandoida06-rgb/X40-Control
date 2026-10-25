@@ -144,6 +144,19 @@ jobs:
 
           test -s build/valetudo.openapi.schema.json
 
+          # Pin and verify the official ARM64 Duststreamer release asset.
+          DUSTSTREAMER_URL="https://github.com/Hypfer/Duststreamer/releases/download/2026.08.0/duststreamer-aarch64"
+          DUSTSTREAMER_SHA256="c261ed4687072774113a1d175c8daed14091cab615170d7473544ebcdd983b2b"
+          curl -fL --retry 3 --connect-timeout 10 \
+            -o /tmp/duststreamer-aarch64 "$DUSTSTREAMER_URL"
+          ACTUAL_DUSTSTREAMER_SHA256="$(sha256sum /tmp/duststreamer-aarch64 | awk '{print $1}')"
+          test "$ACTUAL_DUSTSTREAMER_SHA256" = "$DUSTSTREAMER_SHA256" || {
+            echo "::error::Duststreamer official SHA256 mismatch"
+            exit 1
+          }
+          file /tmp/duststreamer-aarch64
+          file /tmp/duststreamer-aarch64 | grep -q 'ELF 64-bit.*ARM aarch64'
+
           # Ensure all voice files exist before creating the archive.
           for voice in \
             34 35 36 42 49 50 51 53 \
@@ -156,6 +169,7 @@ jobs:
           done
 
           mkdir -p release-artifacts
+          install -m 755 /tmp/duststreamer-aarch64 release-artifacts/duststreamer
 
           cp build/aarch64/valetudo release-artifacts/valetudo
           cp build/armv7/valetudo release-artifacts/valetudo-armv7
@@ -182,11 +196,15 @@ jobs:
           VOICES_SIZE="$(stat -c%s release-artifacts/X40-Control-voices.tar.gz)"
           SHA256="$(sha256sum release-artifacts/valetudo | awk '{print $1}')"
           SIZE="$(stat -c%s release-artifacts/valetudo)"
+          DUSTSTREAMER_SHA256="$(sha256sum release-artifacts/duststreamer | awk '{print $1}')"
+          DUSTSTREAMER_SIZE="$(stat -c%s release-artifacts/duststreamer)"
 
           echo "voices_sha256=${VOICES_SHA256}" >> "$GITHUB_OUTPUT"
           echo "voices_size=${VOICES_SIZE}" >> "$GITHUB_OUTPUT"
           echo "sha256=${SHA256}" >> "$GITHUB_OUTPUT"
           echo "size=${SIZE}" >> "$GITHUB_OUTPUT"
+          echo "duststreamer_sha256=${DUSTSTREAMER_SHA256}" >> "$GITHUB_OUTPUT"
+          echo "duststreamer_size=${DUSTSTREAMER_SIZE}" >> "$GITHUB_OUTPUT"
 
           echo "===== RELEASE ARTIFACTS ====="
           sha256sum release-artifacts/*
@@ -227,7 +245,8 @@ jobs:
             release-artifacts/valetudo-aarch64.upx \
             release-artifacts/valetudo_release_manifest.json \
             release-artifacts/valetudo-openapi.schema.json \
-            release-artifacts/X40-Control-voices.tar.gz
+            release-artifacts/X40-Control-voices.tar.gz \
+            release-artifacts/duststreamer
 
           # Publish only after every upload has succeeded.
           gh release edit "$TAG" --draft=false
@@ -244,6 +263,7 @@ jobs:
 
           RELEASE_URL="https://github.com/${{ github.repository }}/releases/download/${TAG}/valetudo"
           VOICES_URL="https://github.com/${{ github.repository }}/releases/download/${TAG}/X40-Control-voices.tar.gz"
+          DUSTSTREAMER_URL="https://github.com/${{ github.repository }}/releases/download/${TAG}/duststreamer"
 
           jq -n \
             --arg product "X40Control" \
@@ -256,6 +276,9 @@ jobs:
             --arg voices_url "$VOICES_URL" \
             --arg voices_sha256 "${{ steps.artifacts.outputs.voices_sha256 }}" \
             --argjson voices_size "${{ steps.artifacts.outputs.voices_size }}" \
+            --arg duststreamer_url "$DUSTSTREAMER_URL" \
+            --arg duststreamer_sha256 "${{ steps.artifacts.outputs.duststreamer_sha256 }}" \
+            --argjson duststreamer_size "${{ steps.artifacts.outputs.duststreamer_size }}" \
             --arg changelog "$(git log -1 --pretty=%B)" \
             '{
               product: $product,
@@ -268,6 +291,9 @@ jobs:
               voices_url: $voices_url,
               voices_sha256: $voices_sha256,
               voices_size: $voices_size,
+              duststreamer_url: $duststreamer_url,
+              duststreamer_sha256: $duststreamer_sha256,
+              duststreamer_size: $duststreamer_size,
               requires_reboot: true,
               changelog: [$changelog]
             }' > ota/manifest.json
@@ -277,7 +303,9 @@ jobs:
             (.sha256 | test("^[a-f0-9]{64}$")) and
             (.size > 0) and
             (.voices_sha256 | test("^[a-f0-9]{64}$")) and
-            (.voices_size > 0)
+            (.voices_size > 0) and
+            (.duststreamer_sha256 | test("^[a-f0-9]{64}$")) and
+            (.duststreamer_size > 0)
           ' ota/manifest.json >/dev/null
 
           git config user.name "github-actions[bot]"

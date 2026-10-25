@@ -7,12 +7,15 @@ TARGET="/data/valetudo"
 TMP="$BASE/valetudo.new"
 MANIFEST="$BASE/manifest.json"
 BACKUP_DIR="$BASE/backups"
+DUST_TARGET="/data/duststreamer"
+DUST_TMP="$BASE/duststreamer.new"
+DUST_BACKUP_DIR="$BACKUP_DIR/duststreamer"
 
 VOICE_DIR="/data/personalized_voice/X40-Control"
 VOICE_TMP="$BASE/X40-Control-voices.tar.gz.new"
 VOICE_EXTRACT="$BASE/X40-Control-voices.extract"
 
-MANIFEST_URL="https://raw.githubusercontent.com/orlandoida06-rgb/X40-Control/main/ota/manifest.json"
+MANIFEST_URL="https://raw.githubusercontent.com/orlandoida06-rgb/X40-Control/integration-ota-2026.10.12/ota/manifest.json"
 
 echo "===== X40CONTROL OTA ====="
 echo
@@ -35,6 +38,8 @@ EXPECTED_SHA256="$(grep '"sha256"' "$MANIFEST" | sed -E 's/.*"sha256"[[:space:]]
 
 VOICE_URL="$(grep '"voices_url"' "$MANIFEST" | sed -E 's/.*"voices_url"[[:space:]]*:[[:space:]]*"([^"]+)".*/\1/' || true)"
 VOICE_SHA256="$(grep '"voices_sha256"' "$MANIFEST" | sed -E 's/.*"voices_sha256"[[:space:]]*:[[:space:]]*"([^"]+)".*/\1/' || true)"
+DUST_URL="$(grep '"duststreamer_url"' "$MANIFEST" | sed -E 's/.*"duststreamer_url"[[:space:]]*:[[:space:]]*"([^"]+)".*/\1/' || true)"
+DUST_SHA256="$(grep '"duststreamer_sha256"' "$MANIFEST" | sed -E 's/.*"duststreamer_sha256"[[:space:]]*:[[:space:]]*"([^"]+)".*/\1/' || true)"
 
 echo
 echo "Versión OTA: $VERSION"
@@ -46,6 +51,26 @@ if [ -n "$VOICE_URL" ] && [ -n "$VOICE_SHA256" ]; then
     echo "Voces SHA256: $VOICE_SHA256"
 else
     echo "Paquete de voces: no definido en este manifest"
+fi
+
+DUST_NEEDS_UPDATE=0
+if [ -n "$DUST_URL" ] && [ -n "$DUST_SHA256" ]; then
+    case "$DUST_SHA256" in
+        *[!a-fA-F0-9]*|"") echo "ERROR: SHA256 de Duststreamer no válido"; exit 1 ;;
+    esac
+    if [ "${#DUST_SHA256}" -ne 64 ]; then
+        echo "ERROR: longitud SHA256 de Duststreamer incorrecta"; exit 1
+    fi
+    echo "Duststreamer URL: $DUST_URL"
+    echo "Duststreamer SHA256: $DUST_SHA256"
+    if [ -f "$DUST_TARGET" ]; then
+        DUST_CURRENT_SHA="$(sha256sum "$DUST_TARGET" | awk '{print $1}')"
+        [ "$DUST_CURRENT_SHA" = "$DUST_SHA256" ] || DUST_NEEDS_UPDATE=1
+    else
+        DUST_NEEDS_UPDATE=1
+    fi
+else
+    echo "Duststreamer: no definido en este manifest; no se modifica"
 fi
 
 echo
@@ -74,7 +99,7 @@ if [ -n "$VOICE_URL" ] && [ -n "$VOICE_SHA256" ]; then
     VOICE_NEEDS_UPDATE=1
 fi
 
-if [ "$BINARY_NEEDS_UPDATE" -eq 0 ] && [ "$VOICE_NEEDS_UPDATE" -eq 0 ]; then
+if [ "$BINARY_NEEDS_UPDATE" -eq 0 ] && [ "$VOICE_NEEDS_UPDATE" -eq 0 ] && [ "$DUST_NEEDS_UPDATE" -eq 0 ]; then
     echo
     echo "Ya está instalada esta versión."
     exit 0
@@ -108,6 +133,31 @@ if [ "$BINARY_NEEDS_UPDATE" -eq 1 ]; then
     fi
 
     echo "SHA256 BINARIO OK"
+fi
+
+if [ "$DUST_NEEDS_UPDATE" -eq 1 ]; then
+    echo
+    echo "===== DESCARGA DUSTSTREAMER ====="
+    rm -f "$DUST_TMP"
+
+    if command -v curl >/dev/null 2>&1; then
+        curl -fL --retry 3 --connect-timeout 10 -o "$DUST_TMP" "$DUST_URL"
+    else
+        wget -O "$DUST_TMP" "$DUST_URL"
+    fi
+
+    DOWNLOADED_DUST_SHA="$(sha256sum "$DUST_TMP" | awk '{print $1}')"
+    echo "Descargado: $DOWNLOADED_DUST_SHA"
+    echo "Esperado:   $DUST_SHA256"
+
+    if [ "$DOWNLOADED_DUST_SHA" != "$DUST_SHA256" ]; then
+        echo "ERROR: SHA256 DE DUSTSTREAMER INCORRECTO"
+        rm -f "$DUST_TMP"
+        exit 1
+    fi
+
+    chmod 755 "$DUST_TMP"
+    echo "SHA256 DUSTSTREAMER OK"
 fi
 
 if [ "$VOICE_NEEDS_UPDATE" -eq 1 ]; then
@@ -204,11 +254,36 @@ if [ "$BINARY_NEEDS_UPDATE" -eq 1 ]; then
 fi
 
 echo
+if [ "$DUST_NEEDS_UPDATE" -eq 1 ]; then
+    mkdir -p "$DUST_BACKUP_DIR"
+    DUST_TIMESTAMP="$(date +%Y%m%d-%H%M%S)"
+    DUST_BACKUP="$DUST_BACKUP_DIR/duststreamer.$DUST_TIMESTAMP"
+
+    if [ -e "$DUST_TARGET" ] || [ -L "$DUST_TARGET" ]; then
+        if [ -d "$DUST_TARGET" ]; then
+            DUST_BACKUP="$DUST_BACKUP_DIR/duststreamer-directory.$DUST_TIMESTAMP"
+            mv "$DUST_TARGET" "$DUST_BACKUP"
+            echo "Directorio anterior conservado en: $DUST_BACKUP"
+        elif [ -f "$DUST_TARGET" ]; then
+            cp -p "$DUST_TARGET" "$DUST_BACKUP"
+            echo "Backup Duststreamer: $DUST_BACKUP"
+        else
+            echo "ERROR: destino Duststreamer es un tipo de archivo no compatible"
+            exit 1
+        fi
+    fi
+fi
+
 echo "===== INSTALACION ====="
 
 if [ "$BINARY_NEEDS_UPDATE" -eq 1 ]; then
     chmod 755 "$TMP"
     mv "$TMP" "$TARGET"
+fi
+
+if [ "$DUST_NEEDS_UPDATE" -eq 1 ]; then
+    mv "$DUST_TMP" "$DUST_TARGET"
+    chmod 755 "$DUST_TARGET"
 fi
 
 if [ "$VOICE_NEEDS_UPDATE" -eq 1 ]; then
@@ -246,6 +321,25 @@ if [ "$BINARY_NEEDS_UPDATE" -eq 1 ]; then
     fi
 fi
 
+if [ "$DUST_NEEDS_UPDATE" -eq 1 ]; then
+    FINAL_DUST_SHA="$(sha256sum "$DUST_TARGET" | awk '{print $1}')"
+    echo "Duststreamer SHA256 final: $FINAL_DUST_SHA"
+
+    if [ "$FINAL_DUST_SHA" != "$DUST_SHA256" ]; then
+        echo "ERROR: DUSTSTREAMER NO SUPERÓ LA VERIFICACIÓN FINAL"
+        rm -f "$DUST_TARGET"
+
+        if [ -n "${DUST_BACKUP:-}" ] && [ -e "$DUST_BACKUP" ]; then
+            mv "$DUST_BACKUP" "$DUST_TARGET"
+            echo "Se ha restaurado el destino anterior."
+        fi
+
+        rm -f "$TMP" "$DUST_TMP" "$VOICE_TMP"
+        rm -rf "$VOICE_EXTRACT"
+        exit 1
+    fi
+fi
+
 if [ "$VOICE_NEEDS_UPDATE" -eq 1 ]; then
     FINAL_VOICE_COUNT="$(find "$VOICE_DIR" -maxdepth 1 -type f -name '*.ogg' | wc -l)"
 
@@ -259,6 +353,7 @@ if [ "$VOICE_NEEDS_UPDATE" -eq 1 ]; then
 fi
 
 rm -f "$TMP"
+rm -f "$DUST_TMP"
 rm -f "$VOICE_TMP"
 rm -rf "$VOICE_EXTRACT"
 
@@ -276,6 +371,10 @@ fi
 
 if [ "$VOICE_NEEDS_UPDATE" -eq 1 ]; then
     echo "Voces X40-Control: 15"
+fi
+
+if [ "$DUST_NEEDS_UPDATE" -eq 1 ]; then
+    echo "Duststreamer SHA256: $FINAL_DUST_SHA"
 fi
 
 echo

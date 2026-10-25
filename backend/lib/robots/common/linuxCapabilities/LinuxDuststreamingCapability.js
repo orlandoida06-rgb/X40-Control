@@ -38,7 +38,8 @@ class LinuxDuststreamingCapability extends DuststreamingCapability {
 
     isDuststreamerInstalled() {
         try {
-            return fs.existsSync(BINARY_PATH);
+            return fs.statSync(BINARY_PATH).isFile() &&
+                (fs.accessSync(BINARY_PATH, fs.constants.X_OK) === undefined);
         } catch (e) {
             return false;
         }
@@ -52,9 +53,12 @@ class LinuxDuststreamingCapability extends DuststreamingCapability {
         this.manager.stop();
 
         try {
-            fs.unlinkSync(BINARY_PATH);
+            // No borrar directorios ni otras rutas inesperadas.
+            if (fs.statSync(BINARY_PATH).isFile()) {
+                fs.unlinkSync(BINARY_PATH);
+            }
         } catch (e) {
-            // intentional
+            // El archivo puede no existir; no es necesario abortar el apagado.
         }
     }
 
